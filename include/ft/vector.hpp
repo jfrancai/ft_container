@@ -4,7 +4,7 @@
 
 namespace ft {
 
-template<typename T>
+template<typename Type>
 class vector
 {
 	public:
