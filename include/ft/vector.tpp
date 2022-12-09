@@ -1,18 +1,23 @@
 namespace ft {
 
 template< class Type, class Allocator >
-vector< Type, Allocator >::vector(void) : _vectorSize(0)
+const typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::_initialCapacity = 4;
+
+template< class Type, class Allocator >
+vector< Type, Allocator >::vector(void) :
+	_capacity(_initialCapacity),
+	_vectorSize(0),
+	_elements(0)
 {
 	try
 	{
-		this->_elements = this->alloc.allocate(2);
+		this->_elements = this->alloc.allocate(this->_capacity);
 	}
 	catch (std::exception &e)
 	{
 		std::cout << e.what() << std::endl;
 	}
-	this->_elements[0] = 0;
-	this->_elements[1] = 0;
+	std::memset(this->_elements, 0, this->_initialCapacity);
 	return ;
 }
 
@@ -43,7 +48,6 @@ template< class Type, class Allocator >
 void	vector< Type, Allocator >::push_back(const Type& value)
 {
 	this->_vectorSize++;
-	(void)value;
 	return ;
 }
 
