@@ -1,31 +1,63 @@
 namespace ft {
 
-template<typename Type>
-vector<Type>::vector(void)
+template< class Type, class Allocator >
+vector< Type, Allocator >::vector(void) : _vectorSize(0)
 {
+	try
+	{
+		this->_elements = this->alloc.allocate(2);
+	}
+	catch (std::exception &e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+	this->_elements[0] = 0;
+	this->_elements[1] = 0;
 	return ;
 }
 
-template<typename Type>
-vector<Type>::~vector(void)
+/*
+ * Member functions
+ */
+
+// Element access
+
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::reference	vector< Type, Allocator >::operator[](typename vector< Type, Allocator >::size_type pos)
 {
+	return (this->_elements[pos]);
+}
+
+
+// Capacity
+
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::size(void) const
+{
+	return (this->_vectorSize);
+}
+
+// Modifiers
+
+template< class Type, class Allocator >
+void	vector< Type, Allocator >::push_back(const Type& value)
+{
+	this->_vectorSize++;
+	(void)value;
 	return ;
 }
 
-template<typename Type>
-vector<Type>::vector(vector const &src)
+template< class Type, class Allocator >
+void	vector< Type, Allocator >::pop_back(void)
 {
-	*this = src;
-
+	if (this->_vectorSize == 0)
+		return ;
+	this->_vectorSize--;
 	return ;
 }
 
-template<typename Type>
-vector<Type>	&vector<Type>::operator=(vector const &rhs)
-{
-	(void)rhs;
-
-	return (*this);
-}
+/* 
+ * Non-member functions
+ */
 
 } //namespace

@@ -44,4 +44,7 @@ fclean: clean
 re: fclean
 	make $(NAME)
 
+retest: fclean
+	make tests
+
 .PHONY: all clean re fclean tests
