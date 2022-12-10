@@ -12,18 +12,18 @@ class vector
 		vector(void);
 
 		// Member types : Basically they are just aliases.
-		using value_type = Type;
-		using allocator_type = Allocator;
-		using size_type = std::size_t;
-		using difference_type = std::ptrdiff_t;
-		using reference = value_type&;
-		using const_reference = const value_type&;
-		using pointer = typename Allocator::pointer;
-		using const_pointer = typename Allocator::const_pointer;
+		typedef Type value_type;
+		typedef Allocator allocator_type;
+		typedef std::size_t size_type;
+		typedef std::ptrdiff_t difference_type;
+		typedef value_type& reference;
+		typedef const value_type& const_reference;
+		typedef typename Allocator::pointer pointer;
+		typedef typename Allocator::const_pointer const_pointer;
 
 		// Element access
-		reference operator[](size_type pos);
 		const_reference operator[](size_type pos) const;
+		reference operator[](size_type pos);
 
 		// Iterators
 
@@ -37,7 +37,7 @@ class vector
 		static const size_type	_initialCapacity;
 		size_type				_capacity;
 		size_type				_vectorSize;
-		pointer					_elements;
+		pointer 				_elements;
 		allocator_type			alloc;
 };
 
