@@ -17,6 +17,10 @@ TEST := vector_test.cpp
 OBJS := $(SRC:%.cpp=$(OBJSDIR)%.o)
 OBJSTEST := $(TEST:%.cpp=$(OBJSDIR)%.o)
 
+ifeq ($(INT_ONLY), 1)
+	CFLAGS += -DINT_ONLY
+endif
+
 all:
 	make $(NAME)
 
@@ -24,15 +28,15 @@ $(NAME): $(OBJSDIR)main.o $(OBJS)
 	$(CC) $(CFLAGS) $(STDFLAGS) $(INCLUDE) $^ -o $@
 
 tests: $(OBJS) $(OBJSTEST)
-	$(CC) $(CFLAGS) $(INCLUDE) $^ $(TESTFLAGS) -o $@
+	$(CC) $(CFLAGS) $(STDFLAGS) $(INCLUDE) $^ $(TESTFLAGS) -o $@
 
 $(OBJSDIR)%.o: $(TESTDIR)%.cpp 
 	mkdir -p $(OBJSDIR)
-	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+	$(CC) $(CFLAGS) $(STDFLAGS) $(INCLUDE) -c $< -o $@
 
 $(OBJSDIR)%.o: $(SRCDIR)%.cpp 
 	mkdir -p $(OBJSDIR)
-	$(CC) $(CFLAGS) $(INCLUDE) -c $< -o $@
+	$(CC) $(CFLAGS) $(STDFLAGS) $(INCLUDE) -c $< -o $@
 
 clean:
 	rm -rf $(OBJSDIR) 
@@ -47,4 +51,7 @@ re: fclean
 retest: fclean
 	make tests
 
-.PHONY: all clean re fclean tests
+reint: fclean
+	make tests INT_ONLY=1
+
+.PHONY: all clean re fclean tests retest reint
