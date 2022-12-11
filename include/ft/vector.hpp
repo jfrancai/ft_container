@@ -42,11 +42,11 @@ class vector
 		void	push_back(const Type& value);
 		void	pop_back(void);
 	private:
+		allocator_type			_alloc;
 		static const size_type	_initialCapacity;
 		size_type				_vectorCapacity;
 		size_type				_vectorSize;
 		pointer 				_elements;
-		allocator_type			alloc;
 };
 
 } //namespace

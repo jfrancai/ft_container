@@ -17,10 +17,7 @@ vector< Type, Allocator >::vector(void) :
 {
 	try
 	{
-		size_type newAllocationSize = (this->_initialCapacity + 1) * sizeof(value_type);
-
-		this->_elements = this->alloc.allocate(newAllocationSize);
-		std::memset(this->_elements, 0, newAllocationSize);
+		this->_elements = this->_alloc.allocate(this->_initialCapacity);
 	}
 	catch (std::exception &e)
 	{
@@ -33,7 +30,9 @@ vector< Type, Allocator >::vector(void) :
 template< class Type, class Allocator >
 vector< Type, Allocator >::~vector(void)
 {
-	alloc.deallocate(this->_elements, (this->_vectorCapacity + 1) * sizeof(value_type));
+	for (size_type i = 0; i < this->_vectorSize; i++)
+		this->_alloc.destroy(this->_elements + i);
+	this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
 	return ;
 }
 
@@ -84,27 +83,19 @@ void	vector< Type, Allocator >::push_back(const Type& value)
 {
 		try
 		{
-
-		////////////////////////////////////////////////////////////////////////////////////////
-		//	Refactoring needed: This condition should use std::copy,
-		//						we need to implement iterators first.
-
 			if (this->_vectorSize == this->_vectorCapacity)
 			{
-				size_type newAllocationSize = ((this->_vectorCapacity * 2) + 1) * sizeof(value_type);
-
-				pointer	newElements = alloc.allocate(newAllocationSize);
-				std::memset(newElements, 0, newAllocationSize);
+				pointer	newElements = this->_alloc.allocate(this->_vectorSize * 2);
 				for (size_type i = 0; i < this->_vectorSize; i++)
-					newElements[i] = (*this)[i];
-				alloc.deallocate(this->_elements, (this->_vectorCapacity + 1) * sizeof(value_type));
+				{
+					this->_alloc.construct(newElements + i, (*this)[i]);
+					this->_alloc.destroy(this->_elements + i);
+				}
+				this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
 				this->_vectorCapacity *= 2;
 				this->_elements = newElements;
 			}
-		//
-		////////////////////////////////////////////////////////////////////////////////////////
-
-			(*this)[this->_vectorSize] = value;
+			this->_alloc.construct(this->_elements + this->_vectorSize, value);
 			this->_vectorSize++;
 		}
 		catch (std::exception &e)
@@ -121,6 +112,7 @@ void	vector< Type, Allocator >::pop_back(void)
 	if (this->_vectorSize == 0)
 		return ;
 	this->_vectorSize--;
+	this->_alloc.destroy(this->_elements + this->_vectorSize);
 	return ;
 }
 
