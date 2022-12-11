@@ -9,8 +9,6 @@ template< class Type, class Allocator = std::allocator<Type> >
 class vector
 {
 	public:
-		vector(void);
-
 		// Member types : Basically they are just aliases.
 		typedef Type value_type;
 		typedef Allocator allocator_type;
@@ -20,6 +18,16 @@ class vector
 		typedef const value_type& const_reference;
 		typedef typename Allocator::pointer pointer;
 		typedef typename Allocator::const_pointer const_pointer;
+
+		/*
+		 * Member functions
+		 */
+		// Constructors
+		vector(void);
+		~vector(void);
+
+		// Operator=
+		//vector&	operator=(const vector& other);
 
 		// Element access
 		const_reference operator[](size_type pos) const;
@@ -35,7 +43,7 @@ class vector
 		void	pop_back(void);
 	private:
 		static const size_type	_initialCapacity;
-		size_type				_capacity;
+		size_type				_vectorCapacity;
 		size_type				_vectorSize;
 		pointer 				_elements;
 		allocator_type			alloc;
