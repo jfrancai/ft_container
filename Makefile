@@ -4,7 +4,7 @@ CC := c++
 STDFLAGS := -std=c++98
 CFLAGS := -Wall -Werror -Wextra
 INCLUDE := -I include/
-TESTFLAGS := -lgtest -lgtest_main
+TESTFLAGS := -lgtest -lgtest_main -lgmock
 
 SRCDIR := src/
 OBJSDIR := objs/
