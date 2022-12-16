@@ -17,11 +17,6 @@ typename vector< Type, Allocator>::pointer	&vector< Type, Allocator >::getElemen
 	return (this->_elements);
 }
 
-template< class Type, class Allocator >
-typename vector< Type, Allocator>::size_type	vector< Type, Allocator >::getCapacity(void) const
-{
-	return (this->_vectorCapacity);
-}
 ////////////////////////////////////////////
 
 /*
@@ -65,16 +60,26 @@ vector< Type, Allocator >::~vector(void)
 }
 
 // operator=
-/*
+
 template< class Type, class Allocator >
 typename ft::vector< Type, Allocator >	&vector< Type, Allocator >::operator=(const typename ft::vector< Type, Allocator >	&other)
 {
 	if (this != &other)
 	{
+		for (size_type i = 0; i < this->_vectorSize; i++)
+			this->_alloc.destroy(this->_elements + i);
+		if (this->_vectorCapacity != other.capacity())
+		{
+			this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
+			this->_elements = this->_alloc.allocate(other.capacity());
+		}
+		this->_vectorSize = other.size();
+		for (size_type i = 0; i < this->_vectorSize; i++)
+			this->_alloc.construct(this->_elements + i, other[i]);
+		this->_vectorCapacity = other.capacity();
 	}
 	return (*this);
 }
-*/
 
 // assign
 
@@ -150,10 +155,18 @@ typename vector< Type, Allocator >::reference	vector< Type, Allocator >::front(v
 
 //// Capacity ////
 
+// size
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::size(void) const
 {
 	return (this->_vectorSize);
+}
+
+// capacity
+template< class Type, class Allocator >
+typename vector< Type, Allocator>::size_type	vector< Type, Allocator >::capacity(void) const
+{
+	return (this->_vectorCapacity);
 }
 
 //// Modifiers ////

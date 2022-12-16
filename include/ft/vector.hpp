@@ -27,7 +27,6 @@ class vector
 		// Accessors
 		allocator_type	&getAlloc(void);
 		pointer			&getElements(void);
-		size_type		getCapacity(void) const;
 	////
 
 		/*
@@ -61,7 +60,12 @@ class vector
 		//// Iterators ////
 
 		//// Capacity ////
+
+		// size
 		size_type	size(void) const;
+
+		// capacity
+		size_type	capacity(void) const;
 
 		//// Modifiers ////
 		void	push_back(const Type& value);
