@@ -5,40 +5,65 @@
 
 namespace ft {
 
-template< class Type, class Allocator = std::allocator<Type> >
+template< class Type, class Allocator = std::allocator< Type > >
 class vector
 {
 	public:
 		// Member types (aliases)
-		typedef Type value_type;
-		typedef Allocator allocator_type;
-		typedef std::size_t size_type;
-		typedef std::ptrdiff_t difference_type;
-		typedef value_type& reference;
-		typedef const value_type& const_reference;
-		typedef typename Allocator::pointer pointer;
-		typedef typename Allocator::const_pointer const_pointer;
+		typedef Type 								value_type;
+		typedef Allocator 							allocator_type;
+		typedef std::size_t 						size_type;
+		typedef std::ptrdiff_t						difference_type;
+		typedef value_type&							reference;
+		typedef const value_type&					const_reference;
+		typedef typename Allocator::pointer			pointer;
+		typedef typename Allocator::const_pointer	const_pointer;
+
+	//// Put some test flag here
+		/*
+		 * Testing
+		 */
+
+		// Accessors
+		allocator_type	&getAlloc(void);
+		pointer			&getElements(void);
+		size_type		getCapacity(void) const;
+	////
 
 		/*
 		 * Member functions
 		 */
+
 		// Constructors
 		vector(void);
+
 		~vector(void);
 
-		// Operator=
-		//vector&	operator=(const vector& other);
+		// operator=
+		vector&	operator=(const vector& other);
 
-		// Element access
+		// asssign
+		void	assign(size_type count, const Type& value);
+
+		// allocator_type
+		allocator_type get_allocator(void) const;
+
+		//// Element access ////
+
+		// operator[]
 		const_reference operator[](size_type pos) const;
 		reference operator[](size_type pos);
 
-		// Iterators
+		// front
+		reference front(void);
+		const_reference front(void) const;
 
-		// Capacity
+		//// Iterators ////
+
+		//// Capacity ////
 		size_type	size(void) const;
 
-		// Modifiers
+		//// Modifiers ////
 		void	push_back(const Type& value);
 		void	pop_back(void);
 	private:
