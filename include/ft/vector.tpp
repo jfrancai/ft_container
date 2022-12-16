@@ -108,6 +108,28 @@ typename ft::vector< Type, Allocator >::allocator_type	vector< Type, Allocator >
 
 //// Element access ////
 
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::const_reference vector< Type, Allocator >::at( typename vector< Type, Allocator >::size_type pos ) const
+{
+	if (pos >= this->size())
+	{
+		std::ostringstream errorMsg;
+		errorMsg << "vector::_M_range_check: __n (which is " << pos << ") >= this->size() (which is " << this->size() << ")";
+		throw std::out_of_range(errorMsg.str());
+	}
+	return ((*this)[pos]);
+}
+
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::reference vector< Type, Allocator >::at( typename vector< Type, Allocator >::size_type pos )
+{
+	return (
+		const_cast< reference >(
+			static_cast< const typename ft::vector< Type, Allocator >& >(*this).at(pos)
+		)
+	);
+}
+
 // operator[]
 
 template< class Type, class Allocator >
