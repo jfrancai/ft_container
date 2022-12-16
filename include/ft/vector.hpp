@@ -49,6 +49,10 @@ class vector
 
 		//// Element access ////
 
+		// at
+		const_reference at( size_type pos ) const;
+		reference at( size_type pos );
+
 		// operator[]
 		const_reference operator[](size_type pos) const;
 		reference operator[](size_type pos);
