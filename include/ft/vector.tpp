@@ -11,12 +11,6 @@ typename vector< Type, Allocator >::allocator_type	&vector< Type, Allocator >::g
 	return (this->_alloc);
 }
 
-template< class Type, class Allocator >
-typename vector< Type, Allocator>::pointer	&vector< Type, Allocator >::getElements(void)
-{
-	return (this->_elements);
-}
-
 ////////////////////////////////////////////
 
 /*
@@ -108,6 +102,8 @@ typename ft::vector< Type, Allocator >::allocator_type	vector< Type, Allocator >
 
 //// Element access ////
 
+// at
+
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::const_reference vector< Type, Allocator >::at( typename vector< Type, Allocator >::size_type pos ) const
 {
@@ -121,11 +117,11 @@ typename vector< Type, Allocator >::const_reference vector< Type, Allocator >::a
 }
 
 template< class Type, class Allocator >
-typename vector< Type, Allocator >::reference vector< Type, Allocator >::at( typename vector< Type, Allocator >::size_type pos )
+typename vector< Type, Allocator >::reference vector< Type, Allocator >::at( vector< Type, Allocator >::size_type pos )
 {
 	return (
 		const_cast< reference >(
-			static_cast< const typename ft::vector< Type, Allocator >& >(*this).at(pos)
+			static_cast< const ft::vector< Type, Allocator >& >(*this).at(pos)
 		)
 	);
 }
@@ -143,7 +139,7 @@ typename vector< Type, Allocator >::reference	vector< Type, Allocator >::operato
 {
 	return (
 		const_cast< reference >(
-			static_cast< const typename ft::vector< Type, Allocator >& >(*this)[pos]
+			static_cast< const ft::vector< Type, Allocator >& >(*this)[pos]
 		)
 	);
 }
@@ -161,7 +157,43 @@ typename vector< Type, Allocator >::reference	vector< Type, Allocator >::front(v
 {
 	return (
 		const_cast< reference >(
-			static_cast< const typename ft::vector< Type, Allocator >& >(*this).front()
+			static_cast< const ft::vector< Type, Allocator >& >(*this).front()
+		)
+	);
+}
+
+// back
+
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::const_reference	vector< Type, Allocator >::back(void) const
+{
+	return ((*this)[this->_vectorSize - 1]);
+}
+
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::reference	vector< Type, Allocator >::back(void)
+{
+	return (
+		const_cast< reference >(
+			static_cast< const ft::vector< Type, Allocator >& >(*this).back()
+		)
+	);
+}
+
+// data
+
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::const_pointer	vector< Type, Allocator >::data(void) const
+{
+	return (this->_elements);
+}
+
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::pointer	vector< Type, Allocator >::data(void)
+{
+	return (
+		const_cast< pointer >(
+			static_cast< const ft::vector< Type, Allocator >& >(*this).data()
 		)
 	);
 }

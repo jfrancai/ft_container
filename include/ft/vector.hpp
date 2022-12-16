@@ -1,7 +1,7 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 #include <iostream>
-#include <cstring>
+#include <sstream>
 
 namespace ft {
 
@@ -26,7 +26,6 @@ class vector
 
 		// Accessors
 		allocator_type	&getAlloc(void);
-		pointer			&getElements(void);
 	////
 
 		/*
@@ -60,6 +59,14 @@ class vector
 		// front
 		reference front(void);
 		const_reference front(void) const;
+
+		// back
+		reference back(void);
+		const_reference back(void) const;
+
+		// data
+		pointer			data(void);
+		const_pointer	data(void) const;
 
 		//// Iterators ////
 
