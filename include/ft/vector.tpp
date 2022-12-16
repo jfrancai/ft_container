@@ -24,7 +24,7 @@ typename vector< Type, Allocator>::pointer	&vector< Type, Allocator >::getElemen
  */
 
 template< class Type, class Allocator >
-const typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::_initialCapacity = 2;
+const typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::_initialCapacity = 1;
 
 /*
  * Member functions
@@ -34,19 +34,10 @@ const typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::_
 
 template< class Type, class Allocator >
 vector< Type, Allocator >::vector(void) :
-	_vectorCapacity(_initialCapacity),
+	_vectorCapacity(0),
 	_vectorSize(0),
 	_elements(0)
 {
-	try
-	{
-		this->_elements = this->_alloc.allocate(this->_initialCapacity);
-	}
-	catch (std::exception &e)
-	{
-		std::cout << "Default constructor : " << e.what() << std::endl;
-	}
-
 	return ;
 }
 
@@ -174,28 +165,24 @@ typename vector< Type, Allocator>::size_type	vector< Type, Allocator >::capacity
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::push_back(const Type& value)
 {
-		try
+	if (this->_vectorSize == this->_vectorCapacity)
+	{
+		pointer newElements;
+		if (this->_vectorCapacity == 0)
+			newElements = this->_alloc.allocate(this->_initialCapacity);
+		else
+			newElements = this->_alloc.allocate(this->_vectorSize * 2);
+		for (size_type i = 0; i < this->_vectorSize; i++)
 		{
-			if (this->_vectorSize == this->_vectorCapacity)
-			{
-				pointer	newElements = this->_alloc.allocate(this->_vectorSize * 2);
-				for (size_type i = 0; i < this->_vectorSize; i++)
-				{
-					this->_alloc.construct(newElements + i, (*this)[i]);
-					this->_alloc.destroy(this->_elements + i);
-				}
-				this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
-				this->_vectorCapacity *= 2;
-				this->_elements = newElements;
-			}
-			this->_alloc.construct(this->_elements + this->_vectorSize, value);
-			this->_vectorSize++;
+			this->_alloc.construct(newElements + i, (*this)[i]);
+			this->_alloc.destroy(this->_elements + i);
 		}
-		catch (std::exception &e)
-		{
-			std::cout << "push_back : " << e.what() << std::endl;
-		}
-
+		this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
+		this->_vectorCapacity = this->_vectorCapacity ? this->_vectorCapacity * 2 : this->_initialCapacity;
+		this->_elements = newElements;
+	}
+	this->_alloc.construct(this->_elements + this->_vectorSize, value);
+	this->_vectorSize++;
 	return ;
 }
 
