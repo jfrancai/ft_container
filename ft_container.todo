@@ -1,7 +1,7 @@
-[ ] What is C++ inline functions https://cplusplus.com/articles/2LywvCM9/
-[ ] Some template for stl container https://stackoverflow.com/questions/7758580/writing-your-own-stl-container
+[x] What is C++ inline functions https://cplusplus.com/articles/2LywvCM9/
+[x] Some template for stl container https://stackoverflow.com/questions/7758580/writing-your-own-stl-container
 [ ] In detail STL container re-implementation https://medium.com/p/fc5b994462c6#90c4
-[ ]
+[ ] idea: Replace the conditions for empty capacity with reserve call to allocate at least one(?).
 [ ]
 [ ]
 [ ]

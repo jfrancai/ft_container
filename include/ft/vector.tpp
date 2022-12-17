@@ -78,6 +78,8 @@ void	vector< Type, Allocator >::assign(typename vector< Type, Allocator >::size_
 	if (this->_vectorCapacity < count)
 	{
 		this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
+		if (this->_vectorCapacity == 0)
+			this->_vectorCapacity = 1;
 		while (this->_vectorCapacity < count)
 			this->_vectorCapacity *= 2;
 		this->_elements = this->_alloc.allocate(this->_vectorCapacity);
