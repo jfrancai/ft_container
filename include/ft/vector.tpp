@@ -47,21 +47,21 @@ vector< Type, Allocator >::~vector(void)
 // operator=
 
 template< class Type, class Allocator >
-typename ft::vector< Type, Allocator >	&vector< Type, Allocator >::operator=(const typename ft::vector< Type, Allocator >	&other)
+typename ft::vector< Type, Allocator >	&vector< Type, Allocator >::operator=(const typename ft::vector< Type, Allocator >	&rhs)
 {
-	if (this != &other)
+	if (this != &rhs)
 	{
 		for (size_type i = 0; i < this->_vectorSize; i++)
 			this->_alloc.destroy(this->_elements + i);
-		if (this->_vectorCapacity != other.capacity())
+		if (this->_vectorCapacity != rhs.capacity())
 		{
 			this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
-			this->_elements = this->_alloc.allocate(other.capacity());
+			this->_elements = this->_alloc.allocate(rhs.capacity());
 		}
-		this->_vectorSize = other.size();
+		this->_vectorSize = rhs.size();
 		for (size_type i = 0; i < this->_vectorSize; i++)
-			this->_alloc.construct(this->_elements + i, other[i]);
-		this->_vectorCapacity = other.capacity();
+			this->_alloc.construct(this->_elements + i, rhs[i]);
+		this->_vectorCapacity = rhs.capacity();
 	}
 	return (*this);
 }
@@ -201,6 +201,7 @@ typename vector< Type, Allocator >::pointer	vector< Type, Allocator >::data(void
 //// Capacity ////
 
 // size
+
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::size(void) const
 {
@@ -208,6 +209,7 @@ typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::size(vo
 }
 
 // capacity
+
 template< class Type, class Allocator >
 typename vector< Type, Allocator>::size_type	vector< Type, Allocator >::capacity(void) const
 {
@@ -215,6 +217,8 @@ typename vector< Type, Allocator>::size_type	vector< Type, Allocator >::capacity
 }
 
 //// Modifiers ////
+
+// push_back
 
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::push_back(const Type& value)
@@ -239,6 +243,8 @@ void	vector< Type, Allocator >::push_back(const Type& value)
 	this->_vectorSize++;
 	return ;
 }
+
+// pop_back
 
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::pop_back(void)
