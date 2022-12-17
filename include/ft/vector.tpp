@@ -25,7 +25,6 @@ const typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::_
  */
 
 // Constructors
-
 template< class Type, class Allocator >
 vector< Type, Allocator >::vector(void) :
 	_vectorCapacity(0),
@@ -45,7 +44,6 @@ vector< Type, Allocator >::~vector(void)
 }
 
 // operator=
-
 template< class Type, class Allocator >
 typename ft::vector< Type, Allocator >	&vector< Type, Allocator >::operator=(const typename ft::vector< Type, Allocator >	&rhs)
 {
@@ -67,12 +65,10 @@ typename ft::vector< Type, Allocator >	&vector< Type, Allocator >::operator=(con
 }
 
 // assign
-
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::assign(typename vector< Type, Allocator >::size_type count, const Type& value)
 {
-	// Put max_size here when its done
-	if (count > 9223372036854775807)
+	if (count > this->_alloc.max_size())
 	{
 		throw std::invalid_argument("cannot create std::vector larger than max_size()");
 		return ;
@@ -93,7 +89,6 @@ void	vector< Type, Allocator >::assign(typename vector< Type, Allocator >::size_
 }
 
 // get_allocator
-
 template< class Type, class Allocator >
 typename ft::vector< Type, Allocator >::allocator_type	vector< Type, Allocator >::get_allocator(void) const
 {
@@ -103,7 +98,6 @@ typename ft::vector< Type, Allocator >::allocator_type	vector< Type, Allocator >
 //// Element access ////
 
 // at
-
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::const_reference vector< Type, Allocator >::at( typename vector< Type, Allocator >::size_type pos ) const
 {
@@ -127,7 +121,6 @@ typename vector< Type, Allocator >::reference vector< Type, Allocator >::at( vec
 }
 
 // operator[]
-
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::const_reference	vector< Type, Allocator >::operator[](typename vector< Type, Allocator >::size_type pos) const
 {
@@ -145,7 +138,6 @@ typename vector< Type, Allocator >::reference	vector< Type, Allocator >::operato
 }
 
 // front
-
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::const_reference	vector< Type, Allocator >::front(void) const
 {
@@ -163,7 +155,6 @@ typename vector< Type, Allocator >::reference	vector< Type, Allocator >::front(v
 }
 
 // back
-
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::const_reference	vector< Type, Allocator >::back(void) const
 {
@@ -181,7 +172,6 @@ typename vector< Type, Allocator >::reference	vector< Type, Allocator >::back(vo
 }
 
 // data
-
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::const_pointer	vector< Type, Allocator >::data(void) const
 {
@@ -200,16 +190,38 @@ typename vector< Type, Allocator >::pointer	vector< Type, Allocator >::data(void
 
 //// Capacity ////
 
-// size
+// empty
+template< class Type, class Allocator >
+bool	vector< Type, Allocator >::empty(void)
+{
+	if (this->_vectorSize == 0)
+		return (true);
+	return (false);
+}
 
+// size
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::size(void) const
 {
 	return (this->_vectorSize);
 }
 
-// capacity
+// max_size
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::max_size(void) const
+{
+	return (this->_alloc.max_size());
+}
 
+// reserve
+template< class Type, class Allocator >
+void	vector< Type, Allocator >::reserve(typename vector< Type, Allocator >::size_type new_cap)
+{
+	(void)new_cap;
+	return ;
+}
+
+// capacity
 template< class Type, class Allocator >
 typename vector< Type, Allocator>::size_type	vector< Type, Allocator >::capacity(void) const
 {
@@ -219,7 +231,6 @@ typename vector< Type, Allocator>::size_type	vector< Type, Allocator >::capacity
 //// Modifiers ////
 
 // push_back
-
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::push_back(const Type& value)
 {
@@ -245,7 +256,6 @@ void	vector< Type, Allocator >::push_back(const Type& value)
 }
 
 // pop_back
-
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::pop_back(void)
 {

@@ -72,8 +72,17 @@ class vector
 
 		//// Capacity ////
 
+		// empty
+		bool	empty(void);
+
 		// size
 		size_type	size(void) const;
+
+		// max_size
+		size_type max_size() const;
+
+		// reserve
+		void reserve( size_type new_cap );
 
 		// capacity
 		size_type	capacity(void) const;

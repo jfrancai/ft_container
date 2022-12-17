@@ -1,3 +1,3 @@
 #!/bin/bash
 
-make retest && ./tests --gtest_also_run_disabled_tests
+make retest && ./tests #-gtest_also_run_disabled_tests
