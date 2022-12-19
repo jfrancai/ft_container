@@ -19,22 +19,14 @@ class vector
 		typedef typename Allocator::pointer			pointer;
 		typedef typename Allocator::const_pointer	const_pointer;
 
-	//// Put some test flag here
-		/*
-		 * Testing
-		 */
-
-		// Accessors
-		allocator_type	&getAlloc(void);
-	////
-
 		/*
 		 * Member functions
 		 */
 
 		// Constructors
-		vector(void);
+		explicit vector( const Allocator& alloc = Allocator());
 
+		// Destructor
 		~vector(void);
 
 		// operator=

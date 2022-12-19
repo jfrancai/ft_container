@@ -1,19 +1,6 @@
 namespace ft {
 
 /*
- * Testing
- */
-////////////////////////////////////////////
-// Accessors
-template< class Type, class Allocator >
-typename vector< Type, Allocator >::allocator_type	&vector< Type, Allocator >::getAlloc(void)
-{
-	return (this->_alloc);
-}
-
-////////////////////////////////////////////
-
-/*
  * Statics
  */
 
@@ -26,7 +13,8 @@ const typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::_
 
 // Constructors
 template< class Type, class Allocator >
-vector< Type, Allocator >::vector(void) :
+vector< Type, Allocator >::vector(const Allocator& alloc) :
+	_alloc(alloc),
 	_vectorCapacity(0),
 	_vectorSize(0),
 	_elements(0)
@@ -34,6 +22,7 @@ vector< Type, Allocator >::vector(void) :
 	return ;
 }
 
+// Destructor
 template< class Type, class Allocator >
 vector< Type, Allocator >::~vector(void)
 {
@@ -219,7 +208,19 @@ typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::max_siz
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::reserve(typename vector< Type, Allocator >::size_type new_cap)
 {
-	(void)new_cap;
+	if (new_cap <= this->_vectorCapacity)
+		return ;
+	if (new_cap > this->max_size())
+		throw std::length_error("vector::reserve");
+	pointer newElements = this->_alloc.allocate(new_cap);
+	for (size_type i = 0; i < this->_vectorSize; i++)
+	{
+		this->_alloc.construct(newElements + i, (*this)[i]);
+		this->_alloc.destroy(&(*this)[i]);
+	}
+	this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
+	this->_vectorCapacity = new_cap;
+	this->_elements = newElements;
 	return ;
 }
 
