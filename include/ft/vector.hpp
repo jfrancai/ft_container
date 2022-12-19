@@ -25,6 +25,7 @@ class vector
 
 		// Constructors
 		explicit vector( const Allocator& alloc = Allocator());
+		vector( const vector& other);
 
 		// Destructor
 		~vector(void);

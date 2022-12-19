@@ -22,6 +22,16 @@ vector< Type, Allocator >::vector(const Allocator& alloc) :
 	return ;
 }
 
+template< class Type, class Allocator >
+vector< Type, Allocator >::vector(const vector& rhs) :
+	_vectorCapacity(0),
+	_vectorSize(0),
+	_elements(0)
+{
+	(void)rhs;
+	return ;
+}
+
 // Destructor
 template< class Type, class Allocator >
 vector< Type, Allocator >::~vector(void)
@@ -42,8 +52,18 @@ typename ft::vector< Type, Allocator >	&vector< Type, Allocator >::operator=(con
 			this->_alloc.destroy(this->_elements + i);
 		if (this->_vectorCapacity != rhs.capacity())
 		{
+			pointer	pOrigin = this->_elements;
+			this->_elements = this->_alloc.allocate(rhs.capacity());
+			this->_alloc.deallocate(pOrigin, this->_vectorCapacity);
+			/*
+			 *
+			 * This would be dangerous behaviour since we deallocate memory 
+			 * of this object without knowing in advance if the allocation that
+			 * come next is going to work or not...
+			 *
 			this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
 			this->_elements = this->_alloc.allocate(rhs.capacity());
+			*/
 		}
 		this->_vectorSize = rhs.size();
 		for (size_type i = 0; i < this->_vectorSize; i++)
