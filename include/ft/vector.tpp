@@ -24,11 +24,12 @@ vector< Type, Allocator >::vector(const Allocator& alloc) :
 
 template< class Type, class Allocator >
 vector< Type, Allocator >::vector(const vector& rhs) :
-	_vectorCapacity(0),
-	_vectorSize(0),
-	_elements(0)
+	_vectorCapacity(rhs.capacity()),
+	_vectorSize(rhs.size()),
+	_elements(this->_alloc.allocate(this->_vectorCapacity))
 {
-	(void)rhs;
+	for (size_type i = 0; i < this->_vectorSize; i++)
+		this->_alloc.construct(this->_elements + i, rhs[i]);
 	return ;
 }
 

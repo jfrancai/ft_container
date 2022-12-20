@@ -3,6 +3,9 @@
 #include <iostream>
 #include <sstream>
 
+// Testing purpose
+#include <vector>
+
 namespace ft {
 
 template< class Type, class Allocator = std::allocator< Type > >
