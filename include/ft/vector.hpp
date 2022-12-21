@@ -28,6 +28,7 @@ class vector
 
 		// Constructors
 		explicit vector( const Allocator& alloc = Allocator());
+		explicit vector(size_type count, const Type& value = Type(), const Allocator& alloc = Allocator());
 		vector( const vector& other);
 
 		// Destructor

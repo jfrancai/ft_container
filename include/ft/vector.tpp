@@ -25,12 +25,29 @@ vector< Type, Allocator >::vector(const Allocator& alloc) :
 template< class Type, class Allocator >
 vector< Type, Allocator >::vector(const vector& rhs) :
 	_vectorCapacity(rhs.capacity()),
-	_vectorSize(rhs.size()),
-	_elements(this->_alloc.allocate(this->_vectorCapacity))
+	_vectorSize(rhs.size())
 {
+	if (this->_vectorSize)
+		this->_elements = this->_alloc.allocate(this->_vectorCapacity);
+	else
+		this->_elements = 0;
 	for (size_type i = 0; i < this->_vectorSize; i++)
 		this->_alloc.construct(this->_elements + i, rhs[i]);
+
 	return ;
+}
+
+template< class Type, class Allocator >
+vector< Type, Allocator >::vector(size_type count, const Type& value, const Allocator& alloc) :
+	_alloc(alloc),
+	_vectorCapacity(count),
+	_vectorSize(count)
+{
+	if (count > this->max_size())
+		throw std::length_error("cannot create std::vector larger than max_size()");
+	this->_elements = this->_alloc.allocate(count);
+	for (size_type i = 0; i < count; i++)
+		this->_alloc.construct(this->_elements + i, value);
 }
 
 // Destructor
@@ -40,6 +57,7 @@ vector< Type, Allocator >::~vector(void)
 	for (size_type i = 0; i < this->_vectorSize; i++)
 		this->_alloc.destroy(this->_elements + i);
 	this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
+
 	return ;
 }
 
@@ -71,6 +89,7 @@ typename ft::vector< Type, Allocator >	&vector< Type, Allocator >::operator=(con
 			this->_alloc.construct(this->_elements + i, rhs[i]);
 		this->_vectorCapacity = rhs.capacity();
 	}
+
 	return (*this);
 }
 
@@ -97,6 +116,7 @@ void	vector< Type, Allocator >::assign(typename vector< Type, Allocator >::size_
 	for (size_type i = 0; i < count; i++)
 		this->_alloc.construct(this->_elements + i, value);
 	this->_vectorSize = count;
+
 	return ; 
 }
 
