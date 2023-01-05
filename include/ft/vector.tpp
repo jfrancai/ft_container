@@ -28,7 +28,9 @@ vector< Type, Allocator >::vector(const vector& rhs) :
 	_vectorSize(rhs.size())
 {
 	if (this->_vectorSize)
+	{
 		this->_elements = this->_alloc.allocate(this->_vectorCapacity);
+	}
 	else
 		this->_elements = 0;
 	for (size_type i = 0; i < this->_vectorSize; i++)
@@ -218,6 +220,14 @@ typename vector< Type, Allocator >::pointer	vector< Type, Allocator >::data(void
 			static_cast< const ft::vector< Type, Allocator >& >(*this).data()
 		)
 	);
+}
+
+//// Iterators ////
+
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::iterator	vector< Type, Allocator >::begin(void)
+{
+	return (iterator(this->_elements));
 }
 
 //// Capacity ////
