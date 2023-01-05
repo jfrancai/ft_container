@@ -225,6 +225,12 @@ typename vector< Type, Allocator >::pointer	vector< Type, Allocator >::data(void
 //// Iterators ////
 
 template< class Type, class Allocator >
+typename vector< Type, Allocator >::const_iterator	vector< Type, Allocator >::begin(void) const
+{
+	return (const_iterator(this->_elements));
+}
+
+template< class Type, class Allocator >
 typename vector< Type, Allocator >::iterator	vector< Type, Allocator >::begin(void)
 {
 	return (iterator(this->_elements));

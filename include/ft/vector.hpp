@@ -11,20 +11,23 @@ namespace ft {
 
 template< class Type >
 class LegacyRandomAccessIterator;
+template< class Type >
+class ConstLegacyRandomAccessIterator;
 
 template< class Type, class Allocator = std::allocator< Type > >
 class vector
 {
 	public:
 		// Member types (aliases)
-		typedef Type 								value_type;
-		typedef Allocator 							allocator_type;
-		typedef std::size_t 						size_type;
-		typedef value_type&							reference;
-		typedef const value_type&					const_reference;
-		typedef typename Allocator::pointer			pointer;
-		typedef typename Allocator::const_pointer	const_pointer;
-		typedef LegacyRandomAccessIterator< Type >	iterator;
+		typedef Type 										value_type;
+		typedef Allocator 									allocator_type;
+		typedef std::size_t 								size_type;
+		typedef value_type&									reference;
+		typedef const value_type&							const_reference;
+		typedef typename Allocator::pointer					pointer;
+		typedef typename Allocator::const_pointer			const_pointer;
+		typedef LegacyRandomAccessIterator< Type >			iterator;
+		typedef LegacyRandomAccessIterator< const Type >	const_iterator;
 	
 		/*
 		 * Member functions
@@ -71,8 +74,8 @@ class vector
 
 		//// Iterators ////
 
+		const_iterator	begin(void) const;
 		iterator	begin(void);
-		//const_iterator begin(void) const;
 
 		//// Capacity ////
 
@@ -106,13 +109,13 @@ template< class Type >
 class	LegacyRandomAccessIterator
 {
 	public:
-		typedef std::random_access_iterator_tag		iterator_category;
-		typedef Type 								value_type;
-		typedef std::ptrdiff_t						difference_type;
-		typedef Type*								pointer;
-		typedef Type&								reference;
-		typedef LegacyRandomAccessIterator< Type >	iterator;
-
+		typedef std::random_access_iterator_tag				iterator_category;
+		typedef Type 										value_type;
+		typedef std::ptrdiff_t								difference_type;
+		typedef Type*										pointer;
+		typedef Type&										reference;
+		typedef LegacyRandomAccessIterator< Type >			iterator;
+		typedef LegacyRandomAccessIterator< const Type >	const_iterator;
 
 		// LegacyIterator
 		LegacyRandomAccessIterator< Type >(const iterator& other) : _ptr(other._ptr) {}
@@ -130,6 +133,7 @@ class	LegacyRandomAccessIterator
 		// LegacyOutputIterator
 
 		// LegacyForwardIterator
+		operator	const_iterator(void) const { return  LegacyRandomAccessIterator< const Type >(_ptr); }
 		explicit	LegacyRandomAccessIterator< Type >(pointer ptr = NULL) : _ptr(ptr) {}
 
 		// LegacyBidirectionalIterator
@@ -142,21 +146,23 @@ class	LegacyRandomAccessIterator
 		bool			operator<=(const iterator& rhs) const { return (this->_ptr <= rhs._ptr); }
 		bool			operator>=(const iterator& rhs) const { return (this->_ptr >= rhs._ptr); }
 		iterator		&operator+=(difference_type n) {  if (n >= 0) { while (n--) ++_ptr; } else { while(n++) --_ptr; } return (*this); }
-		iterator		operator+(difference_type n) { iterator it(*this); return (it += n); }
-		friend iterator	operator+(difference_type n, const iterator& rhs);
-
-		/*
-		iterator	&operator-=(difference_type n) {  if (n >= 0) { return (*this += -n); }
-		iterator	operator+(difference_type n) { iterator	temp; return (temp += n); }
-		*/
+		iterator		operator+(difference_type n) const { iterator it(*this); return (it += n); }
+		template< class DiffType, class IteType >
+		friend LegacyRandomAccessIterator< IteType >
+						operator+(DiffType n, const LegacyRandomAccessIterator< IteType >& rhs);
+		iterator		&operator-=(difference_type n) {  return (*this += -n); }
+		iterator		operator-(difference_type n) const { iterator	it(*this); return (it -= n); }
+		difference_type	operator-(iterator rhs) { return (this->_ptr - rhs._ptr); }
+		reference		operator[](difference_type n) const { return (*(this->_ptr + n)); };
 
 	private:
 		pointer	_ptr;
 };
 
-LegacyRandomAccessIterator< std::string >	operator+(std::ptrdiff_t n, const LegacyRandomAccessIterator< std::string >& rhs)
+template< class DiffType, class IteType >
+LegacyRandomAccessIterator< IteType >	operator+(DiffType n, const LegacyRandomAccessIterator< IteType >& rhs)
 {
-	LegacyRandomAccessIterator< std::string > it(rhs);
+	LegacyRandomAccessIterator< IteType > it(rhs);
 	it += n;
 	return (it);
 }
