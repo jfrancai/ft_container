@@ -224,6 +224,8 @@ typename vector< Type, Allocator >::pointer	vector< Type, Allocator >::data(void
 
 //// Iterators ////
 
+// begin
+
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::const_iterator	vector< Type, Allocator >::begin(void) const
 {
@@ -234,6 +236,19 @@ template< class Type, class Allocator >
 typename vector< Type, Allocator >::iterator	vector< Type, Allocator >::begin(void)
 {
 	return (iterator(this->_elements));
+}
+
+// end
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::const_iterator	vector< Type, Allocator >::end(void) const
+{
+	return (const_iterator(this->_elements + this->_vectorSize));
+}
+
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::iterator	vector< Type, Allocator >::end(void)
+{
+	return (iterator(this->_elements + this->_vectorSize));
 }
 
 //// Capacity ////
@@ -290,6 +305,39 @@ typename vector< Type, Allocator>::size_type	vector< Type, Allocator >::capacity
 
 //// Modifiers ////
 
+// clear
+template< class Type, class Allocator >
+void	vector< Type, Allocator >::clear(void)
+{
+	for(size_type i = 0; i < this->_vectorSize; i++)
+		this->_alloc.destroy(this->_elements + i);
+	this->_vectorSize = 0;
+	return ;
+}
+
+// erase
+template< class Type, class Allocator >
+typename vector< Type, Allocator>::iterator	vector< Type, Allocator >::erase(typename vector< Type, Allocator >::iterator first, typename vector< Type, Allocator >::iterator last)
+{
+	if (first == last)
+		return (first);
+    size_type num_elements = std::distance(first, last);
+    if (last != end())
+        std::copy(last, end(), first);
+    resize(size() - num_elements);
+	return (first);
+}
+
+template< class Type, class Allocator >
+typename vector< Type, Allocator>::iterator	vector< Type, Allocator >::erase(typename vector< Type, Allocator >::iterator pos)
+{
+	if (pos == this->end())
+		return (pos);
+	std::copy(pos + 1, this->end(), pos);
+	resize(this->size() - 1);
+	return (pos); 
+}
+
 // push_back
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::push_back(const Type& value)
@@ -323,6 +371,29 @@ void	vector< Type, Allocator >::pop_back(void)
 		return ;
 	this->_vectorSize--;
 	this->_alloc.destroy(this->_elements + this->_vectorSize);
+
+	return ;
+}
+
+// resize
+template< class Type, class Allocator >
+void	vector< Type, Allocator>::resize(typename vector< Type, Allocator >::size_type count, Type value)
+{
+	if (count > this->max_size())
+		throw std::length_error("vector::resize");
+	if (count < this->size())
+	{
+		for (iterator i = begin() + count; i != end(); ++i)
+			this->_alloc.destroy(i._ptr);
+	}
+	else if (count > size())
+	{
+		reserve(count);
+		for (iterator i = end(); i != begin() + count; ++i)
+			this->_alloc.construct(i._ptr, value);
+	}
+	this->_vectorSize = count;
+
 	return ;
 }
 

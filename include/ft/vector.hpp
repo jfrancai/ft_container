@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <iterator>
+#include <new>
 
 // Testing purpose
 #include <vector>
@@ -10,9 +11,7 @@
 namespace ft {
 
 template< class Type >
-class LegacyRandomAccessIterator;
-template< class Type >
-class ConstLegacyRandomAccessIterator;
+class	LegacyRandomAccessIterator;
 
 template< class Type, class Allocator = std::allocator< Type > >
 class vector
@@ -28,7 +27,7 @@ class vector
 		typedef typename Allocator::const_pointer			const_pointer;
 		typedef LegacyRandomAccessIterator< Type >			iterator;
 		typedef LegacyRandomAccessIterator< const Type >	const_iterator;
-	
+
 		/*
 		 * Member functions
 		 */
@@ -74,8 +73,13 @@ class vector
 
 		//// Iterators ////
 
+		// begin
 		const_iterator	begin(void) const;
 		iterator	begin(void);
+
+		// end
+		const_iterator	end(void) const;
+		iterator	end(void);
 
 		//// Capacity ////
 
@@ -95,8 +99,23 @@ class vector
 		size_type	capacity(void) const;
 
 		//// Modifiers ////
+
+		// clear
+		void	clear(void);
+
+		// erase
+		iterator	erase(iterator pos);
+		iterator	erase(iterator first, iterator last);
+
+		// push_back
 		void	push_back(const Type& value);
+
+		// pop_back
 		void	pop_back(void);
+
+		// resize
+		void	resize(size_type count, Type value = Type());
+
 	private:
 		allocator_type			_alloc;
 		static const size_type	_initialCapacity;
@@ -109,6 +128,9 @@ template< class Type >
 class	LegacyRandomAccessIterator
 {
 	public:
+		template< class IteType, class AllocatorType >
+		friend class vector;
+
 		typedef std::random_access_iterator_tag				iterator_category;
 		typedef Type 										value_type;
 		typedef std::ptrdiff_t								difference_type;
@@ -122,7 +144,7 @@ class	LegacyRandomAccessIterator
 		~LegacyRandomAccessIterator< Type >(void) {}
 		iterator		&operator=(const iterator& other) { this->_ptr = other._ptr; return (*this); }
 		iterator		&operator++(void) { ++_ptr; return (*this); }
-		value_type		operator*(void) const { return (*_ptr); }
+		reference		operator*(void) const { return (*_ptr); }
 
 		// LegacyInputIterator
 		iterator		operator++(int) { iterator it(_ptr); ++_ptr; return (it); }
@@ -147,9 +169,9 @@ class	LegacyRandomAccessIterator
 		bool			operator>=(const iterator& rhs) const { return (this->_ptr >= rhs._ptr); }
 		iterator		&operator+=(difference_type n) {  if (n >= 0) { while (n--) ++_ptr; } else { while(n++) --_ptr; } return (*this); }
 		iterator		operator+(difference_type n) const { iterator it(*this); return (it += n); }
-		template< class DiffType, class IteType >
+		template< class IteType >
 		friend LegacyRandomAccessIterator< IteType >
-						operator+(DiffType n, const LegacyRandomAccessIterator< IteType >& rhs);
+						operator+(difference_type n, const LegacyRandomAccessIterator< IteType >& rhs);
 		iterator		&operator-=(difference_type n) {  return (*this += -n); }
 		iterator		operator-(difference_type n) const { iterator	it(*this); return (it -= n); }
 		difference_type	operator-(iterator rhs) { return (this->_ptr - rhs._ptr); }
@@ -159,8 +181,8 @@ class	LegacyRandomAccessIterator
 		pointer	_ptr;
 };
 
-template< class DiffType, class IteType >
-LegacyRandomAccessIterator< IteType >	operator+(DiffType n, const LegacyRandomAccessIterator< IteType >& rhs)
+template< class IteType >
+LegacyRandomAccessIterator< IteType >	operator+(std::ptrdiff_t n, const LegacyRandomAccessIterator< IteType >& rhs)
 {
 	LegacyRandomAccessIterator< IteType > it(rhs);
 	it += n;
