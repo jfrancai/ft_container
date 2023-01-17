@@ -397,6 +397,18 @@ void	vector< Type, Allocator>::resize(typename vector< Type, Allocator >::size_t
 	return ;
 }
 
+// swap
+template< class Type, class Allocator >
+void	vector< Type, Allocator>::swap(vector< Type, Allocator > &other)
+{
+	std::swap(this->_vectorSize, other._vectorSize);
+	std::swap(this->_vectorCapacity, other._vectorCapacity);
+	std::swap(this->_elements, other._elements);
+	std::swap(this->_alloc, other._alloc);
+
+	return ;
+}
+
 /*
  * Non-member functions
  */

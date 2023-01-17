@@ -1,12 +1,9 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 #include <iostream>
-#include <sstream>
-#include <iterator>
-#include <new>
 
 // Testing purpose
-#include <vector>
+//#include <vector>
 
 namespace ft {
 
@@ -115,6 +112,9 @@ class vector
 
 		// resize
 		void	resize(size_type count, Type value = Type());
+
+		// swap
+		void	swap(vector< Type, Allocator > &other);
 
 	private:
 		allocator_type			_alloc;
