@@ -343,17 +343,14 @@ void	vector< Type, Allocator >::push_back(const Type& value)
 	if (_vectorSize == _vectorCapacity)
 	{
 		pointer newElements;
-		if (_vectorCapacity == 0)
-			newElements = _alloc.allocate(_initialCapacity);
-		else
-			newElements = _alloc.allocate(_vectorSize * 2);
+		newElements = _alloc.allocate(capacity() ? _vectorCapacity * 2 : _initialCapacity);
 		for (size_type i = 0; i < _vectorSize; i++)
 		{
 			_alloc.construct(newElements + i, (*this)[i]);
 			_alloc.destroy(_elements + i);
 		}
 		_alloc.deallocate(_elements, _vectorCapacity);
-		_vectorCapacity = _vectorCapacity ? _vectorCapacity * 2 : _initialCapacity;
+		_vectorCapacity = capacity() ? _vectorCapacity * 2 : _initialCapacity;
 		_elements = newElements;
 	}
 	_alloc.construct(_elements + _vectorSize, value);
@@ -413,7 +410,7 @@ typename vector< Type, Allocator >::iterator	vector< Type, Allocator>::insert(ty
 {
 	size_type	index = pos - begin();
 	if (size() == capacity())
-		reserve(capacity() ? 2 * capacity() : 1);
+		reserve(capacity() ? 2 * capacity() : _initialCapacity);
 	for (size_type i = size(); i > index; --i)
 		_elements[i] = _elements[i - 1];
 	_elements[index] = value;
