@@ -27,14 +27,12 @@ vector< Type, Allocator >::vector(const vector& rhs) :
 	_vectorCapacity(rhs.capacity()),
 	_vectorSize(rhs.size())
 {
-	if (this->_vectorSize)
-	{
-		this->_elements = this->_alloc.allocate(this->_vectorCapacity);
-	}
+	if (_vectorSize)
+		_elements = _alloc.allocate(_vectorCapacity);
 	else
-		this->_elements = 0;
-	for (size_type i = 0; i < this->_vectorSize; i++)
-		this->_alloc.construct(this->_elements + i, rhs[i]);
+		_elements = 0;
+	for (size_type i = 0; i < _vectorSize; i++)
+		_alloc.construct(_elements + i, rhs[i]);
 
 	return ;
 }
@@ -45,20 +43,20 @@ vector< Type, Allocator >::vector(size_type count, const Type& value, const Allo
 	_vectorCapacity(count),
 	_vectorSize(count)
 {
-	if (count > this->max_size())
+	if (count > max_size())
 		throw std::length_error("cannot create std::vector larger than max_size()");
-	this->_elements = this->_alloc.allocate(count);
+	_elements = _alloc.allocate(count);
 	for (size_type i = 0; i < count; i++)
-		this->_alloc.construct(this->_elements + i, value);
+		_alloc.construct(_elements + i, value);
 }
 
 // Destructor
 template< class Type, class Allocator >
 vector< Type, Allocator >::~vector(void)
 {
-	for (size_type i = 0; i < this->_vectorSize; i++)
-		this->_alloc.destroy(this->_elements + i);
-	this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
+	for (size_type i = 0; i < _vectorSize; i++)
+		_alloc.destroy(_elements + i);
+	_alloc.deallocate(_elements, _vectorCapacity);
 
 	return ;
 }
@@ -69,27 +67,27 @@ typename ft::vector< Type, Allocator >	&vector< Type, Allocator >::operator=(con
 {
 	if (this != &rhs)
 	{
-		for (size_type i = 0; i < this->_vectorSize; i++)
-			this->_alloc.destroy(this->_elements + i);
-		if (this->_vectorCapacity != rhs.capacity())
+		for (size_type i = 0; i < _vectorSize; i++)
+			_alloc.destroy(_elements + i);
+		if (_vectorCapacity != rhs.capacity())
 		{
-			pointer	pOrigin = this->_elements;
-			this->_elements = this->_alloc.allocate(rhs.capacity());
-			this->_alloc.deallocate(pOrigin, this->_vectorCapacity);
+			pointer	pOrigin = _elements;
+			_elements = _alloc.allocate(rhs.capacity());
+			_alloc.deallocate(pOrigin, _vectorCapacity);
 			/*
 			 *
 			 * This would be dangerous behaviour since we deallocate memory 
 			 * of this object without knowing in advance if the allocation that
 			 * come next is going to work or not...
 			 *
-			this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
-			this->_elements = this->_alloc.allocate(rhs.capacity());
+			_alloc.deallocate(_elements, _vectorCapacity);
+			_elements = _alloc.allocate(rhs.capacity());
 			*/
 		}
-		this->_vectorSize = rhs.size();
-		for (size_type i = 0; i < this->_vectorSize; i++)
-			this->_alloc.construct(this->_elements + i, rhs[i]);
-		this->_vectorCapacity = rhs.capacity();
+		_vectorSize = rhs.size();
+		for (size_type i = 0; i < _vectorSize; i++)
+			_alloc.construct(_elements + i, rhs[i]);
+		_vectorCapacity = rhs.capacity();
 	}
 
 	return (*this);
@@ -99,25 +97,25 @@ typename ft::vector< Type, Allocator >	&vector< Type, Allocator >::operator=(con
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::assign(typename vector< Type, Allocator >::size_type count, const Type& value)
 {
-	if (count > this->_alloc.max_size())
+	if (count > _alloc.max_size())
 	{
 		throw std::invalid_argument("cannot create std::vector larger than max_size()");
 		return ;
 	}
-	for (size_type i = 0; i < this->_vectorSize; i++)
-		this->_alloc.destroy(this->_elements + i);
-	if (this->_vectorCapacity < count)
+	for (size_type i = 0; i < _vectorSize; i++)
+		_alloc.destroy(_elements + i);
+	if (_vectorCapacity < count)
 	{
-		this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
-		if (this->_vectorCapacity == 0)
-			this->_vectorCapacity = 1;
-		while (this->_vectorCapacity < count)
-			this->_vectorCapacity *= 2;
-		this->_elements = this->_alloc.allocate(this->_vectorCapacity);
+		_alloc.deallocate(_elements, _vectorCapacity);
+		if (_vectorCapacity == 0)
+			_vectorCapacity = 1;
+		while (_vectorCapacity < count)
+			_vectorCapacity *= 2;
+		_elements = _alloc.allocate(_vectorCapacity);
 	}
 	for (size_type i = 0; i < count; i++)
-		this->_alloc.construct(this->_elements + i, value);
-	this->_vectorSize = count;
+		_alloc.construct(_elements + i, value);
+	_vectorSize = count;
 
 	return ; 
 }
@@ -126,7 +124,7 @@ void	vector< Type, Allocator >::assign(typename vector< Type, Allocator >::size_
 template< class Type, class Allocator >
 typename ft::vector< Type, Allocator >::allocator_type	vector< Type, Allocator >::get_allocator(void) const
 {
-	return (this->_alloc);
+	return (_alloc);
 }
 
 //// Element access ////
@@ -135,10 +133,10 @@ typename ft::vector< Type, Allocator >::allocator_type	vector< Type, Allocator >
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::const_reference vector< Type, Allocator >::at( typename vector< Type, Allocator >::size_type pos ) const
 {
-	if (pos >= this->size())
+	if (pos >= size())
 	{
 		std::ostringstream errorMsg;
-		errorMsg << "vector::_M_range_check: __n (which is " << pos << ") >= this->size() (which is " << this->size() << ")";
+		errorMsg << "vector::_M_range_check: __n (which is " << pos << ") >= size() (which is " << size() << ")";
 		throw std::out_of_range(errorMsg.str());
 	}
 	return ((*this)[pos]);
@@ -158,7 +156,7 @@ typename vector< Type, Allocator >::reference vector< Type, Allocator >::at( vec
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::const_reference	vector< Type, Allocator >::operator[](typename vector< Type, Allocator >::size_type pos) const
 {
-	return (this->_elements[pos]);
+	return (_elements[pos]);
 }
 
 template< class Type, class Allocator >
@@ -192,7 +190,7 @@ typename vector< Type, Allocator >::reference	vector< Type, Allocator >::front(v
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::const_reference	vector< Type, Allocator >::back(void) const
 {
-	return ((*this)[this->_vectorSize - 1]);
+	return ((*this)[_vectorSize - 1]);
 }
 
 template< class Type, class Allocator >
@@ -209,7 +207,7 @@ typename vector< Type, Allocator >::reference	vector< Type, Allocator >::back(vo
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::const_pointer	vector< Type, Allocator >::data(void) const
 {
-	return (this->_elements);
+	return (_elements);
 }
 
 template< class Type, class Allocator >
@@ -229,26 +227,26 @@ typename vector< Type, Allocator >::pointer	vector< Type, Allocator >::data(void
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::const_iterator	vector< Type, Allocator >::begin(void) const
 {
-	return (const_iterator(this->_elements));
+	return (const_iterator(_elements));
 }
 
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::iterator	vector< Type, Allocator >::begin(void)
 {
-	return (iterator(this->_elements));
+	return (iterator(_elements));
 }
 
 // end
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::const_iterator	vector< Type, Allocator >::end(void) const
 {
-	return (const_iterator(this->_elements + this->_vectorSize));
+	return (const_iterator(_elements + _vectorSize));
 }
 
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::iterator	vector< Type, Allocator >::end(void)
 {
-	return (iterator(this->_elements + this->_vectorSize));
+	return (iterator(_elements + _vectorSize));
 }
 
 //// Capacity ////
@@ -257,7 +255,7 @@ typename vector< Type, Allocator >::iterator	vector< Type, Allocator >::end(void
 template< class Type, class Allocator >
 bool	vector< Type, Allocator >::empty(void)
 {
-	if (this->_vectorSize == 0)
+	if (_vectorSize == 0)
 		return (true);
 	return (false);
 }
@@ -266,33 +264,33 @@ bool	vector< Type, Allocator >::empty(void)
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::size(void) const
 {
-	return (this->_vectorSize);
+	return (_vectorSize);
 }
 
 // max_size
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::max_size(void) const
 {
-	return (this->_alloc.max_size());
+	return (_alloc.max_size());
 }
 
 // reserve
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::reserve(typename vector< Type, Allocator >::size_type new_cap)
 {
-	if (new_cap <= this->_vectorCapacity)
+	if (new_cap <= _vectorCapacity)
 		return ;
-	if (new_cap > this->max_size())
+	if (new_cap > max_size())
 		throw std::length_error("vector::reserve");
-	pointer newElements = this->_alloc.allocate(new_cap);
-	for (size_type i = 0; i < this->_vectorSize; i++)
+	pointer newElements = _alloc.allocate(new_cap);
+	for (size_type i = 0; i < _vectorSize; i++)
 	{
-		this->_alloc.construct(newElements + i, (*this)[i]);
-		this->_alloc.destroy(&(*this)[i]);
+		_alloc.construct(newElements + i, (*this)[i]);
+		_alloc.destroy(&(*this)[i]);
 	}
-	this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
-	this->_vectorCapacity = new_cap;
-	this->_elements = newElements;
+	_alloc.deallocate(_elements, _vectorCapacity);
+	_vectorCapacity = new_cap;
+	_elements = newElements;
 	return ;
 }
 
@@ -300,7 +298,7 @@ void	vector< Type, Allocator >::reserve(typename vector< Type, Allocator >::size
 template< class Type, class Allocator >
 typename vector< Type, Allocator>::size_type	vector< Type, Allocator >::capacity(void) const
 {
-	return (this->_vectorCapacity);
+	return (_vectorCapacity);
 }
 
 //// Modifiers ////
@@ -309,9 +307,9 @@ typename vector< Type, Allocator>::size_type	vector< Type, Allocator >::capacity
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::clear(void)
 {
-	for(size_type i = 0; i < this->_vectorSize; i++)
-		this->_alloc.destroy(this->_elements + i);
-	this->_vectorSize = 0;
+	for(size_type i = 0; i < _vectorSize; i++)
+		_alloc.destroy(_elements + i);
+	_vectorSize = 0;
 	return ;
 }
 
@@ -331,10 +329,10 @@ typename vector< Type, Allocator>::iterator	vector< Type, Allocator >::erase(typ
 template< class Type, class Allocator >
 typename vector< Type, Allocator>::iterator	vector< Type, Allocator >::erase(typename vector< Type, Allocator >::iterator pos)
 {
-	if (pos == this->end())
+	if (pos == end())
 		return (pos);
-	std::copy(pos + 1, this->end(), pos);
-	resize(this->size() - 1);
+	std::copy(pos + 1, end(), pos);
+	resize(size() - 1);
 	return (pos); 
 }
 
@@ -342,24 +340,24 @@ typename vector< Type, Allocator>::iterator	vector< Type, Allocator >::erase(typ
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::push_back(const Type& value)
 {
-	if (this->_vectorSize == this->_vectorCapacity)
+	if (_vectorSize == _vectorCapacity)
 	{
 		pointer newElements;
-		if (this->_vectorCapacity == 0)
-			newElements = this->_alloc.allocate(this->_initialCapacity);
+		if (_vectorCapacity == 0)
+			newElements = _alloc.allocate(_initialCapacity);
 		else
-			newElements = this->_alloc.allocate(this->_vectorSize * 2);
-		for (size_type i = 0; i < this->_vectorSize; i++)
+			newElements = _alloc.allocate(_vectorSize * 2);
+		for (size_type i = 0; i < _vectorSize; i++)
 		{
-			this->_alloc.construct(newElements + i, (*this)[i]);
-			this->_alloc.destroy(this->_elements + i);
+			_alloc.construct(newElements + i, (*this)[i]);
+			_alloc.destroy(_elements + i);
 		}
-		this->_alloc.deallocate(this->_elements, this->_vectorCapacity);
-		this->_vectorCapacity = this->_vectorCapacity ? this->_vectorCapacity * 2 : this->_initialCapacity;
-		this->_elements = newElements;
+		_alloc.deallocate(_elements, _vectorCapacity);
+		_vectorCapacity = _vectorCapacity ? _vectorCapacity * 2 : _initialCapacity;
+		_elements = newElements;
 	}
-	this->_alloc.construct(this->_elements + this->_vectorSize, value);
-	this->_vectorSize++;
+	_alloc.construct(_elements + _vectorSize, value);
+	_vectorSize++;
 	return ;
 }
 
@@ -367,10 +365,10 @@ void	vector< Type, Allocator >::push_back(const Type& value)
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::pop_back(void)
 {
-	if (this->_vectorSize == 0)
+	if (_vectorSize == 0)
 		return ;
-	this->_vectorSize--;
-	this->_alloc.destroy(this->_elements + this->_vectorSize);
+	_vectorSize--;
+	_alloc.destroy(_elements + _vectorSize);
 
 	return ;
 }
