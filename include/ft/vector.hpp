@@ -120,6 +120,9 @@ class vector
 		// swap
 		void	swap(vector< Type, Allocator > &other);
 
+		// insert
+		iterator	insert(const_iterator pos, const Type &value);
+
 	private:
 		allocator_type			_alloc;
 		static const size_type	_initialCapacity;

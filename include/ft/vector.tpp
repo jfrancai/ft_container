@@ -377,36 +377,50 @@ void	vector< Type, Allocator >::pop_back(void)
 
 // resize
 template< class Type, class Allocator >
-void	vector< Type, Allocator>::resize(typename vector< Type, Allocator >::size_type count, Type value)
+void	vector< Type, Allocator >::resize(typename vector< Type, Allocator >::size_type count, Type value)
 {
-	if (count > this->max_size())
+	if (count > max_size())
 		throw std::length_error("vector::resize");
-	if (count < this->size())
+	if (count < size())
 	{
 		for (iterator i = begin() + count; i != end(); ++i)
-			this->_alloc.destroy(i._ptr);
+			_alloc.destroy(i._ptr);
 	}
 	else if (count > size())
 	{
 		reserve(count);
 		for (iterator i = end(); i != begin() + count; ++i)
-			this->_alloc.construct(i._ptr, value);
+			_alloc.construct(i._ptr, value);
 	}
-	this->_vectorSize = count;
+	_vectorSize = count;
 
 	return ;
 }
 
 // swap
 template< class Type, class Allocator >
-void	vector< Type, Allocator>::swap(vector< Type, Allocator > &other)
+void	vector< Type, Allocator >::swap(vector< Type, Allocator > &other)
 {
-	std::swap(this->_vectorSize, other._vectorSize);
-	std::swap(this->_vectorCapacity, other._vectorCapacity);
-	std::swap(this->_elements, other._elements);
-	std::swap(this->_alloc, other._alloc);
+	std::swap(_vectorSize, other._vectorSize);
+	std::swap(_vectorCapacity, other._vectorCapacity);
+	std::swap(_elements, other._elements);
+	std::swap(_alloc, other._alloc);
 
 	return ;
+}
+
+//insert
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::iterator	vector< Type, Allocator>::insert(typename vector< Type, Allocator >::const_iterator pos, const Type &value)
+{
+	size_type	index = pos - begin();
+	if (size() == capacity())
+		reserve(capacity() ? 2 * capacity() : 1);
+	for (size_type i = size(); i > index; --i)
+		_elements[i] = _elements[i - 1];
+	_elements[index] = value;
+	++_vectorSize;
+	return (iterator(_elements + index));
 }
 
 /*
