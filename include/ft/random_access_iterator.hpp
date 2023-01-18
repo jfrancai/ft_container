@@ -20,8 +20,8 @@ class	LegacyRandomAccessIterator
 		typedef LegacyRandomAccessIterator< const Type >	const_iterator;
 
 		// LegacyIterator
-		LegacyRandomAccessIterator< Type >(const iterator& other) : _ptr(other._ptr) {}
-		~LegacyRandomAccessIterator< Type >(void) {}
+		LegacyRandomAccessIterator(const iterator& other) : _ptr(other._ptr) {}
+		~LegacyRandomAccessIterator(void) {}
 		iterator		&operator=(const iterator& other) { this->_ptr = other._ptr; return (*this); }
 		iterator		&operator++(void) { ++_ptr; return (*this); }
 		reference		operator*(void) const { return (*_ptr); }
@@ -36,7 +36,7 @@ class	LegacyRandomAccessIterator
 
 		// LegacyForwardIterator
 		operator	const_iterator(void) const { return  LegacyRandomAccessIterator< const Type >(_ptr); }
-		explicit	LegacyRandomAccessIterator< Type >(pointer ptr = NULL) : _ptr(ptr) {}
+		explicit	LegacyRandomAccessIterator(pointer ptr = NULL) : _ptr(ptr) {}
 
 		// LegacyBidirectionalIterator
 		iterator		&operator--(void) { --_ptr; return (*this); }

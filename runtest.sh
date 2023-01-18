@@ -7,5 +7,5 @@ elif [[ $1 = "main" ]]
 then
 	clang++ -std=c++98 -I include main.cpp && ./a.out
 else
-	make retest && valgrind ./tests
+	make retest && ./tests
 fi

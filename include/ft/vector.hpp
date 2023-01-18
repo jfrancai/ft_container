@@ -2,6 +2,7 @@
 #define VECTOR_HPP
 #include <iostream>
 #include <ft/random_access_iterator.hpp>
+#include <ft/reverse_iterator.hpp>
 
 // Testing purpose
 //#include <vector>
@@ -14,6 +15,7 @@ template< class Type, class Allocator = std::allocator< Type > >
 class vector
 {
 	public:
+
 		// Member types (aliases)
 		typedef Type 										value_type;
 		typedef Allocator 									allocator_type;
@@ -24,6 +26,8 @@ class vector
 		typedef typename Allocator::const_pointer			const_pointer;
 		typedef LegacyRandomAccessIterator< Type >			iterator;
 		typedef LegacyRandomAccessIterator< const Type >	const_iterator;
+		typedef ft::reverse_iterator< iterator >			reverse_iterator;
+//		typedef ft::reverse_iterator< const_iterator >		const_reverse_iterator;
 
 		/*
 		 * Member functions
