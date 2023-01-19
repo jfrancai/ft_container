@@ -79,6 +79,61 @@ class vector
 		pointer 				_elements;
 };
 
+template < typename Type >
+bool	operator<(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
+{
+	if (lhs.size() < rhs.size())
+		return (true);
+	if (rhs.size() < lhs.size())
+		return (false);
+
+	for (std::size_t i = 0; i < lhs.size(); i++)
+	{
+		if (lhs[i] < rhs[i])
+			return (true);
+		if (rhs[i] < lhs[i])
+			return (false);
+	}
+	return (false);
+}
+
+template < typename Type >
+bool	operator>(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
+{
+	return (rhs < lhs);
+}
+
+template < typename Type >
+bool	operator>=(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
+{
+	return (!(lhs < rhs));
+}
+
+template < typename Type >
+bool	operator<=(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
+{
+	return (!(rhs < lhs));
+}
+
+template < typename Type >
+bool	operator==(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
+{
+	if (lhs.size() != rhs.size())
+		return (false);
+	for (std::size_t i = 0; i < lhs.size(); i++)
+	{
+		if (lhs[i] != rhs[i])
+			return (false);
+	}
+	return (true);
+}
+
+template < typename Type >
+bool	operator!=(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
+{
+	return (!(lhs == rhs));
+}
+
 } // namespace ft
 
 #include "vector.tpp"
