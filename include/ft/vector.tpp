@@ -278,7 +278,7 @@ typename vector< Type, Allocator >::size_type	vector< Type, Allocator >::max_siz
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::reserve(typename vector< Type, Allocator >::size_type new_cap)
 {
-	if (new_cap <= _vectorCapacity)
+	if (new_cap <= capacity())
 		return ;
 	if (new_cap > max_size())
 		throw std::length_error("vector::reserve");
@@ -291,6 +291,7 @@ void	vector< Type, Allocator >::reserve(typename vector< Type, Allocator >::size
 	_alloc.deallocate(_elements, _vectorCapacity);
 	_vectorCapacity = new_cap;
 	_elements = newElements;
+
 	return ;
 }
 
@@ -313,16 +314,82 @@ void	vector< Type, Allocator >::clear(void)
 	return ;
 }
 
+//insert
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::iterator	vector< Type, Allocator>::insert(typename vector< Type, Allocator >::const_iterator pos, const Type &value)
+{
+	size_type	index = pos - begin();
+	if (size() == capacity())
+		reserve(capacity() ? 2 * capacity() : _initialCapacity);
+	for (size_type i = size(); i > index; --i)
+		_elements[i] = _elements[i - 1];
+	_elements[index] = value;
+	++_vectorSize;
+
+	return (iterator(_elements + index));
+}
+
+template< class Type, class Allocator >
+void	vector< Type, Allocator>::insert(typename vector< Type, Allocator >::const_iterator pos, typename vector< Type, Allocator >::size_type count, const Type &value)
+{
+	size_type	index = pos - begin();
+	if (size() + count > capacity())
+		reserve(std::max(capacity() * 2, size() + count));
+	for (size_type i = size(); i > index; --i)
+		_elements[i + count - 1] = _elements[i - 1];
+	for (size_type i = 0; i < count; ++i)
+		_elements[index + i] = value;
+	_vectorSize += count;
+
+	return ;
+}
+
+template< class Type, class Allocator >
+template < typename  InputIt >
+void	vector< Type, Allocator >::insert(typename vector< Type, Allocator >::const_iterator pos, InputIt first, InputIt last)
+{
+	size_type	index = pos - begin();
+	size_type	count = 0;
+	for (InputIt it = first; it != last; ++it)
+		++count;
+	if (count + size() > capacity())
+	{
+		size_type new_cap = std::max(capacity() * 2, size() + count);
+		pointer newElements = _alloc.allocate(new_cap);
+		for (size_type i = 0; i < _vectorSize; i++)
+			_alloc.construct(newElements + i, (*this)[i]);
+		for (size_type i = _vectorSize; i > index; --i)
+			newElements[i + count - 1] = _elements[i - 1];
+		for (size_type i = 0; i < count; ++i)
+			newElements[index + i] = *(first++);
+		for (size_type i = 0; i < _vectorSize; i++)
+			_alloc.destroy(&(*this)[i]);
+		_alloc.deallocate(_elements, _vectorCapacity);
+		_vectorCapacity = new_cap;
+		_elements = newElements;
+	}
+	else
+	{
+		for (size_type i = _vectorSize; i > index; --i)
+			_elements[i + count - 1] = _elements[i - 1];
+		for (size_type i = 0; i < count; ++i)
+			_elements[index + i] = *(first++);
+	}
+	_vectorSize += count;
+
+	return ;
+}
+
 // erase
 template< class Type, class Allocator >
 typename vector< Type, Allocator>::iterator	vector< Type, Allocator >::erase(typename vector< Type, Allocator >::iterator first, typename vector< Type, Allocator >::iterator last)
 {
 	if (first == last)
 		return (first);
-    size_type num_elements = std::distance(first, last);
-    if (last != end())
-        std::copy(last, end(), first);
-    resize(size() - num_elements);
+	size_type num_elements = std::distance(first, last);
+	if (last != end())
+		std::copy(last, end(), first);
+	resize(size() - num_elements);
 	return (first);
 }
 
@@ -378,14 +445,14 @@ void	vector< Type, Allocator >::resize(typename vector< Type, Allocator >::size_
 		throw std::length_error("vector::resize");
 	if (count < size())
 	{
-		for (iterator i = begin() + count; i != end(); ++i)
-			_alloc.destroy(i._ptr);
+		for (iterator it = begin() + count; it != end(); ++it)
+			_alloc.destroy(it._ptr);
 	}
 	else if (count > size())
 	{
 		reserve(count);
-		for (iterator i = end(); i != begin() + count; ++i)
-			_alloc.construct(i._ptr, value);
+		for (iterator it = end(); it != begin() + count; ++it)
+			_alloc.construct(it._ptr, value);
 	}
 	_vectorSize = count;
 
@@ -402,20 +469,6 @@ void	vector< Type, Allocator >::swap(vector< Type, Allocator > &other)
 	std::swap(_alloc, other._alloc);
 
 	return ;
-}
-
-//insert
-template< class Type, class Allocator >
-typename vector< Type, Allocator >::iterator	vector< Type, Allocator>::insert(typename vector< Type, Allocator >::const_iterator pos, const Type &value)
-{
-	size_type	index = pos - begin();
-	if (size() == capacity())
-		reserve(capacity() ? 2 * capacity() : _initialCapacity);
-	for (size_type i = size(); i > index; --i)
-		_elements[i] = _elements[i - 1];
-	_elements[index] = value;
-	++_vectorSize;
-	return (iterator(_elements + index));
 }
 
 /*

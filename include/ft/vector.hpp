@@ -10,7 +10,6 @@ template< class Type, class Allocator = std::allocator< Type > >
 class vector
 {
 	public:
-
 		// Member types (aliases)
 		typedef Type 										value_type;
 		typedef Allocator 									allocator_type;
@@ -60,13 +59,17 @@ class vector
 
 		//// Modifiers ////
 		void					clear(void);
+		iterator				insert(const_iterator pos, const Type &value);
+		void					insert(const_iterator pos, size_type count, const Type &value);
+		template < class InputIt >
+		void					insert(const_iterator pos, InputIt first, InputIt last);
+
 		iterator				erase(iterator pos);
 		iterator				erase(iterator first, iterator last);
 		void					push_back(const Type& value);
 		void					pop_back(void);
 		void					resize(size_type count, Type value = Type());
 		void					swap(vector< Type, Allocator > &other);
-		iterator				insert(const_iterator pos, const Type &value);
 
 	private:
 		allocator_type			_alloc;
