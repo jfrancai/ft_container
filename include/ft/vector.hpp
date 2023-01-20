@@ -49,6 +49,10 @@ class vector
 		iterator				begin(void);
 		const_iterator			end(void) const;
 		iterator				end(void);
+		reverse_iterator		rbegin(void);
+		const_reverse_iterator	rbegin(void) const;
+		reverse_iterator		rend(void) ;
+		const_reverse_iterator	rend(void) const;
 
 		//// Capacity ////
 		bool					empty(void);

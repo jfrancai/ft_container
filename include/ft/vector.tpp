@@ -249,6 +249,33 @@ typename vector< Type, Allocator >::iterator	vector< Type, Allocator >::end(void
 	return (iterator(_elements + _vectorSize));
 }
 
+// rbegin
+
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::const_reverse_iterator	vector< Type, Allocator >::rbegin(void) const
+{
+	return (const_reverse_iterator(end()));
+}
+
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::reverse_iterator	vector< Type, Allocator >::rbegin(void)
+{
+	return (reverse_iterator(end()));
+}
+
+// rend
+
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::reverse_iterator	vector< Type, Allocator >::rend(void)
+{
+	return (reverse_iterator(begin()));
+}
+
+template< class Type, class Allocator >
+typename vector< Type, Allocator >::const_reverse_iterator	vector< Type, Allocator >::rend(void) const
+{
+	return (const_reverse_iterator(begin()));
+}
 //// Capacity ////
 
 // empty
