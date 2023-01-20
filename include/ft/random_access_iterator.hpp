@@ -47,27 +47,17 @@ class	LegacyRandomAccessIterator
 		bool			operator>(const iterator& rhs) const { return (this->_ptr > rhs._ptr); }
 		bool			operator<=(const iterator& rhs) const { return (this->_ptr <= rhs._ptr); }
 		bool			operator>=(const iterator& rhs) const { return (this->_ptr >= rhs._ptr); }
-		iterator		&operator+=(difference_type n) {  if (n >= 0) { while (n--) ++_ptr; } else { while(n++) --_ptr; } return (*this); }
-		iterator		operator+(difference_type n) const { iterator it(*this); return (it += n); }
-		template< class IteType >
-		friend LegacyRandomAccessIterator< IteType >
-						operator+(difference_type n, const LegacyRandomAccessIterator< IteType >& rhs);
+		iterator		&operator+=(difference_type n) {  _ptr += n; return (*this); }
+		iterator		operator+(difference_type n) const { return (iterator(_ptr + n)); }
+		friend iterator	operator+(difference_type n, const iterator& rhs) { return (iterator(rhs + n)); }
 		iterator		&operator-=(difference_type n) {  return (*this += -n); }
-		iterator		operator-(difference_type n) const { iterator	it(*this); return (it -= n); }
+		iterator		operator-(difference_type n) const { return (iterator(_ptr - n)); }
 		difference_type	operator-(iterator rhs) { return (this->_ptr - rhs._ptr); }
 		reference		operator[](difference_type n) const { return (*(this->_ptr + n)); };
 
 	private:
 		pointer	_ptr;
 };
-
-template< class IteType >
-LegacyRandomAccessIterator< IteType >	operator+(std::ptrdiff_t n, const LegacyRandomAccessIterator< IteType >& rhs)
-{
-	LegacyRandomAccessIterator< IteType > it(rhs);
-	it += n;
-	return (it);
-}
 
 } // namespace ft
 

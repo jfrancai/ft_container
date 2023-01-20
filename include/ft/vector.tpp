@@ -412,7 +412,7 @@ template< class Type, class Allocator >
 typename vector< Type, Allocator>::iterator	vector< Type, Allocator >::erase(typename vector< Type, Allocator >::iterator first, typename vector< Type, Allocator >::iterator last)
 {
 	if (first == last)
-		return (first);
+		return (last);
 	size_type num_elements = std::distance(first, last);
 	if (last != end())
 		std::copy(last, end(), first);
