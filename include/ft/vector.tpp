@@ -463,11 +463,7 @@ void	vector< Type, Allocator >::resize(typename vector< Type, Allocator >::size_
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::swap(vector< Type, Allocator > &other)
 {
-	std::swap(_vectorSize, other._vectorSize);
-	std::swap(_vectorCapacity, other._vectorCapacity);
-	std::swap(_elements, other._elements);
-	std::swap(_alloc, other._alloc);
-
+	ft::swap(*this, other);
 	return ;
 }
 

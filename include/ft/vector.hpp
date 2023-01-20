@@ -134,6 +134,14 @@ bool	operator!=(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
 	return (!(lhs == rhs));
 }
 
+template< class Type, class Allocator >
+void	swap(ft::vector< Type, Allocator > &x, ft::vector< Type, Allocator > &y)
+{
+	ft::vector< Type, Allocator > tmp(x);
+	x = y;
+	y = tmp;
+}
+
 } // namespace ft
 
 #include "vector.tpp"
