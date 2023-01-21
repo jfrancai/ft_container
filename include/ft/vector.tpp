@@ -136,7 +136,7 @@ typename vector< Type, Allocator >::const_reference vector< Type, Allocator >::a
 	if (pos >= size())
 	{
 		std::ostringstream errorMsg;
-		errorMsg << "vector::_M_range_check: __n (which is " << pos << ") >= size() (which is " << size() << ")";
+		errorMsg << "vector::_M_range_check: __n (which is " << pos << ") >= this->size() (which is " << size() << ")";
 		throw std::out_of_range(errorMsg.str());
 	}
 	return ((*this)[pos]);
@@ -280,7 +280,7 @@ typename vector< Type, Allocator >::const_reverse_iterator	vector< Type, Allocat
 
 // empty
 template< class Type, class Allocator >
-bool	vector< Type, Allocator >::empty(void)
+bool	vector< Type, Allocator >::empty(void) const
 {
 	if (_vectorSize == 0)
 		return (true);

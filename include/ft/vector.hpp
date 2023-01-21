@@ -1,6 +1,7 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 #include <iostream>
+#include <sstream>
 #include <ft/random_access_iterator.hpp>
 #include <ft/reverse_iterator.hpp>
 
@@ -55,7 +56,7 @@ class vector
 		const_reverse_iterator	rend(void) const;
 
 		//// Capacity ////
-		bool					empty(void);
+		bool					empty(void) const;
 		size_type				size(void) const;
 		size_type				max_size() const;
 		void					reserve( size_type new_cap );
