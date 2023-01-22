@@ -1,21 +1,35 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   reverse_iterator.hpp                               :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jfrancai <jfrancai@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/18 11:47:07 by jfrancai          #+#    #+#             */
-/*   Updated: 2023/01/18 12:39:36 by jfrancai         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#ifndef REVERSE_ITERATOR
-#define REVERSE_ITERATOR
+#ifndef ITERATOR
+#define ITERATOR
 #include <iostream>
-#include <ft/iterator_traits.hpp>
 
 namespace ft {
+
+template <typename Iterator>
+struct iterator_traits {
+	typedef typename Iterator::iterator_category	iterator_category;
+	typedef typename Iterator::value_type			value_type;
+	typedef typename Iterator::difference_type		difference_type;
+	typedef typename Iterator::pointer				pointer;
+	typedef typename Iterator::reference			reference;
+};
+
+template <typename T>
+struct iterator_traits<T*> {
+	typedef std::random_access_iterator_tag	iterator_category;
+	typedef T								value_type;
+	typedef std::ptrdiff_t					difference_type;
+	typedef T*								pointer;
+	typedef T&								reference;
+};
+
+template <typename T>
+struct iterator_traits<const T*> {
+	typedef std::random_access_iterator_tag	iterator_category;
+	typedef T								value_type;
+	typedef std::ptrdiff_t					difference_type;
+	typedef const T*						pointer;
+	typedef const T&						reference;
+};
 
 template<class Iterator >
 class reverse_iterator

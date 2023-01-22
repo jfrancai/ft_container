@@ -24,11 +24,11 @@ vector< Type, Allocator >::vector(const Allocator& alloc) :
 
 template< class Type, class Allocator >
 vector< Type, Allocator >::vector(const vector& rhs) :
-	_vectorCapacity(rhs.capacity()),
+	_vectorCapacity(rhs.size()),
 	_vectorSize(rhs.size())
 {
 	if (_vectorSize)
-		_elements = _alloc.allocate(_vectorCapacity);
+		_elements = _alloc.allocate(_vectorSize);
 	else
 		_elements = 0;
 	for (size_type i = 0; i < _vectorSize; i++)
@@ -69,10 +69,10 @@ typename ft::vector< Type, Allocator >	&vector< Type, Allocator >::operator=(con
 	{
 		for (size_type i = 0; i < _vectorSize; i++)
 			_alloc.destroy(_elements + i);
-		if (_vectorCapacity != rhs.capacity())
+		if (_vectorCapacity != rhs.size())
 		{
 			pointer	pOrigin = _elements;
-			_elements = _alloc.allocate(rhs.capacity());
+			_elements = _alloc.allocate(rhs.size());
 			_alloc.deallocate(pOrigin, _vectorCapacity);
 			/*
 			 *
@@ -87,7 +87,7 @@ typename ft::vector< Type, Allocator >	&vector< Type, Allocator >::operator=(con
 		_vectorSize = rhs.size();
 		for (size_type i = 0; i < _vectorSize; i++)
 			_alloc.construct(_elements + i, rhs[i]);
-		_vectorCapacity = rhs.capacity();
+		_vectorCapacity = rhs.size();
 	}
 
 	return (*this);
@@ -98,26 +98,22 @@ template< class Type, class Allocator >
 void	vector< Type, Allocator >::assign(typename vector< Type, Allocator >::size_type count, const Type& value)
 {
 	if (count > _alloc.max_size())
-	{
 		throw std::invalid_argument("cannot create std::vector larger than max_size()");
-		return ;
-	}
-	for (size_type i = 0; i < _vectorSize; i++)
-		_alloc.destroy(_elements + i);
-	if (_vectorCapacity < count)
-	{
-		_alloc.deallocate(_elements, _vectorCapacity);
-		if (_vectorCapacity == 0)
-			_vectorCapacity = 1;
-		while (_vectorCapacity < count)
-			_vectorCapacity *= 2;
-		_elements = _alloc.allocate(_vectorCapacity);
-	}
-	for (size_type i = 0; i < count; i++)
-		_alloc.construct(_elements + i, value);
-	_vectorSize = count;
+	clear();
+	resize(count, value);
 
 	return ; 
+}
+
+// assign
+template< class Type, class Allocator >
+template< class InputIt >
+void	vector< Type, Allocator >::assign(InputIt first, InputIt last)
+{
+	clear();
+	insert(begin(), first, last);
+
+	return ;
 }
 
 // get_allocator
@@ -490,7 +486,21 @@ void	vector< Type, Allocator >::resize(typename vector< Type, Allocator >::size_
 template< class Type, class Allocator >
 void	vector< Type, Allocator >::swap(vector< Type, Allocator > &other)
 {
-	ft::swap(*this, other);
+	ft::vector< Type, Allocator >::pointer d(data());
+	ft::vector< Type, Allocator >::size_type c(capacity());
+	ft::vector< Type, Allocator >::size_type s(size());
+	ft::vector< Type, Allocator >::allocator_type a(get_allocator());
+
+	_vectorCapacity = other.capacity();
+	_vectorSize = other.size();
+	_elements = other.data();
+	_alloc = other.get_allocator();
+
+	other._vectorCapacity = c;
+	other._vectorSize = s;
+	other._alloc = a;
+	other._elements = d;
+
 	return ;
 }
 
