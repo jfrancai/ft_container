@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <iterator.hpp>
+#include <type_traits.hpp>
 
 namespace ft {
 
@@ -29,12 +30,15 @@ class vector
 		explicit vector( const Allocator& alloc = Allocator());
 		explicit vector(size_type count, const Type& value = Type(), const Allocator& alloc = Allocator());
 		vector( const vector& other);
-		~vector(void);
+		template< class InputIt >
+		vector(InputIt first, InputIt last, const Allocator &alloc = Allocator());
 
+		~vector(void);
 		vector&					operator=(const vector& other);
 		void					assign(size_type count, const Type& value);
+		
 		template< class InputIt >
-		void					assign(InputIt first, InputIt last);
+		void assign(InputIt first, InputIt last, typename ft::enable_if< !ft::is_integral< InputIt >::value, InputIt >::value* =0);
 		allocator_type			get_allocator(void) const;
 
 		//// Element access ////
@@ -71,7 +75,7 @@ class vector
 		iterator				insert(const_iterator pos, const Type &value);
 		void					insert(const_iterator pos, size_type count, const Type &value);
 		template < class InputIt >
-		void					insert(const_iterator pos, InputIt first, InputIt last);
+		void					insert(const_iterator pos, InputIt first, InputIt last, typename ft::enable_if< !ft::is_integral< InputIt >::value, InputIt >::value* =0);
 		iterator				erase(iterator pos);
 		iterator				erase(iterator first, iterator last);
 		void					push_back(const Type& value);
@@ -216,6 +220,7 @@ void	swap(ft::LegacyRandomAccessIterator< Type > &x, ft::LegacyRandomAccessItera
 	x = y;
 	y = tmp;
 }
+
 
 } // namespace ft
 

@@ -23,16 +23,26 @@ vector< Type, Allocator >::vector(const Allocator& alloc) :
 }
 
 template< class Type, class Allocator >
-vector< Type, Allocator >::vector(const vector& rhs) :
-	_vectorCapacity(rhs.size()),
-	_vectorSize(rhs.size())
+vector< Type, Allocator >::vector(const vector &rhs) :
+	_alloc(rhs.get_allocator()),
+	_vectorCapacity(0),
+	_vectorSize(0),
+	_elements(0)
 {
-	if (_vectorSize)
-		_elements = _alloc.allocate(_vectorSize);
-	else
-		_elements = 0;
-	for (size_type i = 0; i < _vectorSize; i++)
-		_alloc.construct(_elements + i, rhs[i]);
+	insert(begin(), rhs.begin(), rhs.end());
+
+	return ;
+}
+
+template< class Type, class Allocator >
+template< class InputIt >
+vector< Type, Allocator >::vector(InputIt first, InputIt last, const Allocator &alloc) :
+	_alloc(alloc),
+	_vectorCapacity(0),
+	_vectorSize(0),
+	_elements(0)
+{
+	insert(begin(), first, last);
 
 	return ;
 }
@@ -40,14 +50,13 @@ vector< Type, Allocator >::vector(const vector& rhs) :
 template< class Type, class Allocator >
 vector< Type, Allocator >::vector(size_type count, const Type& value, const Allocator& alloc) :
 	_alloc(alloc),
-	_vectorCapacity(count),
-	_vectorSize(count)
+	_vectorCapacity(0),
+	_vectorSize(0),
+	_elements(0)
 {
 	if (count > max_size())
 		throw std::length_error("cannot create std::vector larger than max_size()");
-	_elements = _alloc.allocate(count);
-	for (size_type i = 0; i < count; i++)
-		_alloc.construct(_elements + i, value);
+	insert(begin(), count, value);
 }
 
 // Destructor
@@ -66,29 +75,7 @@ template< class Type, class Allocator >
 typename ft::vector< Type, Allocator >	&vector< Type, Allocator >::operator=(const typename ft::vector< Type, Allocator >	&rhs)
 {
 	if (this != &rhs)
-	{
-		for (size_type i = 0; i < _vectorSize; i++)
-			_alloc.destroy(_elements + i);
-		if (_vectorCapacity != rhs.size())
-		{
-			pointer	pOrigin = _elements;
-			_elements = _alloc.allocate(rhs.size());
-			_alloc.deallocate(pOrigin, _vectorCapacity);
-			/*
-			 *
-			 * This would be dangerous behaviour since we deallocate memory 
-			 * of this object without knowing in advance if the allocation that
-			 * come next is going to work or not...
-			 *
-			_alloc.deallocate(_elements, _vectorCapacity);
-			_elements = _alloc.allocate(rhs.capacity());
-			*/
-		}
-		_vectorSize = rhs.size();
-		for (size_type i = 0; i < _vectorSize; i++)
-			_alloc.construct(_elements + i, rhs[i]);
-		_vectorCapacity = rhs.size();
-	}
+		assign(rhs.begin(), rhs.end());
 
 	return (*this);
 }
@@ -108,7 +95,7 @@ void	vector< Type, Allocator >::assign(typename vector< Type, Allocator >::size_
 // assign
 template< class Type, class Allocator >
 template< class InputIt >
-void	vector< Type, Allocator >::assign(InputIt first, InputIt last)
+void	vector< Type, Allocator >::assign(InputIt first, InputIt last, typename ft::enable_if< !ft::is_integral< InputIt >::value, InputIt >::value*)
 {
 	clear();
 	insert(begin(), first, last);
@@ -357,7 +344,7 @@ void	vector< Type, Allocator>::insert(typename vector< Type, Allocator >::const_
 {
 	size_type	index = pos - begin();
 	if (size() + count > capacity())
-		reserve(std::max(capacity() * 2, size() + count));
+		reserve(capacity() + count);
 	for (size_type i = size(); i > index; --i)
 		_elements[i + count - 1] = _elements[i - 1];
 	for (size_type i = 0; i < count; ++i)
@@ -369,15 +356,13 @@ void	vector< Type, Allocator>::insert(typename vector< Type, Allocator >::const_
 
 template< class Type, class Allocator >
 template < typename  InputIt >
-void	vector< Type, Allocator >::insert(typename vector< Type, Allocator >::const_iterator pos, InputIt first, InputIt last)
+void	vector< Type, Allocator >::insert(typename vector< Type, Allocator >::const_iterator pos, InputIt first, InputIt last, typename ft::enable_if< !ft::is_integral< InputIt >::value, InputIt >::value*)
 {
 	size_type	index = pos - begin();
-	size_type	count = 0;
-	for (InputIt it = first; it != last; ++it)
-		++count;
+	size_type	count = std::distance(first, last);
 	if (count + size() > capacity())
 	{
-		size_type new_cap = std::max(capacity() * 2, size() + count);
+		size_type new_cap = size() + count;
 		pointer newElements = _alloc.allocate(new_cap);
 		for (size_type i = 0; i < _vectorSize; i++)
 			_alloc.construct(newElements + i, (*this)[i]);
@@ -431,18 +416,7 @@ template< class Type, class Allocator >
 void	vector< Type, Allocator >::push_back(const Type& value)
 {
 	if (_vectorSize == _vectorCapacity)
-	{
-		pointer newElements;
-		newElements = _alloc.allocate(capacity() ? _vectorCapacity * 2 : _initialCapacity);
-		for (size_type i = 0; i < _vectorSize; i++)
-		{
-			_alloc.construct(newElements + i, (*this)[i]);
-			_alloc.destroy(_elements + i);
-		}
-		_alloc.deallocate(_elements, _vectorCapacity);
-		_vectorCapacity = capacity() ? _vectorCapacity * 2 : _initialCapacity;
-		_elements = newElements;
-	}
+		reserve(capacity() ? _vectorCapacity * 2 : _initialCapacity);
 	_alloc.construct(_elements + _vectorSize, value);
 	_vectorSize++;
 	return ;
