@@ -13,7 +13,6 @@ struct enable_if< true, T >
 	typedef T value;
 };
 
-
 template < typename T>
 struct is_integral
 {
