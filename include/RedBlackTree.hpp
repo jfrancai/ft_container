@@ -108,6 +108,20 @@ class RedBlackTree
 				return;
 		}
 
+		void	leftRightRotate(node_pointer z)
+		{
+			node_pointer	x = z->left;
+			leftRotate(x);
+			rightRotate(z);
+		}
+
+		void	rightLeftRotate(node_pointer z)
+		{
+			node_pointer	x = z->right;
+			rightRotate(x);
+			leftRotate(z);
+		}
+
 		node_pointer	getRoot(void) const {
 			return (_root);
 		}
