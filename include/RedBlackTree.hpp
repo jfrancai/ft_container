@@ -36,6 +36,93 @@ class RedBlackTree
 		}
 		~RedBlackTree(void) {}
 
+		bool	checkerHelper(node_pointer node, bool &status)
+		{
+			if (status)
+				return (status);
+			if (node->color && (node->right->color || node->left->color))
+			{
+				status = true;
+				return (status);
+			}
+			if (node != _NILL)
+			{
+				checkerHelper(node->left, status);
+				checkerHelper(node->right, status);
+			}
+			return (status);
+		}
+
+		bool	depthHelper(node_pointer node, bool &status, int &depth, int &maxDepth)
+		{
+			if (status)
+				return (status);
+			if (node == _NILL)
+			{
+				if (depth != maxDepth)
+					status = true;
+				return (status);
+			}
+			if (node != _NILL)
+			{
+				if (node->color == false)
+					depth++;
+				depthHelper(node->left, status, depth, maxDepth);
+				depthHelper(node->right, status, depth, maxDepth);
+				if (node->color == false)
+					depth--;
+			}
+			return (status);
+		}
+
+		int	maxDepthHelper(node_pointer node)
+		{
+			int depth = 0;
+			while(node != _NILL)
+			{
+				if (node->color == false)
+					depth++;
+				node = node->left;
+			}
+			return (depth);
+		}
+
+		bool	checker(node_pointer root)
+		{
+			if (root->color)
+			{
+				std::cout << "root is black" << std::endl;
+				printTree();
+				return (false);
+			}
+			if (_NILL->color)
+			{
+				std::cout << "_NILL is black" << std::endl;
+				printTree();
+				return (false);
+			}
+			bool status = false;
+			if (checkerHelper(_root, status))
+			{
+				std::cout << "The children of red nodes are always black." << std::endl;
+				printTree();
+				return (false);
+			}
+			status = false;
+			int maxDepth = maxDepthHelper(_root);
+			int depth = 0;
+			if (depthHelper(_root, status, depth, maxDepth))
+			{
+				std::cout << "Depth property violated." << std::endl;
+				std::cout << "depth = " << depth << std::endl;
+				std::cout << "maxDepth = " << maxDepth << std::endl;
+				printTree();
+				return (false);
+			}
+
+			return (true);
+		}
+
 		void	rightRotate(node_pointer y)
 		{
 			node_pointer x = y->left;
@@ -70,9 +157,65 @@ class RedBlackTree
 			x->parent = y;
 		}
 
+		void	insertFix(node_pointer k)
+		{
+			node_pointer	u;
+
+			while (k->parent->color)
+			{
+				if (k->parent == k->parent->parent->right)
+				{
+					u = k->parent->parent->left;
+					if (u->color)
+					{
+						u->color = false;
+						k->parent->color = false;
+						k->parent->parent->color = true;
+						k = k->parent->parent;
+					}
+					else
+					{
+						if (k == k->parent->left)
+						{
+							k = k->parent;
+							rightRotate(k);
+						}
+						k->parent->color = false;
+						k->parent->parent->color = true;
+						leftRotate(k->parent->parent);
+					}
+				}
+				else
+				{
+					u = k->parent->parent->right;
+
+					if (u->color)
+					{
+						u->color = false;
+						k->parent->color = false;
+						k->parent->parent->color = true;
+						k = k->parent->parent;
+					}
+					else
+					{
+						if (k == k->parent->right)
+						{
+							k = k->parent;
+							leftRotate(k);
+						}
+						k->parent->color = false;
+						k->parent->parent->color = 1;
+						rightRotate(k->parent->parent);
+					}
+				}
+				if (k == _root)
+					break;
+			}
+			_root->color = false;
+		}
+
 		void	insert(const_reference key)
 		{
-
 			node_pointer node = new node_type;
 			node->parent = NULL;
 			node->data = key;
@@ -106,28 +249,42 @@ class RedBlackTree
 			}
 			if (node->parent->parent == NULL)
 				return;
-		}
-
-		void	leftRightRotate(node_pointer z)
-		{
-			node_pointer	x = z->left;
-			leftRotate(x);
-			rightRotate(z);
-		}
-
-		void	rightLeftRotate(node_pointer z)
-		{
-			node_pointer	x = z->right;
-			rightRotate(x);
-			leftRotate(z);
+			insertFix(node);
 		}
 
 		node_pointer	getRoot(void) const {
 			return (_root);
 		}
+
+		void	printTree(void)
+		{
+			if (_root)
+				printHelper(_root, "", true);
+		}
 		//RedBlackTree(RedBlackTree const &src);
 		//RedBlackTree	&operator=(RedBlackTree const &rhs);
 	private:
+		void	printHelper(node_pointer root, std::string indent, bool last)
+		{
+			if (root != _NILL)
+			{
+				std::cout << indent;
+				if (last)
+				{
+					std::cout << "R----";
+					indent += "   ";
+				}
+				else
+				{
+					std::cout << "L----";
+					indent += "|  ";
+				}
+				std::string sColor = root->color ? "RED" : "BLACK";
+				std::cout << root->data << "(" << sColor << ")" << std::endl;
+				printHelper(root->left, indent, false);
+				printHelper(root->right, indent, true);
+			}
+		}
 		node_pointer	_NILL;
 		node_pointer	_root;
 };
