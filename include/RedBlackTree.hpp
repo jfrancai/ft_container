@@ -252,6 +252,147 @@ class RedBlackTree
 			insertFix(node);
 		}
 
+		void	transplantNode(node_pointer x, node_pointer y)
+		{
+			if (x->parent == NULL)
+				_root = y;
+			else if (x == x->parent->left)
+				x->parent->left = y;
+			else
+				x->parent->right = y;
+			y->parent = x->parent;
+		}
+
+		node_pointer minimum(node_pointer node)
+		{
+			while (node->left != _NILL)
+				node = node->left;
+			return (node);
+		}
+
+		node_pointer maximum(node_pointer node)
+		{
+			while (node->right != _NILL)
+				node = node->right;
+			return (node);
+		}
+
+		void deleteFix(node_pointer x)
+		{
+			node_pointer	s;
+			while (x != _root && x->color == false)
+			{
+				if (x == x->parent->left)
+				{
+					s = x->parent->right;
+					if (s->color == true)
+					{
+						s->color = false;
+						x->parent->color = true;
+						leftRotate(x->parent);
+						s = x->parent->right;
+					}
+					if (s->left->color == false && s->right->color == false)
+					{
+						s->color = true;
+						x = x->parent;
+					}
+					else
+					{
+						if (s->right->color == false)
+						{
+							s->left->color = false;
+							s->color = true;
+							rightRotate(s);
+							s = x->parent->right;
+						}
+						s->color = x->parent->color;
+						x->parent->color = false;
+						s->right->color = false;
+						leftRotate(x->parent);
+						x = _root;
+					}
+				}
+				else
+				{
+					s = x->parent->left;
+					if (s->color == true)
+					{
+						s->color = false;
+						x->parent->color = true;
+						rightRotate(x->parent);
+						s = x->parent->left;
+					}
+					if (s->right->color == false && s->right->color == false)
+					{
+						s->color = true;
+						x = x->parent;
+					}
+					else
+					{
+						if (s->left->color == false)
+						{
+							s->right->color = false;
+							s->color = true;
+							leftRotate(s);
+							s = x->parent->left;
+						}
+						s->color = x->parent->color;
+						x->parent->color = 0;
+						s->left->color = 0;
+						rightRotate(x->parent);
+						x = _root;
+					}
+				}
+			}
+			x->color = false;
+		}
+
+		void	deleteNode(value_type data)
+		{
+			node_pointer	node = searchTree(_root, data);
+
+			if (node == _NILL)
+			{
+				std::cout << "Key is not in the tree" << std::endl;
+				return ;
+			}
+			node_pointer	x;
+			node_pointer	y;
+			int	original_color = node->color;
+			if (node->left == _NILL)
+			{
+				x = node->right;
+				transplantNode(node, node->right);
+			}
+			else if (node->right == _NILL)
+			{
+				x = node->left;
+				transplantNode(node, node->left);
+			}
+			else
+			{
+				y = minimum(node->right);
+				original_color = y->color;
+				x = y->right;
+				if (y->parent == node)
+					x->parent = y;
+				else
+				{
+					transplantNode(y, y->right);
+					y->right = node->right;
+					y->right->parent = y;
+				}
+				transplantNode(node, y);
+				y->left = node->left;
+				y->left->parent = y;
+				y->color = node->color;
+			}
+			delete node;
+			if (original_color == false)
+				deleteFix(x);
+		}
+
 		node_pointer	getRoot(void) const {
 			return (_root);
 		}
@@ -260,6 +401,15 @@ class RedBlackTree
 		{
 			if (_root)
 				printHelper(_root, "", true);
+		}
+
+		node_pointer	searchTree(node_pointer node, value_type key)
+		{
+			if (node == _NILL || key == node->data)
+				return (node);
+			if (key < node->data)
+				return (searchTree(node->left, key));
+			return (searchTree(node->right, key));
 		}
 		//RedBlackTree(RedBlackTree const &src);
 		//RedBlackTree	&operator=(RedBlackTree const &rhs);
