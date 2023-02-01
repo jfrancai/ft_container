@@ -11,6 +11,27 @@ struct Node {
 	Node< Type >	*left;
 	Node< Type >	*right;
 	bool			color;
+
+	Node(const Type &d = Type(), bool c = false) : 
+		data(d),
+		parent(NULL),
+		left(NULL),
+		right(NULL),
+		color(c)
+	{}
+	~Node()
+	{
+		if (left)
+		{
+			delete left;
+			left = NULL;
+		}
+		if (right)
+		{
+			delete right;
+			right = NULL;
+		}
+	}
 };
 
 template< typename Type >
@@ -26,15 +47,51 @@ class RedBlackTree
 		typedef node_type				*node_pointer;
 		typedef node_type				&node_reference;
 
+
+		~RedBlackTree(void) {}
 		RedBlackTree(void)
 		{
-			_NILL = new Node< Type >;
-			_NILL->color = false;
-			_NILL->left = NULL;
-			_NILL->right = NULL;
+			_NILL = getNewNode();
 			_root = _NILL;
 		}
-		~RedBlackTree(void) {}
+
+		RedBlackTree(RedBlackTree const &src)
+		{
+			_NILL = getNewNode();
+			_root = cloneBinaryTree(src.getRoot(), src._NILL, _NILL);
+		}
+
+		node_pointer	getNewNode(Type data = Type())
+		{
+			node_pointer newNode = new node_type(data);
+			return (newNode);
+		}
+
+		node_pointer cloneBinaryTree(node_pointer node, node_pointer stop, node_pointer null)
+		{
+			if (node == stop)
+				return (null);
+			node_pointer newNode = getNewNode(node->data);
+			newNode->left = cloneBinaryTree(node->left, stop, null);
+			newNode->right = cloneBinaryTree(node->right, stop, null);
+			return (newNode);
+		}
+
+		void	deleteNode(node_pointer node)
+		{
+			node->left = NULL;
+			node->right = NULL;
+			delete node;
+		}
+
+		RedBlackTree	&operator=(RedBlackTree const &rhs)
+		{
+			if (_root)
+				delete _root;
+			_NILL = getNewNode();
+			_root = cloneBinaryTree(rhs.getRoot(), rhs._NILL, _NILL);
+			return (*this);
+		}
 
 		bool	checkerHelper(node_pointer node, bool &status)
 		{
@@ -263,14 +320,14 @@ class RedBlackTree
 			y->parent = x->parent;
 		}
 
-		node_pointer minimum(node_pointer node)
+		node_pointer minimum(node_pointer node) const
 		{
-			while (node->left != _NILL)
+			while (node && node->left != _NILL)
 				node = node->left;
 			return (node);
 		}
 
-		node_pointer maximum(node_pointer node)
+		node_pointer maximum(node_pointer node) const
 		{
 			while (node->right != _NILL)
 				node = node->right;
@@ -388,13 +445,41 @@ class RedBlackTree
 				y->left->parent = y;
 				y->color = node->color;
 			}
-			delete node;
+			deleteNode(node);
 			if (original_color == false)
 				deleteFix(x);
 		}
 
 		node_pointer	getRoot(void) const {
 			return (_root);
+		}
+
+		node_pointer	predecessor(node_pointer x) const
+		{
+			if (x->left != _NILL)
+				return (maximum(x->left));
+
+			node_pointer y = x->parent;
+			while (y != _NILL && x == y->left)
+			{
+				x = y;
+				y = y->parent;
+			}
+			return (y);
+		}
+
+		node_pointer	successor(node_pointer x) const
+		{
+			if (x->right != _NILL)
+				return (minimum(x->right));
+
+			node_pointer y = x->parent;
+			while (y != _NILL && x == y->right)
+			{
+				x = y;
+				y = y->parent;
+			}
+			return (y);
 		}
 
 		void	printTree(void)
@@ -411,8 +496,6 @@ class RedBlackTree
 				return (searchTree(node->left, key));
 			return (searchTree(node->right, key));
 		}
-		//RedBlackTree(RedBlackTree const &src);
-		//RedBlackTree	&operator=(RedBlackTree const &rhs);
 	private:
 		void	printHelper(node_pointer root, std::string indent, bool last)
 		{
