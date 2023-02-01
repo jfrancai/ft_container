@@ -11,22 +11,25 @@ struct Node {
 	Node< Type >	*left;
 	Node< Type >	*right;
 	bool			color;
+	bool			isNILL;
 
-	Node(const Type &d = Type(), bool c = false) : 
+	Node(const Type &d = Type(), bool c = false, bool isN = false) : 
 		data(d),
 		parent(NULL),
 		left(NULL),
 		right(NULL),
-		color(c)
+		color(c),
+		isNILL(isN)
 	{}
+
 	~Node()
 	{
-		if (left)
+		if (left && !left->isNILL && !isNILL)
 		{
 			delete left;
 			left = NULL;
 		}
-		if (right)
+		if (right && !right->isNILL && !isNILL)
 		{
 			delete right;
 			right = NULL;
@@ -48,32 +51,38 @@ class RedBlackTree
 		typedef node_type				&node_reference;
 
 
-		~RedBlackTree(void) {}
+		~RedBlackTree(void) 
+		{
+			if (_root != _NILL)
+				delete _root;
+			delete _NILL;
+		}
+
 		RedBlackTree(void)
 		{
-			_NILL = getNewNode();
+			_NILL = getNewNode(Type(), false, true);
 			_root = _NILL;
 		}
 
 		RedBlackTree(RedBlackTree const &src)
 		{
-			_NILL = getNewNode();
-			_root = cloneBinaryTree(src.getRoot(), src._NILL, _NILL);
+			_NILL = getNewNode(Type(), false, true);
+			_root = cloneBinaryTree(src.getRoot(), src._NILL);
 		}
 
-		node_pointer	getNewNode(Type data = Type())
+		node_pointer	getNewNode(Type data = Type(), bool color = true, bool isNILL = false)
 		{
-			node_pointer newNode = new node_type(data);
+			node_pointer newNode = new node_type(data, color, isNILL);
 			return (newNode);
 		}
 
-		node_pointer cloneBinaryTree(node_pointer node, node_pointer stop, node_pointer null)
+		node_pointer cloneBinaryTree(node_pointer node, node_pointer stop)
 		{
-			if (node == stop)
-				return (null);
-			node_pointer newNode = getNewNode(node->data);
-			newNode->left = cloneBinaryTree(node->left, stop, null);
-			newNode->right = cloneBinaryTree(node->right, stop, null);
+			if (node->isNILL)
+				return (_NILL);
+			node_pointer newNode = getNewNode(node->data, node->color, node->isNILL);
+			newNode->left = cloneBinaryTree(node->left, stop);
+			newNode->right = cloneBinaryTree(node->right, stop);
 			return (newNode);
 		}
 
@@ -86,11 +95,30 @@ class RedBlackTree
 
 		RedBlackTree	&operator=(RedBlackTree const &rhs)
 		{
-			if (_root)
+			if (!_root->isNILL)
 				delete _root;
-			_NILL = getNewNode();
-			_root = cloneBinaryTree(rhs.getRoot(), rhs._NILL, _NILL);
+			_root = cloneBinaryTree(rhs.getRoot(), rhs._NILL);
 			return (*this);
+		}
+
+		bool	isIdentical(node_pointer root1, node_pointer root2) const
+		{
+			if (root1->isNILL && root2->isNILL)
+				return (true);
+			else if (root1->isNILL || root2->isNILL)
+				return (false);
+			else
+			{
+				if (root1->data == root2->data && isIdentical(root1->left, root2->left) && isIdentical(root1->right, root2->right))
+					return (true);
+				else
+					return (false);
+			}
+		}
+
+		bool	operator==(RedBlackTree const &rhs) const
+		{
+			return (isIdentical(this->getRoot(), rhs.getRoot()));
 		}
 
 		bool	checkerHelper(node_pointer node, bool &status)
@@ -102,7 +130,7 @@ class RedBlackTree
 				status = true;
 				return (status);
 			}
-			if (node != _NILL)
+			if (!node->isNILL)
 			{
 				checkerHelper(node->left, status);
 				checkerHelper(node->right, status);
@@ -114,13 +142,13 @@ class RedBlackTree
 		{
 			if (status)
 				return (status);
-			if (node == _NILL)
+			if (node->isNILL)
 			{
 				if (depth != maxDepth)
 					status = true;
 				return (status);
 			}
-			if (node != _NILL)
+			if (!node->isNILL)
 			{
 				if (node->color == false)
 					depth++;
@@ -135,7 +163,7 @@ class RedBlackTree
 		int	maxDepthHelper(node_pointer node)
 		{
 			int depth = 0;
-			while(node != _NILL)
+			while(!node->isNILL)
 			{
 				if (node->color == false)
 					depth++;
@@ -201,7 +229,7 @@ class RedBlackTree
 		{
 			node_pointer y = x->right;
 			x->right = y->left;
-			if (y->left != _NILL)
+			if (!y->left->isNILL)
 				y->left->parent = x;
 			y->parent = x->parent;
 			if (x->parent == NULL)
@@ -283,7 +311,7 @@ class RedBlackTree
 			node_pointer y = NULL;
 			node_pointer x = _root;
 
-			while (x != _NILL)
+			while (!x->isNILL)
 			{
 				y = x;
 				if (node->data < x->data)
@@ -322,14 +350,14 @@ class RedBlackTree
 
 		node_pointer minimum(node_pointer node) const
 		{
-			while (node && node->left != _NILL)
+			while (node && !node->left->isNILL)
 				node = node->left;
 			return (node);
 		}
 
 		node_pointer maximum(node_pointer node) const
 		{
-			while (node->right != _NILL)
+			while (!node->right->isNILL)
 				node = node->right;
 			return (node);
 		}
@@ -409,7 +437,7 @@ class RedBlackTree
 		{
 			node_pointer	node = searchTree(_root, data);
 
-			if (node == _NILL)
+			if (node->isNILL)
 			{
 				std::cout << "Key is not in the tree" << std::endl;
 				return ;
@@ -417,12 +445,12 @@ class RedBlackTree
 			node_pointer	x;
 			node_pointer	y;
 			int	original_color = node->color;
-			if (node->left == _NILL)
+			if (node->left->isNILL)
 			{
 				x = node->right;
 				transplantNode(node, node->right);
 			}
-			else if (node->right == _NILL)
+			else if (node->right->isNILL)
 			{
 				x = node->left;
 				transplantNode(node, node->left);
@@ -456,11 +484,11 @@ class RedBlackTree
 
 		node_pointer	predecessor(node_pointer x) const
 		{
-			if (x->left != _NILL)
+			if (!x->left->isNILL)
 				return (maximum(x->left));
 
 			node_pointer y = x->parent;
-			while (y != _NILL && x == y->left)
+			while (!y->isNILL && x == y->left)
 			{
 				x = y;
 				y = y->parent;
@@ -470,11 +498,11 @@ class RedBlackTree
 
 		node_pointer	successor(node_pointer x) const
 		{
-			if (x->right != _NILL)
+			if (!x->right->isNILL)
 				return (minimum(x->right));
 
 			node_pointer y = x->parent;
-			while (y != _NILL && x == y->right)
+			while (!y->isNILL && x == y->right)
 			{
 				x = y;
 				y = y->parent;
@@ -490,7 +518,7 @@ class RedBlackTree
 
 		node_pointer	searchTree(node_pointer node, value_type key)
 		{
-			if (node == _NILL || key == node->data)
+			if (node->isNILL || key == node->data)
 				return (node);
 			if (key < node->data)
 				return (searchTree(node->left, key));
@@ -499,7 +527,7 @@ class RedBlackTree
 	private:
 		void	printHelper(node_pointer root, std::string indent, bool last)
 		{
-			if (root != _NILL)
+			if (!root->isNILL)
 			{
 				std::cout << indent;
 				if (last)
