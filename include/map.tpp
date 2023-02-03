@@ -296,7 +296,11 @@ typename map< Key, Type, Compare, Allocator >::size_type	map< Key, Type, Compare
 template< class Key, class Type, class Compare, class Allocator >
 typename std::pair< typename map< Key, Type, Compare, Allocator >::iterator, bool >	map< Key, Type, Compare, Allocator >::insert(const typename map< Key, Type, Compare, Allocator >::value_type &value)
 {
-	_elements->insert(value);
+	typedef typename ft::RedBlackTree< typename ft::map< Key, Type, Compare, Allocator >::value_type >::node_pointer node_pointer;
+
+	node_pointer node = _elements->insert(value);
+	if (node == NULL)
+	LegacyBidirectionalIterator< node_pointer >	it(node);
 	return ();
 }
 

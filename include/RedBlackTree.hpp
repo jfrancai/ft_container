@@ -49,7 +49,7 @@ class RedBlackTree
 		typedef Node< Type >			node_type;
 		typedef node_type				*node_pointer;
 		typedef node_type				&node_reference;
-		typedef Compare					key_compare
+		typedef Compare					key_compare;
 
 		~RedBlackTree(void) 
 		{
@@ -299,7 +299,7 @@ class RedBlackTree
 			_root->color = false;
 		}
 
-		void	insert(const_reference key)
+		node_pointer	insert(const_reference key)
 		{
 			node_pointer node = new node_type;
 			node->parent = NULL;
@@ -314,7 +314,7 @@ class RedBlackTree
 			while (!x->isNILL)
 			{
 				y = x;
-				if (node->data < x->data)
+				if (_compare(node->data, x->data))
 					x = x->left;
 				else
 					x = x->right;
@@ -323,18 +323,19 @@ class RedBlackTree
 			node->parent = y;
 			if (y == NULL)
 				_root = node;
-			else if (node->data < y->data)
+			else if (_compare(node->data, y->data))
 				y->left = node;
 			else
 				y->right = node;
 			if (node->parent == NULL)
 			{
 				node->color = false;
-				return ;
+				return (node);
 			}
 			if (node->parent->parent == NULL)
-				return;
+				return (node);
 			insertFix(node);
+			return (node);
 		}
 
 		void	transplantNode(node_pointer x, node_pointer y)
@@ -548,6 +549,7 @@ class RedBlackTree
 		}
 		node_pointer	_NILL;
 		node_pointer	_root;
+		key_compare		_compare;
 };
 
 } //namespace

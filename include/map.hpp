@@ -91,9 +91,9 @@ template<
 		//void					swap(vector< Type, Allocator > &other);
 
 	private:
-		allocator_type				_alloc;
-		size_type					_mapSize;
-		RedBlackTree< value_type >	*_elements;
+		allocator_type					_alloc;
+		size_type						_mapSize;
+		ft::RedBlackTree< value_type >	*_elements;
 
 };
 
