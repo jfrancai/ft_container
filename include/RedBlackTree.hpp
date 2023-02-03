@@ -37,7 +37,7 @@ struct Node {
 	}
 };
 
-template< typename Type >
+template< typename Type, typename Compare = std::less< Type > >
 class RedBlackTree
 {
 	public:
@@ -49,7 +49,7 @@ class RedBlackTree
 		typedef Node< Type >			node_type;
 		typedef node_type				*node_pointer;
 		typedef node_type				&node_reference;
-
+		typedef Compare					key_compare
 
 		~RedBlackTree(void) 
 		{

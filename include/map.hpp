@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iterator.hpp>
 #include <type_traits.hpp>
+#include <RedBlackTree.hpp>
 
 namespace ft {
 
@@ -90,9 +91,10 @@ template<
 		//void					swap(vector< Type, Allocator > &other);
 
 	private:
-		allocator_type			_alloc;
-		size_type				_mapSize;
-		pointer 				_elements;
+		allocator_type				_alloc;
+		size_type					_mapSize;
+		RedBlackTree< value_type >	*_elements;
+
 };
 
 /*

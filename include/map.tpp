@@ -294,8 +294,9 @@ typename map< Key, Type, Compare, Allocator >::size_type	map< Key, Type, Compare
 
 //insert
 template< class Key, class Type, class Compare, class Allocator >
-typename std::pair< iterator, bool >	map< Key, Type, Compare, Allocator >::insert(const typename map< Key, Type, Compare, Allocator >::value_type &value);
+typename std::pair< typename map< Key, Type, Compare, Allocator >::iterator, bool >	map< Key, Type, Compare, Allocator >::insert(const typename map< Key, Type, Compare, Allocator >::value_type &value)
 {
+	_elements->insert(value);
 	return ();
 }
 
