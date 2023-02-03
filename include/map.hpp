@@ -6,6 +6,8 @@
 #include <type_traits.hpp>
 #include <RedBlackTree.hpp>
 
+#include <utility> // replace with utility .hpp (make_pair and pair template should be inside this header)
+
 namespace ft {
 
 template< class Type >
@@ -64,7 +66,7 @@ template<
 
 		////// Iterators ////
 		//const_iterator			begin(void) const;
-		//iterator				begin(void);
+		iterator				begin(void);
 		//const_iterator			end(void) const;
 		//iterator				end(void);
 		//reverse_iterator		rbegin(void);
@@ -93,7 +95,7 @@ template<
 	private:
 		allocator_type					_alloc;
 		size_type						_mapSize;
-		ft::RedBlackTree< value_type >	*_elements;
+		RedBlackTree< value_type >		_elements;
 
 };
 

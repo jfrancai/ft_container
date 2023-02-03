@@ -12,8 +12,7 @@ namespace ft {
 template< class Key, class Type, class Compare, class Allocator >
 map< Key, Type, Compare, Allocator >::map(const Allocator& alloc) :
 	_alloc(alloc),
-	_mapSize(0),
-	_elements(0)
+	_mapSize(0)
 {
 	return ;
 }
@@ -22,8 +21,7 @@ map< Key, Type, Compare, Allocator >::map(const Allocator& alloc) :
 //vector< Type, Allocator >::vector(const vector &rhs) :
 //	_alloc(rhs.get_allocator()),
 //	_vectorCapacity(0),
-//	_vectorSize(0),
-//	_elements(0)
+//	_vectorSize(0)
 //{
 //	insert(begin(), rhs.begin(), rhs.end());
 //
@@ -35,8 +33,7 @@ map< Key, Type, Compare, Allocator >::map(const Allocator& alloc) :
 //vector< Type, Allocator >::vector(InputIt first, InputIt last, const Allocator &alloc) :
 //	_alloc(alloc),
 //	_vectorCapacity(0),
-//	_vectorSize(0),
-//	_elements(0)
+//	_vectorSize(0)
 //{
 //	insert(begin(), first, last);
 //
@@ -47,8 +44,7 @@ map< Key, Type, Compare, Allocator >::map(const Allocator& alloc) :
 //vector< Type, Allocator >::vector(size_type count, const Type& value, const Allocator& alloc) :
 //	_alloc(alloc),
 //	_vectorCapacity(0),
-//	_vectorSize(0),
-//	_elements(0)
+//	_vectorSize(0)
 //{
 //	if (count > max_size())
 //		throw std::length_error("cannot create std::vector larger than max_size()");
@@ -200,21 +196,23 @@ typename map< Key, Type, Compare, Allocator >::allocator_type	map< Key, Type, Co
 //}
 //
 ////// Iterators ////
-//
-//// begin
-//
-//template< class Type, class Allocator >
-//typename vector< Type, Allocator >::const_iterator	vector< Type, Allocator >::begin(void) const
-//{
-//	return (const_iterator(_elements));
-//}
-//
-//template< class Type, class Allocator >
-//typename vector< Type, Allocator >::iterator	vector< Type, Allocator >::begin(void)
-//{
-//	return (iterator(_elements));
-//}
-//
+
+// begin
+
+/*
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator >::const_iterator	map< Key, Type, Compare, Allocator>::begin(void) const
+{
+	return (const_iterator(_elements));
+}
+*/
+
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator>::begin(void)
+{
+	return (iterator((_elements.minimum())->data));
+}
+
 //// end
 //template< class Type, class Allocator >
 //typename vector< Type, Allocator >::const_iterator	vector< Type, Allocator >::end(void) const
@@ -296,12 +294,12 @@ typename map< Key, Type, Compare, Allocator >::size_type	map< Key, Type, Compare
 template< class Key, class Type, class Compare, class Allocator >
 typename std::pair< typename map< Key, Type, Compare, Allocator >::iterator, bool >	map< Key, Type, Compare, Allocator >::insert(const typename map< Key, Type, Compare, Allocator >::value_type &value)
 {
-	typedef typename ft::RedBlackTree< typename ft::map< Key, Type, Compare, Allocator >::value_type >::node_pointer node_pointer;
+	std::pair< typename ft::RedBlackTree< typename ft::map< Key, Type, Compare, Allocator >::value_type >::node_pointer, bool > pair = _elements.insert(value);
 
-	node_pointer node = _elements->insert(value);
-	if (node == NULL)
-	LegacyBidirectionalIterator< node_pointer >	it(node);
-	return ();
+	LegacyBidirectionalIterator< map< Key, Type, Compare, Allocator >::value_type >	it(&pair.first->data);
+	if (pair.second)
+		_mapSize++;
+	return (std::make_pair(it, pair.second));
 }
 
 //template< class Type, class Allocator >

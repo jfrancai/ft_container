@@ -41,15 +41,15 @@ template< typename Type, typename Compare = std::less< Type > >
 class RedBlackTree
 {
 	public:
-		typedef Type					value_type;
-		typedef value_type				*pointer;
-		typedef const value_type		*const_pointer;
-		typedef value_type				&reference;
-		typedef const value_type		&const_reference;
-		typedef Node< Type >			node_type;
-		typedef node_type				*node_pointer;
-		typedef node_type				&node_reference;
-		typedef Compare					key_compare;
+		typedef Type			value_type;
+		typedef Type			*pointer;
+		typedef const Type		*const_pointer;
+		typedef Type			&reference;
+		typedef const Type		&const_reference;
+		typedef Node< Type >	node_type;
+		typedef node_type		*node_pointer;
+		typedef node_type		&node_reference;
+		typedef Compare			key_compare;
 
 		~RedBlackTree(void) 
 		{
@@ -299,11 +299,12 @@ class RedBlackTree
 			_root->color = false;
 		}
 
-		node_pointer	insert(const_reference key)
+		std::pair< node_pointer, bool >	insert(const_reference key)
 		{
-			node_pointer node = new node_type;
-			node->parent = NULL;
-			node->data = key;
+			node_pointer node = searchTree(_root, key);
+			if (!node->isNILL)
+				return (std::make_pair(node, false));
+			node = new node_type(key);
 			node->left = _NILL;
 			node->right = _NILL;
 			node->color = true;
@@ -330,12 +331,12 @@ class RedBlackTree
 			if (node->parent == NULL)
 			{
 				node->color = false;
-				return (node);
+				return (std::make_pair(node, true));
 			}
 			if (node->parent->parent == NULL)
-				return (node);
+				return (std::make_pair(node, true));
 			insertFix(node);
-			return (node);
+			return (std::make_pair(node, true));
 		}
 
 		void	transplantNode(node_pointer x, node_pointer y)

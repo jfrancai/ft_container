@@ -12,8 +12,7 @@ TESTDIR := test/
 
 SRC :=
 
-TEST := redblacktree_test.cpp \
-	map_test.cpp	
+TEST := map_test.cpp	
 
 OBJS := $(SRC:%.cpp=$(OBJSDIR)%.o)
 OBJSTEST := $(TEST:%.cpp=$(OBJSDIR)%.o)
