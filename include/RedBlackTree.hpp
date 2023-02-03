@@ -352,14 +352,14 @@ class RedBlackTree
 
 		node_pointer minimum(node_pointer node) const
 		{
-			while (node && !node->left->isNILL)
+			while (node && node->left && !node->left->isNILL)
 				node = node->left;
 			return (node);
 		}
 
 		node_pointer maximum(node_pointer node) const
 		{
-			while (!node->right->isNILL)
+			while (node && node->right && !node->right->isNILL)
 				node = node->right;
 			return (node);
 		}

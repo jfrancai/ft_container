@@ -199,18 +199,16 @@ typename map< Key, Type, Compare, Allocator >::allocator_type	map< Key, Type, Co
 
 // begin
 
-/*
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::const_iterator	map< Key, Type, Compare, Allocator>::begin(void) const
 {
-	return (const_iterator(_elements));
+	return (const_iterator(&((_elements.minimum(_elements.getRoot()))->data)));
 }
-*/
 
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator>::begin(void)
 {
-	return (iterator((_elements.minimum())->data));
+	return (iterator(&((_elements.minimum(_elements.getRoot()))->data)));
 }
 
 //// end

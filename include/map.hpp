@@ -1,5 +1,5 @@
 #ifndef MAP_HPP
-#define Map_HPP
+#define MAP_HPP
 #include <iostream>
 #include <sstream>
 #include <iterator.hpp>
@@ -65,7 +65,7 @@ template<
 		//const_pointer			data(void) const;
 
 		////// Iterators ////
-		//const_iterator			begin(void) const;
+		const_iterator			begin(void) const;
 		iterator				begin(void);
 		//const_iterator			end(void) const;
 		//iterator				end(void);
