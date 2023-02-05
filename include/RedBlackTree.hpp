@@ -484,6 +484,10 @@ class RedBlackTree
 			return (_root);
 		}
 
+		node_pointer	getNill(void) const {
+			return (_NILL);
+		}
+
 		node_pointer	predecessor(node_pointer x) const
 		{
 			if (!x->left->isNILL)
@@ -504,7 +508,7 @@ class RedBlackTree
 				return (minimum(x->right));
 
 			node_pointer y = x->parent;
-			while (!y->isNILL && x == y->right)
+			while (y && !y->isNILL && x == y->right)
 			{
 				x = y;
 				y = y->parent;
@@ -552,6 +556,8 @@ class RedBlackTree
 		node_pointer	_root;
 		key_compare		_compare;
 };
+
+
 
 } //namespace
 
