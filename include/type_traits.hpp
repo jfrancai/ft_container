@@ -13,7 +13,7 @@ struct enable_if< true, T >
 	typedef T value;
 };
 
-template < typename T>
+template < typename T >
 struct is_integral
 {
 	static const bool value = false;
@@ -90,6 +90,19 @@ struct is_integral <bool>
 {
 	static const bool value = true;
 };
+
+template< typename T, typename U>
+struct	is_same
+{
+	static const bool value = false;
+};
+
+template< typename T >
+struct is_same< T, T>
+{
+	static const bool value = true;
+};
+
 
 } // namespace ft
 
