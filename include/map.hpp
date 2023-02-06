@@ -38,7 +38,7 @@ template<
 		typedef ft::reverse_iterator< iterator >				reverse_iterator;
 		typedef ft::reverse_iterator< const_iterator >			const_reverse_iterator;
 
-		const RedBlackTree< value_type >	&getTree() const { return _elements; }
+		const RedBlackTree< value_type >	&getTree() const { return _elements; } // remove temp helper function
 		explicit map( const Allocator& alloc = Allocator());
 		//explicit vector(size_type count, const Type& value = Type(), const Allocator& alloc = Allocator());
 		//vector( const vector& other);
@@ -110,7 +110,6 @@ template<
 		allocator_type					_alloc;
 		size_type						_mapSize;
 		RedBlackTree< value_type >		_elements;
-
 };
 
 /*

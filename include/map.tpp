@@ -274,7 +274,7 @@ typename map< Key, Type, Compare, Allocator >::size_type	map< Key, Type, Compare
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::size_type	map< Key, Type, Compare, Allocator >::max_size(void) const
 {
-	return (_alloc.max_size());
+	return (_alloc.max_size() / 5);
 }
 
 ////// Modifiers ////
