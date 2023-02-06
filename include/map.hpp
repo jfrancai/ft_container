@@ -26,7 +26,7 @@ template<
 		typedef Type 											mapped_type;
 		typedef std::pair< const Key, Type >					value_type; // update for ft::pair
 		typedef std::size_t 									size_type;
-		typedef std::ptrdiff_t									difference_type;
+		typedef std::ptrdiff_t									Typedifference_type;
 		typedef Compare											key_compare;
 		typedef Allocator										allocator_type;
 		typedef value_type&										reference;

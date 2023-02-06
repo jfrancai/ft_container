@@ -619,12 +619,18 @@ class RedBlackTree
 
 		node_pointer	searchTree(node_pointer node, value_type key)
 		{
-			if (node->isNILL || key == node->data)
-				return (node);
-			if (key < node->data)
-				return (searchTree(node->left, key));
-			return (searchTree(node->right, key));
+			while (!node->isNILL)
+			{
+				if (key == node->data)
+					return (node);
+				if (key < node->data)
+					node = node->left;
+				else
+					node = node->right;
+			}
+			return (node);
 		}
+
 	private:
 		void	printHelper(node_pointer root, std::string indent, bool last) const
 		{
