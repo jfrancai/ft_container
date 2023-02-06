@@ -6,12 +6,39 @@ namespace ft {
 
 template< typename Type >
 struct Node {
+	typedef Type			value_type;
+	typedef Type			*pointer;
+	typedef Node< Type >	*node_pointer;
+	typedef Node< Type >	&node_reference;
+	typedef const Type		*const_pointer;
+	typedef Type			&reference;
+	typedef const Type		&const_reference;
+
 	Type			data;
 	Node< Type >	*parent;
 	Node< Type >	*left;
 	Node< Type >	*right;
 	bool			color;
 	bool			isNILL;
+
+	Node< Type >	&operator=(const Node< Type > &rhs)
+	{
+		data = rhs.data;
+		parent = rhs.parent;
+		left = rhs.left;
+		right = rhs.right;
+		color = rhs.color;
+		isNILL = rhs.isNILL;
+	}
+
+	Node(const Node< Type > &src) : 
+		data(src.data),
+		parent(src.parent),
+		left(src.left),
+		right(src.right),
+		color(src.color),
+		isNILL(src.isNILL)
+	{}
 
 	Node(const Type &d = Type(), bool c = false, bool isN = false) : 
 		data(d),
@@ -34,6 +61,98 @@ struct Node {
 			delete right;
 			right = NULL;
 		}
+	}
+
+	friend bool	operator<=(const Node< Type > &lhs, const Node< Type > &rhs)
+	{
+		if (lhs < rhs || lhs == rhs)
+			return (true);
+		return (false);
+	}
+
+	friend bool	operator>=(const Node< Type > &lhs, const Node< Type > &rhs)
+	{
+		if (lhs > rhs || lhs == rhs)
+			return (true);
+		return (false);
+	}
+	
+	friend bool	operator>(const Node< Type > &lhs, const Node< Type > &rhs)
+	{
+		if (lhs.isNILL && rhs.isNILL)
+			return (false);
+		if (lhs.data > rhs.data)
+			return (true);
+		return (false);
+	}
+
+	friend bool	operator<(const Node< Type > &lhs, const Node< Type > &rhs)
+	{
+		if (lhs.isNILL && rhs.isNILL)
+			return (false);
+		if (lhs.data < rhs.data)
+			return (true);
+		return (false);
+	}
+
+	friend bool	operator!=(const Node< Type > &lhs, const Node< Type > &rhs)
+	{
+		return (!(lhs == rhs));
+	}
+
+	friend bool	operator==(const Node< Type > &lhs, const Node< Type > &rhs)
+	{
+		if (lhs.data == rhs.data &&
+			lhs.color == rhs.color &&
+			lhs.isNILL == rhs.isNILL)
+			return (true);
+		return (false);
+	}
+	
+	node_pointer	predecessor(void)
+	{
+		node_pointer	x = this;
+		if (x->left && !x->left->isNILL)
+			return (x->left->maximum());
+
+		node_pointer y = x->parent;
+		while (!x->isNILL && y && !y->isNILL && x == y->left)
+		{
+			x = y;
+			y = y->parent;
+		}
+		return (y);
+	}
+
+	node_pointer	successor(void)
+	{
+		node_pointer	x = this;
+		if (x->right && !x->right->isNILL)
+			return (x->right->minimum());
+
+		node_pointer y = x->parent;
+		while (y && !y->isNILL && x == y->right)
+		{
+			x = y;
+			y = y->parent;
+		}
+		return (y);
+	}
+
+	node_pointer minimum(void)
+	{
+		node_pointer	node = this;
+		while (node->left && !node->left->isNILL)
+			node = node->left;
+		return (node);
+	}
+
+	node_pointer maximum(void)
+	{
+		node_pointer	node = this;
+		while (node->right && !node->right->isNILL)
+			node = node->right;
+		return (node);
 	}
 };
 
@@ -101,6 +220,24 @@ class RedBlackTree
 			return (*this);
 		}
 
+		bool	isInferior(node_pointer root1, node_pointer root2) const
+		{
+			if (root2->isNILL)
+				return (false);
+			if (root1->isNILL)
+				return (true);
+			while (root1 && root2)
+			{
+				if (*root1 < *root2)
+					return (true);
+				if (*root2 < *root1)
+					return (false);
+				root1 = root1->successor();
+				root2 = root2->successor();
+			}
+			return (false);
+		}
+
 		bool	isIdentical(node_pointer root1, node_pointer root2) const
 		{
 			if (root1->isNILL && root2->isNILL)
@@ -109,17 +246,16 @@ class RedBlackTree
 				return (false);
 			else
 			{
-				if (root1->data == root2->data && isIdentical(root1->left, root2->left) && isIdentical(root1->right, root2->right))
+				if (*root1 == *root2 && isIdentical(root1->left, root2->left) && isIdentical(root1->right, root2->right))
 					return (true);
 				else
 					return (false);
 			}
 		}
 
-		bool	operator==(RedBlackTree const &rhs) const
-		{
-			return (isIdentical(this->getRoot(), rhs.getRoot()));
-		}
+		friend bool	operator<(const RedBlackTree< Type, Compare > &lhs, const RedBlackTree< Type, Compare > &rhs) { return (lhs.isInferior((lhs.getRoot())->minimum(), (rhs.getRoot())->minimum())); }
+		friend bool	operator==(const RedBlackTree< Type, Compare > &lhs, const RedBlackTree< Type, Compare > &rhs) { return (lhs.isIdentical(lhs.getRoot(), rhs.getRoot())); }
+		friend bool	operator!=(const RedBlackTree< Type, Compare > &lhs, const RedBlackTree< Type, Compare > &rhs) { return (!(lhs == rhs)); }
 
 		bool	checkerHelper(node_pointer node, bool &status)
 		{
@@ -350,20 +486,6 @@ class RedBlackTree
 			y->parent = x->parent;
 		}
 
-		node_pointer minimum(node_pointer node) const
-		{
-			while (node && node->left && !node->left->isNILL)
-				node = node->left;
-			return (node);
-		}
-
-		node_pointer maximum(node_pointer node) const
-		{
-			while (node && node->right && !node->right->isNILL)
-				node = node->right;
-			return (node);
-		}
-
 		void deleteFix(node_pointer x)
 		{
 			node_pointer	s;
@@ -459,7 +581,7 @@ class RedBlackTree
 			}
 			else
 			{
-				y = minimum(node->right);
+				y = node->right->minimum();
 				original_color = y->color;
 				x = y->right;
 				if (y->parent == node)
@@ -488,35 +610,8 @@ class RedBlackTree
 			return (_NILL);
 		}
 
-		node_pointer	predecessor(node_pointer x) const
-		{
-			if (!x->left->isNILL)
-				return (maximum(x->left));
 
-			node_pointer y = x->parent;
-			while (!y->isNILL && x == y->left)
-			{
-				x = y;
-				y = y->parent;
-			}
-			return (y);
-		}
-
-		node_pointer	successor(node_pointer x) const
-		{
-			if (!x->right->isNILL)
-				return (minimum(x->right));
-
-			node_pointer y = x->parent;
-			while (y && !y->isNILL && x == y->right)
-			{
-				x = y;
-				y = y->parent;
-			}
-			return (y);
-		}
-
-		void	printTree(void)
+		void	printTree(void) const
 		{
 			if (_root)
 				printHelper(_root, "", true);
@@ -531,7 +626,7 @@ class RedBlackTree
 			return (searchTree(node->right, key));
 		}
 	private:
-		void	printHelper(node_pointer root, std::string indent, bool last)
+		void	printHelper(node_pointer root, std::string indent, bool last) const
 		{
 			if (!root->isNILL)
 			{
@@ -547,7 +642,7 @@ class RedBlackTree
 					indent += "|  ";
 				}
 				std::string sColor = root->color ? "RED" : "BLACK";
-				std::cout << root->data << "(" << sColor << ")" << std::endl;
+				std::cout << "key = " << root->data.first << " value = " << root->data.second << "(" << sColor << ")" << std::endl;
 				printHelper(root->left, indent, false);
 				printHelper(root->right, indent, true);
 			}

@@ -198,59 +198,60 @@ typename map< Key, Type, Compare, Allocator >::allocator_type	map< Key, Type, Co
 ////// Iterators ////
 
 // begin
-
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::const_iterator	map< Key, Type, Compare, Allocator>::begin(void) const
 {
-	return (const_iterator(&((_elements.minimum(_elements.getRoot()))->data)));
+	return (const_iterator((_elements.getRoot())->minimum()));
 }
 
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator>::begin(void)
 {
-	return (iterator(&((_elements.minimum(_elements.getRoot()))->data)));
+	return (iterator((_elements.getRoot())->minimum()));
 }
 
-//// end
-//template< class Type, class Allocator >
-//typename vector< Type, Allocator >::const_iterator	vector< Type, Allocator >::end(void) const
-//{
-//	return (const_iterator(_elements + _vectorSize));
-//}
-//
-//template< class Type, class Allocator >
-//typename vector< Type, Allocator >::iterator	vector< Type, Allocator >::end(void)
-//{
-//	return (iterator(_elements + _vectorSize));
-//}
-//
+// end
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator >::const_iterator	map< Key, Type, Compare, Allocator>::end(void) const
+{
+	(_elements.getNill())->parent = (_elements.getRoot())->maximum();
+	return (const_iterator(_elements.getNill()));
+}
+
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator>::end(void)
+{
+	(_elements.getNill())->parent = (_elements.getRoot())->maximum();
+	return (iterator(_elements.getNill()));
+}
+
+
 //// rbegin
-//
-//template< class Type, class Allocator >
-//typename vector< Type, Allocator >::const_reverse_iterator	vector< Type, Allocator >::rbegin(void) const
-//{
-//	return (const_reverse_iterator(end()));
-//}
-//
-//template< class Type, class Allocator >
-//typename vector< Type, Allocator >::reverse_iterator	vector< Type, Allocator >::rbegin(void)
-//{
-//	return (reverse_iterator(end()));
-//}
-//
-//// rend
-//
-//template< class Type, class Allocator >
-//typename vector< Type, Allocator >::reverse_iterator	vector< Type, Allocator >::rend(void)
-//{
-//	return (reverse_iterator(begin()));
-//}
-//
-//template< class Type, class Allocator >
-//typename vector< Type, Allocator >::const_reverse_iterator	vector< Type, Allocator >::rend(void) const
-//{
-//	return (const_reverse_iterator(begin()));
-//}
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator >::const_reverse_iterator	map< Key, Type, Compare, Allocator>::rbegin(void) const
+{
+	return (const_reverse_iterator(end()));
+}
+
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator >::reverse_iterator	map< Key, Type, Compare, Allocator>::rbegin(void)
+{
+	return (reverse_iterator(end()));
+}
+
+// rend
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator >::const_reverse_iterator	map< Key, Type, Compare, Allocator>::rend(void) const
+{
+	return (const_reverse_iterator(begin()));
+}
+
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator >::reverse_iterator	map< Key, Type, Compare, Allocator>::rend(void)
+{
+	return (reverse_iterator(begin()));
+}
+
 ////// Capacity ////
 
 // empty
@@ -293,8 +294,7 @@ template< class Key, class Type, class Compare, class Allocator >
 typename std::pair< typename map< Key, Type, Compare, Allocator >::iterator, bool >	map< Key, Type, Compare, Allocator >::insert(const typename map< Key, Type, Compare, Allocator >::value_type &value)
 {
 	std::pair< typename ft::RedBlackTree< typename ft::map< Key, Type, Compare, Allocator >::value_type >::node_pointer, bool > pair = _elements.insert(value);
-
-	LegacyBidirectionalIterator< map< Key, Type, Compare, Allocator >::value_type >	it(&pair.first->data);
+	typename map< Key, Type, Compare, Allocator >::iterator	it(pair.first);
 	if (pair.second)
 		_mapSize++;
 	return (std::make_pair(it, pair.second));

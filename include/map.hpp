@@ -33,11 +33,12 @@ template<
 		typedef const value_type&								const_reference;
 		typedef typename Allocator::pointer						pointer;
 		typedef typename Allocator::const_pointer				const_pointer;
-		typedef LegacyBidirectionalIterator< value_type >		iterator;
-		typedef LegacyBidirectionalIterator< const value_type >	const_iterator;
+		typedef LegacyBidirectionalIterator< Node< value_type > >		iterator;
+		typedef LegacyBidirectionalIterator< const Node < value_type > >	const_iterator;
 		typedef ft::reverse_iterator< iterator >				reverse_iterator;
 		typedef ft::reverse_iterator< const_iterator >			const_reverse_iterator;
 
+		const RedBlackTree< value_type >	&getTree() const { return _elements; }
 		explicit map( const Allocator& alloc = Allocator());
 		//explicit vector(size_type count, const Type& value = Type(), const Allocator& alloc = Allocator());
 		//vector( const vector& other);
@@ -67,12 +68,12 @@ template<
 		////// Iterators ////
 		const_iterator			begin(void) const;
 		iterator				begin(void);
-		//const_iterator			end(void) const;
-		//iterator				end(void);
-		//reverse_iterator		rbegin(void);
-		//const_reverse_iterator	rbegin(void) const;
-		//reverse_iterator		rend(void) ;
-		//const_reverse_iterator	rend(void) const;
+		const_iterator			end(void) const;
+		iterator				end(void);
+		reverse_iterator		rbegin(void);
+		const_reverse_iterator	rbegin(void) const;
+		reverse_iterator		rend(void) ;
+		const_reverse_iterator	rend(void) const;
 
 		////// Capacity ////
 		bool					empty(void) const;
@@ -92,6 +93,19 @@ template<
 		//void					resize(size_type count, Type value = Type());
 		//void					swap(vector< Type, Allocator > &other);
 
+		////// Non-Member Functions ////
+		friend bool	operator==(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs) { return (lhs._elements == rhs._elements); }
+		friend bool	operator!=(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs) { return (lhs._elements != rhs._elements); }
+		friend bool	operator>=(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (!(lhs._elements < rhs._elements)); }
+		friend bool	operator>(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (rhs._elements < lhs._elements); }
+		friend bool	operator<=(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (!(rhs._elements < lhs._elements)); }
+		friend bool	operator<(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) {
+			if (lhs.size() < rhs.size())
+				return (true);
+			if (rhs.size() < lhs.size())
+				return (false);
+			return (lhs._elements < rhs._elements);
+		}
 	private:
 		allocator_type					_alloc;
 		size_type						_mapSize;
@@ -100,61 +114,6 @@ template<
 };
 
 /*
-template < typename Type >
-bool	operator<(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
-{
-	if (lhs.size() < rhs.size())
-		return (true);
-	if (rhs.size() < lhs.size())
-		return (false);
-
-	for (std::size_t i = 0; i < lhs.size(); i++)
-	{
-		if (lhs[i] < rhs[i])
-			return (true);
-		if (rhs[i] < lhs[i])
-			return (false);
-	}
-	return (false);
-}
-
-template < typename Type >
-bool	operator>(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
-{
-	return (rhs < lhs);
-}
-
-template < typename Type >
-bool	operator>=(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
-{
-	return (!(lhs < rhs));
-}
-
-template < typename Type >
-bool	operator<=(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
-{
-	return (!(rhs < lhs));
-}
-
-template < typename Type >
-bool	operator==(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
-{
-	if (lhs.size() != rhs.size())
-		return (false);
-	for (std::size_t i = 0; i < lhs.size(); i++)
-	{
-		if (lhs[i] != rhs[i])
-			return (false);
-	}
-	return (true);
-}
-
-template < typename Type >
-bool	operator!=(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
-{
-	return (!(lhs == rhs));
-}
-
 template< class Type, class Allocator >
 void	swap(ft::vector< Type, Allocator > &x, ft::vector< Type, Allocator > &y)
 {
@@ -165,43 +124,44 @@ void	swap(ft::vector< Type, Allocator > &x, ft::vector< Type, Allocator > &y)
 template< class Type >
 class	LegacyBidirectionalIterator
 {
-	public:
+
+	private:
+		typedef Type	*node_pointer;
+		node_pointer	_node;
+		public:
 		template< class IteType, class AllocatorType >
 		friend class vector;
 
-		typedef std::random_access_iterator_tag				iterator_category;
-		typedef Type 										value_type;
+		typedef std::bidirectional_iterator_tag				iterator_category;
+		typedef typename Type::value_type					value_type;
 		typedef std::ptrdiff_t								difference_type;
-		typedef Type*										pointer;
-		typedef Type&										reference;
+		typedef value_type*									pointer;
+		typedef value_type&									reference;
 		typedef LegacyBidirectionalIterator< Type >			iterator;
 		typedef LegacyBidirectionalIterator< const Type >	const_iterator;
 
 		// LegacyIterator
-		LegacyBidirectionalIterator(const iterator& other) : _ptr(other._ptr) {}
+		LegacyBidirectionalIterator(const iterator& other) : _node(other._node) {}
 		~LegacyBidirectionalIterator(void) {}
-		iterator		&operator=(const iterator& other) { this->_ptr = other._ptr; return (*this); }
-		iterator		&operator++(void) { ++_ptr; return (*this); }
-		reference		operator*(void) const { return (*_ptr); }
+		iterator		&operator=(const iterator& other) { _node = other._node; return (*this); }
+		iterator		&operator++(void) { _node = _node->successor(); return (*this); }
+		reference		operator*(void) const { return (_node->data); }
 
 		// LegacyInputIterator
-		iterator		operator++(int) { iterator it(_ptr); ++_ptr; return (it); }
-		pointer			operator->(void) const { return (_ptr); }
-		bool			operator==(const iterator& rhs) const { return (this->_ptr == rhs._ptr); }
-		bool			operator!=(const iterator& rhs) const { return (this->_ptr != rhs._ptr); }
+		iterator		operator++(int) { iterator it(_node); ++_node; return (it); }
+		pointer			operator->(void) const { return (&_node->data); }
+		bool			operator==(const iterator& rhs) const { return _node == rhs._node; }
+		bool			operator!=(const iterator& rhs) const { return _node != rhs._node; }
 
 		// LegacyOutputIterator
 
 		// LegacyForwardIterator
-		operator	const_iterator(void) const { return  (LegacyBidirectionalIterator< const Type >(_ptr)); }
-		explicit	LegacyBidirectionalIterator(pointer ptr = NULL) : _ptr(ptr) {}
+		explicit		LegacyBidirectionalIterator(node_pointer node = NULL) : _node(node) { }
+		operator const_iterator(void) const { return  (LegacyBidirectionalIterator< const Type >(_node)); }
 
 		// LegacyBidirectionalIterator
-		iterator		&operator--(void) { --_ptr; return (*this); }
-		iterator		operator--(int) { iterator it(_ptr); --_ptr; return (it); }
-
-	private:
-		pointer	_ptr;
+		iterator		&operator--(void) { _node = _node->predecessor(); return (*this); }
+		iterator		operator--(int) { iterator it(_node); --_node; return (it); }
 };
 
 template< class Type >
