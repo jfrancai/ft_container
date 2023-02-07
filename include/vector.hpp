@@ -192,17 +192,17 @@ class	LegacyRandomAccessIterator
 		iterator		operator--(int) { iterator it(_ptr); --_ptr; return (it); }
 
 		// LegacyRandomAccessIterator
-		bool			operator<(const iterator& rhs) const { return (this->_ptr < rhs._ptr); }
-		bool			operator>(const iterator& rhs) const { return (this->_ptr > rhs._ptr); }
-		bool			operator<=(const iterator& rhs) const { return (this->_ptr <= rhs._ptr); }
-		bool			operator>=(const iterator& rhs) const { return (this->_ptr >= rhs._ptr); }
+		bool			operator<(const iterator& rhs) const { return (_ptr < rhs._ptr); }
+		bool			operator>(const iterator& rhs) const { return (_ptr > rhs._ptr); }
+		bool			operator<=(const iterator& rhs) const { return (_ptr <= rhs._ptr); }
+		bool			operator>=(const iterator& rhs) const { return (_ptr >= rhs._ptr); }
 		iterator		&operator+=(difference_type n) {  _ptr += n; return (*this); }
 		iterator		operator+(difference_type n) const { return (iterator(_ptr + n)); }
 //		friend iterator	operator+(difference_type n, const iterator& rhs) { return (iterator(rhs + n)); }
 		iterator		&operator-=(difference_type n) {  return (*this += -n); }
 		iterator		operator-(difference_type n) const { return (iterator(_ptr - n)); }
-		difference_type	operator-(iterator rhs) { return (this->_ptr - rhs._ptr); }
-		reference		operator[](difference_type n) const { return (*(this->_ptr + n)); };
+		difference_type	operator-(iterator rhs) { return (_ptr - rhs._ptr); }
+		reference		operator[](difference_type n) const { return (*(_ptr + n)); };
 
 	private:
 		pointer	_ptr;

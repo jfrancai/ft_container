@@ -648,7 +648,7 @@ class RedBlackTree
 					indent += "|  ";
 				}
 				std::string sColor = root->color ? "RED" : "BLACK";
-				std::cout << "key = " << root->data.first << " value = " << root->data.second << "(" << sColor << ")" << std::endl;
+				std::cout << "(" << root->data.first << ", " << root->data.second << ", " << sColor << ")" << std::endl;
 				printHelper(root->left, indent, false);
 				printHelper(root->right, indent, true);
 			}
