@@ -658,8 +658,6 @@ class RedBlackTree
 		key_compare		_compare;
 };
 
-
-
 } //namespace
 
 #endif

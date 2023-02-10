@@ -2,9 +2,9 @@
 #define MAP_HPP
 #include <iostream>
 #include <sstream>
-#include <iterator.hpp>
-#include <type_traits.hpp>
-#include <RedBlackTree.hpp>
+#include "iterator.hpp"
+#include "type_traits.hpp"
+#include "RedBlackTree.hpp"
 
 #include <utility> // replace with utility .hpp (make_pair and pair template should be inside this header)
 
@@ -21,6 +21,10 @@ template<
 > class map
 {
 	public:
+
+		// template< class TType >
+		// friend class LegacyBidirectionalIterator;
+
 		// Member types (aliases)
 		typedef Key												key_type;
 		typedef Type 											mapped_type;
@@ -38,34 +42,15 @@ template<
 		typedef ft::reverse_iterator< iterator >				reverse_iterator;
 		typedef ft::reverse_iterator< const_iterator >			const_reverse_iterator;
 
+		// Debug
 		const RedBlackTree< value_type >	&getTree() const { return _elements; } // remove temp helper function
-		explicit map( const Allocator& alloc = Allocator());
-		//explicit vector(size_type count, const Type& value = Type(), const Allocator& alloc = Allocator());
-		//vector( const vector& other);
-		//template< class InputIt >
-		//vector(InputIt first, InputIt last, const Allocator &alloc = Allocator());
 
-		//~vector(void);
-		//vector&					operator=(const vector& other);
-		//void					assign(size_type count, const Type& value);
-		//
-		//template< class InputIt >
-		//void assign(InputIt first, InputIt last, typename ft::enable_if< !ft::is_integral< InputIt >::value, InputIt >::value* =0);
+		explicit map( const Allocator& alloc = Allocator());
 		allocator_type			get_allocator(void) const;
 
-		////// Element access ////
-		//const_reference			at( size_type pos ) const;
-		//reference				at( size_type pos );
-		//const_reference			operator[](size_type pos) const;
-		//reference				operator[](size_type pos);
-		//reference				front(void);
-		//const_reference			front(void) const;
-		//reference				back(void);
-		//const_reference			back(void) const;
-		//pointer					data(void);
-		//const_pointer			data(void) const;
+		//// Element access ////
 
-		////// Iterators ////
+		//// Iterators ////
 		const_iterator			begin(void) const;
 		iterator				begin(void);
 		const_iterator			end(void) const;
@@ -75,23 +60,18 @@ template<
 		reverse_iterator		rend(void) ;
 		const_reverse_iterator	rend(void) const;
 
-		////// Capacity ////
+		//// Capacity ////
 		bool					empty(void) const;
 		size_type				size(void) const;
 		size_type				max_size() const;
 
-		////// Modifiers ////
-		//void					clear(void);
+		//// Modifiers ////
 		std::pair< iterator, bool >				insert(const value_type &value); //remplacer par ft::pair
-		//void					insert(const_iterator pos, size_type count, const Type &value);
-		//template < class InputIt >
-		//void					insert(const_iterator pos, InputIt first, InputIt last, typename ft::enable_if< !ft::is_integral< InputIt >::value, InputIt >::value* =0);
-		//iterator				erase(iterator pos);
-		//iterator				erase(iterator first, iterator last);
-		//void					push_back(const Type& value);
-		//void					pop_back(void);
-		//void					resize(size_type count, Type value = Type());
-		//void					swap(vector< Type, Allocator > &other);
+
+		///// Lookup ////
+		size_type				count(const Key &key);
+		iterator				find(const Key &key);
+		const_iterator			find(const Key &key) const;
 
 		////// Non-Member Functions ////
 		friend bool	operator==(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs) { return (lhs._elements == rhs._elements); }
@@ -123,11 +103,10 @@ void	swap(ft::vector< Type, Allocator > &x, ft::vector< Type, Allocator > &y)
 template< class Type >
 class	LegacyBidirectionalIterator
 {
-
 	private:
 		typedef Type	*node_pointer;
 		node_pointer	_node;
-		public:
+	public:
 		template< class IteType, class AllocatorType >
 		friend class vector;
 
