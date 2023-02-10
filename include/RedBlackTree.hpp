@@ -39,9 +39,7 @@ struct Node {
 		right(NULL),
 		color(src.color),
 		isNILL(src.isNILL)
-	{
-			data = new value_type(*src.data);
-	}
+	{ data = new value_type(*src.data); }
 
 	Node(void) : 
 		data(NULL),
@@ -59,61 +57,13 @@ struct Node {
 		right(NULL),
 		color(c),
 		isNILL(isN)
-	{
-		data = new value_type(d);
-	}
+	{ data = new value_type(d); }
 
 	~Node()
 	{
-		if (data)
-			delete data;
-		if (left && !left->isNILL && !isNILL)
-		{
-			delete left;
-			left = NULL;
-		}
-		if (right && !right->isNILL && !isNILL)
-		{
-			delete right;
-			right = NULL;
-		}
-	}
-
-	friend bool	operator<=(const Node< Type > &lhs, const Node< Type > &rhs)
-	{
-		if (lhs < rhs || lhs == rhs)
-			return (true);
-		return (false);
-	}
-
-	friend bool	operator>=(const Node< Type > &lhs, const Node< Type > &rhs)
-	{
-		if (lhs > rhs || lhs == rhs)
-			return (true);
-		return (false);
-	}
-	
-	friend bool	operator>(const Node< Type > &lhs, const Node< Type > &rhs)
-	{
-		if (lhs.isNILL && rhs.isNILL)
-			return (false);
-		if (*lhs.data > *rhs.data)
-			return (true);
-		return (false);
-	}
-
-	friend bool	operator<(const Node< Type > &lhs, const Node< Type > &rhs)
-	{
-		if (lhs.isNILL && rhs.isNILL)
-			return (false);
-		if (*lhs.data < *rhs.data)
-			return (true);
-		return (false);
-	}
-
-	friend bool	operator!=(const Node< Type > &lhs, const Node< Type > &rhs)
-	{
-		return (!(lhs == rhs));
+		if (data) { delete data; }
+		if (left && !left->isNILL && !isNILL) { delete left; left = NULL; }
+		if (right && !right->isNILL && !isNILL) { delete right; right = NULL; }
 	}
 
 	friend bool	operator==(const Node< Type > &lhs, const Node< Type > &rhs)
@@ -124,6 +74,14 @@ struct Node {
 			return (true);
 		return (false);
 	}
+
+	friend bool	operator<(const Node< Type > &lhs, const Node< Type > &rhs)
+	{ if (!lhs.isNILL && !rhs.isNILL && *lhs.data < *rhs.data) { return (true); } return (false); }
+	friend bool	operator<=(const Node< Type > &lhs, const Node< Type > &rhs) { return (!(rhs < lhs)); }
+	friend bool	operator>=(const Node< Type > &lhs, const Node< Type > &rhs) { return (!(lhs < rhs)); }
+	friend bool	operator>(const Node< Type > &lhs, const Node< Type > &rhs) { return (rhs < lhs); }
+	friend bool	operator!=(const Node< Type > &lhs, const Node< Type > &rhs) {return (!(lhs == rhs)); }
+
 	
 	node_pointer	predecessor(void)
 	{

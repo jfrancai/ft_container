@@ -333,7 +333,7 @@ typename vector< Type, Allocator >::iterator	vector< Type, Allocator>::insert(ty
 		reserve(capacity() ? 2 * capacity() : _initialCapacity);
 	for (size_type i = size(); i > index; --i)
 		_elements[i] = _elements[i - 1];
-	_elements[index] = value;
+	_alloc.construct(_elements + index, value);
 	++_vectorSize;
 
 	return (iterator(_elements + index));
@@ -348,7 +348,7 @@ void	vector< Type, Allocator>::insert(typename vector< Type, Allocator >::const_
 	for (size_type i = size(); i > index; --i)
 		_elements[i + count - 1] = _elements[i - 1];
 	for (size_type i = 0; i < count; ++i)
-		_elements[index + i] = value;
+		_alloc.construct(_elements + index + i, value);
 	_vectorSize += count;
 
 	return ;
@@ -359,7 +359,7 @@ template < typename  InputIt >
 void	vector< Type, Allocator >::insert(typename vector< Type, Allocator >::const_iterator pos, InputIt first, InputIt last, typename ft::enable_if< !ft::is_integral< InputIt >::value, InputIt >::value*)
 {
 	size_type	index = pos - begin();
-	size_type	count = std::distance(first, last);
+	size_type	count = std::distance(first, last); // recoder std distance car il utilise std traits en dessous
 	if (count + size() > capacity())
 	{
 		size_type new_cap = size() + count;
@@ -392,6 +392,7 @@ void	vector< Type, Allocator >::insert(typename vector< Type, Allocator >::const
 template< class Type, class Allocator >
 typename vector< Type, Allocator>::iterator	vector< Type, Allocator >::erase(typename vector< Type, Allocator >::iterator first, typename vector< Type, Allocator >::iterator last)
 {
+	//dprintf(2, "%s", "erase first last\n");
 	if (first == last)
 		return (last);
 	size_type num_elements = std::distance(first, last);
@@ -404,8 +405,9 @@ typename vector< Type, Allocator>::iterator	vector< Type, Allocator >::erase(typ
 template< class Type, class Allocator >
 typename vector< Type, Allocator>::iterator	vector< Type, Allocator >::erase(typename vector< Type, Allocator >::iterator pos)
 {
+	//dprintf(2, "%s", "erase pos\n");
 	if (pos == end())
-		return (pos);
+		return (end());
 	std::copy(pos + 1, end(), pos);
 	resize(size() - 1);
 	return (pos); 
@@ -442,7 +444,7 @@ void	vector< Type, Allocator >::resize(typename vector< Type, Allocator >::size_
 		throw std::length_error("vector::resize");
 	if (count < size())
 	{
-		for (iterator it = begin() + count; it != end(); ++it)
+		for (iterator it(begin() + count); it != end(); ++it)
 			_alloc.destroy(it._ptr);
 	}
 	else if (count > size())

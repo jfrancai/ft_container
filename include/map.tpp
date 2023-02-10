@@ -49,8 +49,6 @@ typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare,
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::const_iterator	map< Key, Type, Compare, Allocator>::end(void) const
 {
-	if (empty())
-		return (const_iterator(NULL));
 	(_elements.getNill())->parent = (_elements.getRoot())->maximum();
 	return (const_iterator(_elements.getNill()));
 }
@@ -58,8 +56,6 @@ typename map< Key, Type, Compare, Allocator >::const_iterator	map< Key, Type, Co
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator>::end(void)
 {
-	if (empty())
-		return (iterator(NULL));
 	(_elements.getNill())->parent = (_elements.getRoot())->maximum();
 	return (iterator(_elements.getNill()));
 }
