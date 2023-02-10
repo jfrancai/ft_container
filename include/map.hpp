@@ -123,11 +123,11 @@ class	LegacyBidirectionalIterator
 		~LegacyBidirectionalIterator(void) {}
 		iterator		&operator=(const iterator& other) { _node = other._node; return (*this); }
 		iterator		&operator++(void) { _node = _node->successor(); return (*this); }
-		reference		operator*(void) const { return (_node->data); }
+		reference		operator*(void) const { return (*_node->data); }
 
 		// LegacyInputIterator
 		iterator		operator++(int) { iterator it(_node); ++_node; return (it); }
-		pointer			operator->(void) const { return (&_node->data); }
+		pointer			operator->(void) const { return (_node->data); }
 		bool			operator==(const iterator& rhs) const { return _node == rhs._node; }
 		bool			operator!=(const iterator& rhs) const { return _node != rhs._node; }
 

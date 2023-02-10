@@ -14,43 +14,59 @@ struct Node {
 	typedef Type			&reference;
 	typedef const Type		&const_reference;
 
-	Type			data;
-	Node< Type >	*parent;
-	Node< Type >	*left;
-	Node< Type >	*right;
+	pointer			data;
+	node_pointer	parent;
+	node_pointer	left;
+	node_pointer	right;
 	bool			color;
 	bool			isNILL;
 
 	Node< Type >	&operator=(const Node< Type > &rhs)
 	{
-		data = rhs.data;
-		parent = rhs.parent;
-		left = rhs.left;
-		right = rhs.right;
+		if (data)
+			data = new value_type(*rhs.data);
+		parent = NULL;
+		left = NULL;
+		right = NULL;
 		color = rhs.color;
 		isNILL = rhs.isNILL;
 	}
 
 	Node(const Node< Type > &src) : 
-		data(src.data),
-		parent(src.parent),
-		left(src.left),
-		right(src.right),
+		data(NULL),
+		parent(NULL),
+		left(NULL),
+		right(NULL),
 		color(src.color),
 		isNILL(src.isNILL)
+	{
+			data = new value_type(*src.data);
+	}
+
+	Node(void) : 
+		data(NULL),
+		parent(NULL),
+		left(NULL),
+		right(NULL),
+		color(false),
+		isNILL(true)
 	{}
 
-	Node(const Type &d = Type(), bool c = false, bool isN = false) : 
-		data(d),
+	Node(const_reference d, bool c = false, bool isN = false) : 
+		data(NULL),
 		parent(NULL),
 		left(NULL),
 		right(NULL),
 		color(c),
 		isNILL(isN)
-	{}
+	{
+		data = new value_type(d);
+	}
 
 	~Node()
 	{
+		if (data)
+			delete data;
 		if (left && !left->isNILL && !isNILL)
 		{
 			delete left;
@@ -81,7 +97,7 @@ struct Node {
 	{
 		if (lhs.isNILL && rhs.isNILL)
 			return (false);
-		if (lhs.data > rhs.data)
+		if (*lhs.data > *rhs.data)
 			return (true);
 		return (false);
 	}
@@ -90,7 +106,7 @@ struct Node {
 	{
 		if (lhs.isNILL && rhs.isNILL)
 			return (false);
-		if (lhs.data < rhs.data)
+		if (*lhs.data < *rhs.data)
 			return (true);
 		return (false);
 	}
@@ -102,7 +118,7 @@ struct Node {
 
 	friend bool	operator==(const Node< Type > &lhs, const Node< Type > &rhs)
 	{
-		if (lhs.data == rhs.data &&
+		if (*lhs.data == *rhs.data &&
 			lhs.color == rhs.color &&
 			lhs.isNILL == rhs.isNILL)
 			return (true);
@@ -179,29 +195,25 @@ class RedBlackTree
 
 		RedBlackTree(void)
 		{
-			_NILL = getNewNode(Type(), false, true);
+			_NILL = new node_type();
 			_root = _NILL;
 		}
 
 		RedBlackTree(RedBlackTree const &src)
 		{
-			_NILL = getNewNode(Type(), false, true);
-			_root = cloneBinaryTree(src.getRoot(), src._NILL);
+			_NILL = new node_type();
+			_root = cloneBinaryTree(src.getRoot());
 		}
 
-		node_pointer	getNewNode(Type data = Type(), bool color = true, bool isNILL = false)
-		{
-			node_pointer newNode = new node_type(data, color, isNILL);
-			return (newNode);
-		}
-
-		node_pointer cloneBinaryTree(node_pointer node, node_pointer stop)
+		node_pointer cloneBinaryTree(node_pointer node)
 		{
 			if (node->isNILL)
-				return (_NILL);
-			node_pointer newNode = getNewNode(node->data, node->color, node->isNILL);
-			newNode->left = cloneBinaryTree(node->left, stop);
-			newNode->right = cloneBinaryTree(node->right, stop);
+				return (new node_type(_NILL));
+			node_pointer newNode = new node_type(*node);
+			newNode->left = cloneBinaryTree(node->left);
+			newNode->left->parent = newNode;
+			newNode->right = cloneBinaryTree(node->right);
+			newNode->right->parent = newNode;
 			return (newNode);
 		}
 
@@ -451,7 +463,7 @@ class RedBlackTree
 			while (!x->isNILL)
 			{
 				y = x;
-				if (_compare(node->data, x->data))
+				if (_compare(*node->data, *x->data))
 					x = x->left;
 				else
 					x = x->right;
@@ -460,7 +472,7 @@ class RedBlackTree
 			node->parent = y;
 			if (y == NULL)
 				_root = node;
-			else if (_compare(node->data, y->data))
+			else if (_compare(*node->data, *y->data))
 				y->left = node;
 			else
 				y->right = node;
@@ -557,7 +569,7 @@ class RedBlackTree
 			x->color = false;
 		}
 
-		void	deleteNode(value_type data)
+		void	deleteNode(const_reference data)
 		{
 			node_pointer	node = searchTree(_root, data);
 
@@ -617,13 +629,13 @@ class RedBlackTree
 				printHelper(_root, "", true);
 		}
 
-		node_pointer	searchTree(node_pointer node, value_type key)
+		node_pointer	searchTree(node_pointer node, const_reference key)
 		{
 			while (!node->isNILL)
 			{
-				if (key == node->data)
+				if (key == *node->data)
 					return (node);
-				if (key < node->data)
+				if (key < *node->data)
 					node = node->left;
 				else
 					node = node->right;
@@ -648,7 +660,7 @@ class RedBlackTree
 					indent += "|  ";
 				}
 				std::string sColor = root->color ? "RED" : "BLACK";
-				std::cout << "(" << root->data.first << ", " << root->data.second << ", " << sColor << ")" << std::endl;
+				std::cout << "(" << (*root->data).first << ", " << (*root->data).second << ", " << sColor << ")" << std::endl;
 				printHelper(root->left, indent, false);
 				printHelper(root->right, indent, true);
 			}
