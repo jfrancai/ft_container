@@ -4,6 +4,7 @@
 #include <sstream>
 #include "iterator.hpp"
 #include "type_traits.hpp"
+#include "algorithm.hpp"
 
 namespace ft {
 
@@ -95,19 +96,7 @@ class vector
 template < typename Type >
 bool	operator<(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
 {
-	if (lhs.size() < rhs.size())
-		return (true);
-	if (rhs.size() < lhs.size())
-		return (false);
-
-	for (std::size_t i = 0; i < lhs.size(); i++)
-	{
-		if (lhs[i] < rhs[i])
-			return (true);
-		if (rhs[i] < lhs[i])
-			return (false);
-	}
-	return (false);
+	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
 }
 
 template < typename Type >
@@ -133,12 +122,7 @@ bool	operator==(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
 {
 	if (lhs.size() != rhs.size())
 		return (false);
-	for (std::size_t i = 0; i < lhs.size(); i++)
-	{
-		if (lhs[i] != rhs[i])
-			return (false);
-	}
-	return (true);
+	return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
 }
 
 template < typename Type >
