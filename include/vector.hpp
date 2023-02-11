@@ -160,6 +160,9 @@ class	LegacyRandomAccessIterator
 		template< class IteType, class AllocatorType >
 		friend class vector;
 
+		template< class IteType >
+		friend class LegacyRandomAccessIterator;
+
 		typedef std::random_access_iterator_tag				iterator_category;
 		typedef Type 										value_type;
 		typedef std::ptrdiff_t								difference_type;
@@ -178,8 +181,12 @@ class	LegacyRandomAccessIterator
 		// LegacyInputIterator
 		iterator		operator++(int) { iterator it(_ptr); ++_ptr; return (it); }
 		pointer			operator->(void) const { return (_ptr); }
-		bool			operator==(const iterator& rhs) const { return (this->_ptr == rhs._ptr); }
-		bool			operator!=(const iterator& rhs) const { return (this->_ptr != rhs._ptr); }
+
+		bool			operator==(const iterator& rhs) { return (this->_ptr == rhs._ptr); }
+		bool			operator==(const const_iterator& rhs) const { return (this->_ptr == rhs._ptr); }
+
+		bool			operator!=(const iterator& rhs) { return (this->_ptr != rhs._ptr); }
+		bool			operator!=(const const_iterator& rhs) const { return (this->_ptr != rhs._ptr); }
 
 		// LegacyOutputIterator
 
@@ -192,10 +199,18 @@ class	LegacyRandomAccessIterator
 		iterator		operator--(int) { iterator it(_ptr); --_ptr; return (it); }
 
 		// LegacyRandomAccessIterator
-		bool			operator<(const iterator& rhs) const { return (_ptr < rhs._ptr); }
-		bool			operator>(const iterator& rhs) const { return (_ptr > rhs._ptr); }
-		bool			operator<=(const iterator& rhs) const { return (_ptr <= rhs._ptr); }
-		bool			operator>=(const iterator& rhs) const { return (_ptr >= rhs._ptr); }
+		bool			operator<(const iterator& rhs) { return (_ptr < rhs._ptr); }
+		bool			operator<(const const_iterator& rhs) const { return (_ptr < rhs._ptr); }
+
+		bool			operator>(const iterator& rhs) { return (_ptr > rhs._ptr); }
+		bool			operator>(const const_iterator& rhs) const { return (_ptr > rhs._ptr); }
+
+		bool			operator<=(const iterator& rhs) { return (_ptr <= rhs._ptr); }
+		bool			operator<=(const const_iterator& rhs) const { return (_ptr <= rhs._ptr); }
+
+		bool			operator>=(const iterator& rhs) { return (_ptr >= rhs._ptr); }
+		bool			operator>=(const const_iterator& rhs) const { return (_ptr >= rhs._ptr); }
+
 		iterator		&operator+=(difference_type n) {  _ptr += n; return (*this); }
 		iterator		operator+(difference_type n) const { return (iterator(_ptr + n)); }
 //		friend iterator	operator+(difference_type n, const iterator& rhs) { return (iterator(rhs + n)); }
