@@ -201,7 +201,8 @@ class	LegacyRandomAccessIterator
 //		friend iterator	operator+(difference_type n, const iterator& rhs) { return (iterator(rhs + n)); }
 		iterator		&operator-=(difference_type n) {  return (*this += -n); }
 		iterator		operator-(difference_type n) const { return (iterator(_ptr - n)); }
-		difference_type	operator-(iterator rhs) { return (_ptr - rhs._ptr); }
+		difference_type	operator-(const iterator &rhs) { return (_ptr - rhs._ptr); }
+		difference_type	operator-(const const_iterator &rhs) const { return (_ptr - rhs._ptr); }
 		reference		operator[](difference_type n) const { return (*(_ptr + n)); };
 
 	private:
