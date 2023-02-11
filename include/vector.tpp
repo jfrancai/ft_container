@@ -233,7 +233,6 @@ typename vector< Type, Allocator >::iterator	vector< Type, Allocator >::end(void
 }
 
 // rbegin
-
 template< class Type, class Allocator >
 typename vector< Type, Allocator >::const_reverse_iterator	vector< Type, Allocator >::rbegin(void) const
 {

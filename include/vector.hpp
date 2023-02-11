@@ -93,49 +93,15 @@ class vector
 		pointer 				_elements;
 };
 
-template < typename Type >
-bool	operator<(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
-{
-	return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
-}
-
-template < typename Type >
-bool	operator>(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
-{
-	return (rhs < lhs);
-}
-
-template < typename Type >
-bool	operator>=(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
-{
-	return (!(lhs < rhs));
-}
-
-template < typename Type >
-bool	operator<=(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
-{
-	return (!(rhs < lhs));
-}
-
-template < typename Type >
-bool	operator==(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
-{
-	if (lhs.size() != rhs.size())
-		return (false);
-	return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
-}
-
-template < typename Type >
-bool	operator!=(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs)
-{
-	return (!(lhs == rhs));
-}
+template < typename Type > bool	operator==(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs) { if (lhs.size() != rhs.size()) return (false); return (ft::equal(lhs.begin(), lhs.end(), rhs.begin())); }
+template < typename Type > bool	operator<(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs) { return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
+template < typename Type > bool	operator>(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs) { return (rhs < lhs); }
+template < typename Type > bool	operator>=(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs) { return (!(lhs < rhs)); }
+template < typename Type > bool	operator<=(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs) { return (!(rhs < lhs)); }
+template < typename Type > bool	operator!=(const ft::vector< Type > &lhs, const ft::vector< Type > &rhs) { return (!(lhs == rhs)); }
 
 template< class Type, class Allocator >
-void	swap(ft::vector< Type, Allocator > &x, ft::vector< Type, Allocator > &y)
-{
-	return (y.swap(x));
-}
+void	swap(ft::vector< Type, Allocator > &x, ft::vector< Type, Allocator > &y) { return (y.swap(x)); }
 
 template< class Type >
 class	LegacyRandomAccessIterator
@@ -143,9 +109,6 @@ class	LegacyRandomAccessIterator
 	public:
 		template< class IteType, class AllocatorType >
 		friend class vector;
-
-		template< class IteType >
-		friend class LegacyRandomAccessIterator;
 
 		typedef std::random_access_iterator_tag				iterator_category;
 		typedef Type 										value_type;
@@ -155,64 +118,41 @@ class	LegacyRandomAccessIterator
 		typedef LegacyRandomAccessIterator< Type >			iterator;
 		typedef LegacyRandomAccessIterator< const Type >	const_iterator;
 
-		// LegacyIterator
-		LegacyRandomAccessIterator(const iterator& other) : _ptr(other._ptr) {}
+		LegacyRandomAccessIterator(const iterator& other) : _ptr(other.operator->()) {}
 		~LegacyRandomAccessIterator(void) {}
-		iterator		&operator=(const iterator& other) { this->_ptr = other._ptr; return (*this); }
-		iterator		&operator++(void) { ++_ptr; return (*this); }
-		reference		operator*(void) const { return (*_ptr); }
-
-		// LegacyInputIterator
-		iterator		operator++(int) { iterator it(_ptr); ++_ptr; return (it); }
-		pointer			operator->(void) const { return (_ptr); }
-
-		bool			operator==(const iterator& rhs) { return (this->_ptr == rhs._ptr); }
-		bool			operator==(const const_iterator& rhs) const { return (this->_ptr == rhs._ptr); }
-
-		bool			operator!=(const iterator& rhs) { return (this->_ptr != rhs._ptr); }
-		bool			operator!=(const const_iterator& rhs) const { return (this->_ptr != rhs._ptr); }
-
-		// LegacyOutputIterator
-
-		// LegacyForwardIterator
 		operator	const_iterator(void) const { return  (LegacyRandomAccessIterator< const Type >(_ptr)); }
 		explicit	LegacyRandomAccessIterator(pointer ptr = NULL) : _ptr(ptr) {}
 
-		// LegacyBidirectionalIterator
-		iterator		&operator--(void) { --_ptr; return (*this); }
-		iterator		operator--(int) { iterator it(_ptr); --_ptr; return (it); }
-
-		// LegacyRandomAccessIterator
-		bool			operator<(const iterator& rhs) { return (_ptr < rhs._ptr); }
-		bool			operator<(const const_iterator& rhs) const { return (_ptr < rhs._ptr); }
-
-		bool			operator>(const iterator& rhs) { return (_ptr > rhs._ptr); }
-		bool			operator>(const const_iterator& rhs) const { return (_ptr > rhs._ptr); }
-
-		bool			operator<=(const iterator& rhs) { return (_ptr <= rhs._ptr); }
-		bool			operator<=(const const_iterator& rhs) const { return (_ptr <= rhs._ptr); }
-
-		bool			operator>=(const iterator& rhs) { return (_ptr >= rhs._ptr); }
-		bool			operator>=(const const_iterator& rhs) const { return (_ptr >= rhs._ptr); }
-
-		iterator		&operator+=(difference_type n) {  _ptr += n; return (*this); }
-		iterator		operator+(difference_type n) const { return (iterator(_ptr + n)); }
-//		friend iterator	operator+(difference_type n, const iterator& rhs) { return (iterator(rhs + n)); }
-		iterator		&operator-=(difference_type n) {  return (*this += -n); }
-		iterator		operator-(difference_type n) const { return (iterator(_ptr - n)); }
-		difference_type	operator-(const iterator &rhs) { return (_ptr - rhs._ptr); }
-		difference_type	operator-(const const_iterator &rhs) const { return (_ptr - rhs._ptr); }
-		reference		operator[](difference_type n) const { return (*(_ptr + n)); };
-
+		iterator				operator++(int) { iterator it(_ptr); ++_ptr; return (it); }
+		pointer					operator->(void) const { return (_ptr); }
+		iterator				&operator=(const iterator& other) { this->_ptr = other.operator->(); return (*this); }
+		iterator				&operator++(void) { ++_ptr; return (*this); }
+		reference				operator*(void) const { return (*_ptr); }
+		iterator				&operator--(void) { --_ptr; return (*this); }
+		iterator				operator--(int) { iterator it(_ptr); --_ptr; return (it); }
+		iterator				&operator+=(difference_type n) {  _ptr += n; return (*this); }
+		iterator				operator+(difference_type n) const { return (iterator(_ptr + n)); }
+		iterator				&operator-=(difference_type n) {  return (*this += -n); }
+		iterator				operator-(difference_type n) const { return (iterator(_ptr - n)); }
+		reference				operator[](difference_type n) const { return (*(_ptr + n)); };
 	private:
 		pointer	_ptr;
 };
 
+template < typename Type1, typename Type2 > bool	operator==(const LegacyRandomAccessIterator< Type1 > &lhs, const LegacyRandomAccessIterator< Type2 > &rhs) { return (lhs.operator->() == rhs.operator->()); }
+template < typename Type1, typename Type2 > bool	operator!=(const LegacyRandomAccessIterator< Type1 > &lhs, const LegacyRandomAccessIterator< Type2 > &rhs) { return (lhs.operator->() != rhs.operator->()); }
+template < typename Type1, typename Type2 > bool	operator<=(const LegacyRandomAccessIterator< Type1 > &lhs, const LegacyRandomAccessIterator< Type2 > &rhs) { return (lhs.operator->() <= rhs.operator->()); }
+template < typename Type1, typename Type2 > bool	operator>=(const LegacyRandomAccessIterator< Type1 > &lhs, const LegacyRandomAccessIterator< Type2 > &rhs) { return (lhs.operator->() >= rhs.operator->()); }
+template < typename Type1, typename Type2 > bool	operator<(const LegacyRandomAccessIterator< Type1 >  &lhs, const LegacyRandomAccessIterator< Type2 > &rhs) { return (lhs.operator->() < rhs.operator->()); }
+template < typename Type1, typename Type2 > bool	operator>(const LegacyRandomAccessIterator< Type1 >  &lhs, const LegacyRandomAccessIterator< Type2 > &rhs) { return (lhs.operator->() > rhs.operator->()); }
+
+template < typename Type1, typename Type2 >
+std::ptrdiff_t	operator-(const LegacyRandomAccessIterator< Type1 >  &lhs, const LegacyRandomAccessIterator< Type2 > &rhs)
+{ return (lhs.operator->() - rhs.operator->()); }
+
 template< class Type >
 LegacyRandomAccessIterator< Type > operator+(std::ptrdiff_t n, const LegacyRandomAccessIterator< Type > &rhs)
-{
-	return (rhs + n);
-}
+{ return (rhs + n); }
 
 template< class Type >
 void	swap(ft::LegacyRandomAccessIterator< Type > &x, ft::LegacyRandomAccessIterator< Type > &y)
@@ -221,7 +161,6 @@ void	swap(ft::LegacyRandomAccessIterator< Type > &x, ft::LegacyRandomAccessItera
 	x = y;
 	y = tmp;
 }
-
 
 } // namespace ft
 
