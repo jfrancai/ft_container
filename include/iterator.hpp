@@ -51,16 +51,16 @@ class reverse_iterator
 
 		template< class U >
 		reverse_iterator	&operator=(const reverse_iterator< U > &other) { current_ = other.base(); return (*this); }
-		Iterator			base(void) const { return (current_); }
-		reference			operator*(void) const { return (*(current_ - 1)); }
+		iterator_type		base(void) const { return (current_); }
+		reference			operator*(void) const { iterator_type tmp(current_); return (*--tmp); }
 		pointer				operator->(void) const { return &(operator*()); }
 		reference			operator[](difference_type n) const { return (*(*this + n)); }
 		reverse_iterator	&operator++() { --current_; return (*this); }
 		reverse_iterator	operator++(int) { reverse_iterator tmp(*this); --current_; return (tmp); }
 		reverse_iterator	&operator--() { ++current_; return (*this); }
 		reverse_iterator	operator--(int) { reverse_iterator tmp(*this); ++current_; return (tmp); }
-		reverse_iterator	operator+(difference_type n) const { return (reverse_iterator(current_ - n)); }
-		reverse_iterator	operator-(difference_type n) const { return (reverse_iterator(current_ + n)); }
+		reverse_iterator	operator+(difference_type n) const { iterator_type tmp(current_); while (n--) --tmp; return (reverse_iterator(tmp)); }
+		reverse_iterator	operator-(difference_type n) const { iterator_type tmp(current_); while (n--) ++tmp; return (reverse_iterator(tmp)); }
 		reverse_iterator	&operator+=(difference_type n) { current_ -= n; return (*this); }
 		reverse_iterator	&operator-=(difference_type n) { current_ += n; return (*this); }
 
