@@ -32,7 +32,6 @@ typename map< Key, Type, Compare, Allocator >::allocator_type	map< Key, Type, Co
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::const_iterator	map< Key, Type, Compare, Allocator>::begin(void) const
 {
-	std::cout << "const" << std::endl;
 	if (empty())
 		return (const_iterator(_elements.getNill()));
 	return (const_iterator(_elements.minimum(_elements.getRoot())));

@@ -5,6 +5,7 @@
 #include "iterator.hpp"
 #include "type_traits.hpp"
 #include "RedBlackTree.hpp"
+#include "algorithm.hpp"
 
 #include <utility> // replace with utility .hpp (make_pair and pair template should be inside this header)
 
@@ -75,10 +76,10 @@ template<
 
 		////// Non-Member Functions ////
 		friend bool	operator==(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs)
-		{ return (lhs == rhs); }
+		{  if (lhs.size() != rhs.size()) return (false); return (ft::equal(lhs.begin(), lhs.end(), rhs.begin())); }
 
 		friend bool	operator!=(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs)
-		{ return (lhs != rhs); }
+		{ return (!(lhs == rhs)); }
 
 		friend bool	operator>=(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs)
 		{ return (!(lhs < rhs)); }
@@ -88,13 +89,8 @@ template<
 
 		friend bool	operator<=(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) 
 		{ return (!(rhs < lhs)); }
-		friend bool	operator<(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) {
-			if (lhs.size() < rhs.size())
-				return (true);
-			if (rhs.size() < lhs.size())
-				return (false);
-			return (lhs < rhs);
-		}
+		friend bool	operator<(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs)
+		{ return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
 	private:
 		allocator_type					_alloc;
 		size_type						_mapSize;

@@ -1,5 +1,6 @@
 #ifndef ALGORITHM
 #define ALGORITHM
+#include <iostream>
 
 namespace ft {
 

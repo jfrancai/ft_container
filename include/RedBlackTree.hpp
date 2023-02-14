@@ -6,13 +6,14 @@ namespace ft {
 
 template< typename Type >
 struct Node {
-	typedef Type			value_type;
-	typedef Type			*pointer;
-	typedef Node< Type >	*node_pointer;
-	typedef Node< Type >	&node_reference;
-	typedef const Type		*const_pointer;
-	typedef Type			&reference;
-	typedef const Type		&const_reference;
+	typedef Type				value_type;
+	typedef Type				*pointer;
+	typedef Node< Type >		*node_pointer;
+	typedef const Node< Type >	*const_node_pointer;
+	typedef Node< Type >		&node_reference;
+	typedef const Type			*const_pointer;
+	typedef Type				&reference;
+	typedef const Type			&const_reference;
 
 	pointer			data;
 	node_pointer	parent;
@@ -83,8 +84,10 @@ struct Node {
 	friend bool	operator!=(const Node< Type > &lhs, const Node< Type > &rhs) {return (!(lhs == rhs)); }
 
 	
-	node_pointer	predecessor(node_pointer x) const
+	node_pointer	predecessor(const_node_pointer node) const
 	{
+		node_pointer x = const_cast< node_pointer >(node);
+
 		if (x->left && !x->left->isNILL)
 		{
 			x = x->left;
@@ -102,23 +105,34 @@ struct Node {
 		return (y);
 	}
 
-	node_pointer	successor(node_pointer x) const
+	node_pointer	successor(const_node_pointer node) const
 	{
+		node_pointer x = const_cast< node_pointer >(node);
+
+		std::cout << "in with : " << std::endl;
+		std::cout << x->data << std::endl;
+		std::cout << x->data->first << std::endl;
+
 		if (x->right && !x->right->isNILL)
 		{
 			x = x->right;
 			while (x->left->isNILL == false)
 				x = x->left;
+			std::cout << "out with: " << std::endl;
+			std::cout << x << std::endl;
 			return (x);
 		}
 
 		node_pointer y = x->parent;
+		node_pointer nill = x->right;
 		while (y && !y->isNILL && x == y->right)
 		{
 			x = y;
 			y = y->parent;
 		}
-		return (y);
+		if (y)
+			return (y);
+		return (nill);
 	}
 };
 
