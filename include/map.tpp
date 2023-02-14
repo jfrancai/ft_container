@@ -130,23 +130,19 @@ typename std::pair< typename map< Key, Type, Compare, Allocator >::iterator, boo
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator>::size_type	map< Key, Type, Compare, Allocator >::count(const Key &key)
 {
-	if (_elements.searchTree(_elements.getRoot(), key)->isNILL)
-		return (size_type(0));
-	return (size_type(1));
+	return (find(key) != end());
 }
 
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator>::iterator	map< Key, Type, Compare, Allocator >::find(const Key &key)
 {
-	(void)key;
-	return (end());
+	return (iterator(_elements.searchTree(_elements.getRoot(), key)));
 }
 
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Compare, Allocator >::find(const Key &key) const
 {
-	(void)key;
-	return (end());
+	return (const_iterator(_elements.searchTree(_elements.getRoot(), key)));
 }
 
 } //namespace
