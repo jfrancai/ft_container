@@ -57,7 +57,7 @@ class reverse_iterator
 		reference			operator[](difference_type n) const { return (*(*this + n)); }
 		reverse_iterator	&operator++() { --current_; return (*this); }
 		reverse_iterator	operator++(int) { reverse_iterator tmp(*this); --current_; return (tmp); }
-		reverse_iterator	&operator--() { ++current_; return (*this); }
+		reverse_iterator	&operator--() {  ++current_; return (*this); }
 		reverse_iterator	operator--(int) { reverse_iterator tmp(*this); ++current_; return (tmp); }
 		reverse_iterator	operator+(difference_type n) const { iterator_type tmp(current_); while (n--) --tmp; return (reverse_iterator(tmp)); }
 		reverse_iterator	operator-(difference_type n) const { iterator_type tmp(current_); while (n--) ++tmp; return (reverse_iterator(tmp)); }

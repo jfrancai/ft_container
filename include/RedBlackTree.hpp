@@ -83,13 +83,12 @@ struct Node {
 	friend bool	operator!=(const Node< Type > &lhs, const Node< Type > &rhs) {return (!(lhs == rhs)); }
 
 	
-	node_pointer	predecessor(void) const
+	node_pointer	predecessor(node_pointer x) const
 	{
-		node_pointer	x = const_cast< node_pointer > (this);
 		if (x->left && !x->left->isNILL)
 		{
 			x = x->left;
-			while (x->isNILL == false)
+			while (x->right->isNILL == false)
 				x = x->right;
 			return (x);
 		}
@@ -103,13 +102,12 @@ struct Node {
 		return (y);
 	}
 
-	node_pointer	successor(void) const
+	node_pointer	successor(node_pointer x) const
 	{
-		node_pointer	x = const_cast< node_pointer > (this);
 		if (x->right && !x->right->isNILL)
 		{
 			x = x->right;
-			while (x->isNILL == false)
+			while (x->left->isNILL == false)
 				x = x->left;
 			return (x);
 		}

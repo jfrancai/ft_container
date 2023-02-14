@@ -131,8 +131,8 @@ class	LegacyBidirectionalIterator
 		LegacyBidirectionalIterator(const iterator& other) : _node(other._node) {}
 		~LegacyBidirectionalIterator(void) {}
 		iterator		&operator=(const iterator& other) { _node = other._node; return (*this); }
-		iterator		&operator++(void) { _node = _node->successor(); return (*this); }
-		reference		operator*(void) const { return (*_node->data); }
+		iterator		&operator++(void) { _node = _node->successor(_node); return (*this); }
+		reference		operator*(void) const { return (*(_node->data)); }
 
 		// LegacyInputIterator
 		iterator		operator++(int) { iterator it(_node); ++_node; return (it); }
@@ -147,7 +147,7 @@ class	LegacyBidirectionalIterator
 		operator const_iterator(void) const { return  (LegacyBidirectionalIterator< const Type >(_node)); }
 
 		// LegacyBidirectionalIterator
-		iterator		&operator--(void) { _node = _node->predecessor(); return (*this); }
+		iterator		&operator--(void) { _node = _node->predecessor(_node); return (*this); }
 		iterator		operator--(int) { iterator it(_node); --_node; return (it); }
 };
 
