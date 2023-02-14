@@ -43,9 +43,6 @@ template<
 		typedef ft::reverse_iterator< iterator >				reverse_iterator;
 		typedef ft::reverse_iterator< const_iterator >			const_reverse_iterator;
 
-		// Debug
-		const RedBlackTree< value_type >	&getTree() const { return _elements; } // remove temp helper function
-
 		explicit map( const Allocator& alloc = Allocator());
 		allocator_type			get_allocator(void) const;
 
@@ -92,9 +89,9 @@ template<
 		friend bool	operator<(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs)
 		{ return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
 	private:
-		allocator_type					_alloc;
-		size_type						_mapSize;
-		RedBlackTree< value_type >		_elements;
+		allocator_type							_alloc;
+		size_type								_mapSize;
+		RedBlackTree< Key, value_type, Compare >		_elements;
 };
 
 /*

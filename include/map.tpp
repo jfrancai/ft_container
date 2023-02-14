@@ -116,7 +116,7 @@ typename map< Key, Type, Compare, Allocator >::size_type	map< Key, Type, Compare
 template< class Key, class Type, class Compare, class Allocator >
 typename std::pair< typename map< Key, Type, Compare, Allocator >::iterator, bool >	map< Key, Type, Compare, Allocator >::insert(const typename map< Key, Type, Compare, Allocator >::value_type &value)
 {
-	std::pair< typename ft::RedBlackTree< typename ft::map< Key, Type, Compare, Allocator >::value_type >::node_pointer, bool > pair = _elements.insert(value);
+	std::pair< typename ft::RedBlackTree< Key, std::pair< const Key, Type >, Allocator >::node_pointer, bool > pair = _elements.insert(value);
 	typename map< Key, Type, Compare, Allocator >::iterator	it(pair.first);
 	if (pair.second)
 	{
@@ -130,8 +130,9 @@ typename std::pair< typename map< Key, Type, Compare, Allocator >::iterator, boo
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator>::size_type	map< Key, Type, Compare, Allocator >::count(const Key &key)
 {
-	(void)key;
-	return (0);
+	if (_elements.searchTree(_elements.getRoot(), key)->isNILL)
+		return (size_type(0));
+	return (size_type(1));
 }
 
 template< class Key, class Type, class Compare, class Allocator >

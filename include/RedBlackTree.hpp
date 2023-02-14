@@ -109,17 +109,21 @@ struct Node {
 	{
 		node_pointer x = const_cast< node_pointer >(node);
 
+		/*
 		std::cout << "in with : " << std::endl;
 		std::cout << x->data << std::endl;
 		std::cout << x->data->first << std::endl;
+			*/
 
 		if (x->right && !x->right->isNILL)
 		{
 			x = x->right;
 			while (x->left->isNILL == false)
 				x = x->left;
+				/*
 			std::cout << "out with: " << std::endl;
 			std::cout << x << std::endl;
+				*/
 			return (x);
 		}
 
@@ -136,10 +140,11 @@ struct Node {
 	}
 };
 
-template< typename Type, typename Compare = std::less< Type > >
+template< typename Key, typename Type, typename Compare >
 class RedBlackTree
 {
 	public:
+		typedef Key				key_type;
 		typedef Type			value_type;
 		typedef Type			*pointer;
 		typedef const Type		*const_pointer;
@@ -390,7 +395,7 @@ class RedBlackTree
 
 		std::pair< node_pointer, bool >	insert(const_reference key)
 		{
-			node_pointer node = searchTree(_root, key);
+			node_pointer node = searchTree(_root, key.first);
 			if (!node->isNILL)
 				return (std::make_pair(node, false));
 			node = new node_type(key);
@@ -404,7 +409,7 @@ class RedBlackTree
 			while (!x->isNILL)
 			{
 				y = x;
-				if (_compare(*node->data, *x->data))
+				if (_compare(node->data->first, x->data->first))
 					x = x->left;
 				else
 					x = x->right;
@@ -413,7 +418,7 @@ class RedBlackTree
 			node->parent = y;
 			if (y == NULL)
 				_root = node;
-			else if (_compare(*node->data, *y->data))
+			else if (_compare(node->data->first, y->data->first))
 				y->left = node;
 			else
 				y->right = node;
@@ -570,13 +575,13 @@ class RedBlackTree
 				printHelper(_root, "", true);
 		}
 
-		node_pointer	searchTree(node_pointer node, const_reference key)
+		node_pointer	searchTree(node_pointer node, key_type key)
 		{
 			while (!node->isNILL)
 			{
-				if (key == *node->data)
+				if (key == node->data->first)
 					return (node);
-				if (key < *node->data)
+				if (_compare(key, node->data->first))
 					node = node->left;
 				else
 					node = node->right;
