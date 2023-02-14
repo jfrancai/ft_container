@@ -32,31 +32,30 @@ typename map< Key, Type, Compare, Allocator >::allocator_type	map< Key, Type, Co
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::const_iterator	map< Key, Type, Compare, Allocator>::begin(void) const
 {
+	std::cout << "const" << std::endl;
 	if (empty())
-		return (const_iterator(NULL));
-	return (const_iterator((_elements.getRoot())->minimum()));
+		return (const_iterator(_elements.getNill()));
+	return (const_iterator(_elements.minimum(_elements.getRoot())));
 }
 
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator>::begin(void)
 {
 	if (empty())
-		return (iterator(NULL));
-	return (iterator((_elements.getRoot())->minimum()));
+		return (iterator(_elements.getNill()));
+	return (iterator(_elements.minimum(_elements.getRoot())));
 }
 
 // end
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::const_iterator	map< Key, Type, Compare, Allocator>::end(void) const
 {
-	(_elements.getNill())->parent = (_elements.getRoot())->maximum();
 	return (const_iterator(_elements.getNill()));
 }
 
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator>::end(void)
 {
-	(_elements.getNill())->parent = (_elements.getRoot())->maximum();
 	return (iterator(_elements.getNill()));
 }
 
@@ -121,7 +120,10 @@ typename std::pair< typename map< Key, Type, Compare, Allocator >::iterator, boo
 	std::pair< typename ft::RedBlackTree< typename ft::map< Key, Type, Compare, Allocator >::value_type >::node_pointer, bool > pair = _elements.insert(value);
 	typename map< Key, Type, Compare, Allocator >::iterator	it(pair.first);
 	if (pair.second)
+	{
+		_elements.getNill()->parent = _elements.maximum(_elements.getRoot());
 		_mapSize++;
+	}
 	return (std::make_pair(it, pair.second));
 }
 

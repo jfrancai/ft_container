@@ -83,11 +83,16 @@ struct Node {
 	friend bool	operator!=(const Node< Type > &lhs, const Node< Type > &rhs) {return (!(lhs == rhs)); }
 
 	
-	node_pointer	predecessor(void)
+	node_pointer	predecessor(void) const
 	{
-		node_pointer	x = this;
+		node_pointer	x = const_cast< node_pointer > (this);
 		if (x->left && !x->left->isNILL)
-			return (x->left->maximum());
+		{
+			x = x->left;
+			while (x->isNILL == false)
+				x = x->right;
+			return (x);
+		}
 
 		node_pointer y = x->parent;
 		while (!x->isNILL && y && !y->isNILL && x == y->left)
@@ -98,11 +103,16 @@ struct Node {
 		return (y);
 	}
 
-	node_pointer	successor(void)
+	node_pointer	successor(void) const
 	{
-		node_pointer	x = this;
+		node_pointer	x = const_cast< node_pointer > (this);
 		if (x->right && !x->right->isNILL)
-			return (x->right->minimum());
+		{
+			x = x->right;
+			while (x->isNILL == false)
+				x = x->left;
+			return (x);
+		}
 
 		node_pointer y = x->parent;
 		while (y && !y->isNILL && x == y->right)
@@ -111,22 +121,6 @@ struct Node {
 			y = y->parent;
 		}
 		return (y);
-	}
-
-	node_pointer minimum(void)
-	{
-		node_pointer	node = this;
-		while (node->left && !node->left->isNILL)
-			node = node->left;
-		return (node);
-	}
-
-	node_pointer maximum(void)
-	{
-		node_pointer	node = this;
-		while (node->right && !node->right->isNILL)
-			node = node->right;
-		return (node);
 	}
 };
 
@@ -163,6 +157,20 @@ class RedBlackTree
 			_root = cloneBinaryTree(src.getRoot());
 		}
 
+		node_pointer	minimum(node_pointer node) const
+		{
+			while (node->left->isNILL == false)
+				node = node->left;
+			return (node);
+		}
+
+		node_pointer	maximum(node_pointer node) const
+		{
+			while (node->right->isNILL == false)
+				node = node->right;
+			return (node);
+		}
+
 		node_pointer cloneBinaryTree(node_pointer node)
 		{
 			if (node->isNILL)
@@ -189,43 +197,6 @@ class RedBlackTree
 			_root = cloneBinaryTree(rhs.getRoot(), rhs._NILL);
 			return (*this);
 		}
-
-		bool	isInferior(node_pointer root1, node_pointer root2) const
-		{
-			if (root2->isNILL)
-				return (false);
-			if (root1->isNILL)
-				return (true);
-			while (root1 && root2)
-			{
-				if (*root1 < *root2)
-					return (true);
-				if (*root2 < *root1)
-					return (false);
-				root1 = root1->successor();
-				root2 = root2->successor();
-			}
-			return (false);
-		}
-
-		bool	isIdentical(node_pointer root1, node_pointer root2) const
-		{
-			if (root1->isNILL && root2->isNILL)
-				return (true);
-			else if (root1->isNILL || root2->isNILL)
-				return (false);
-			else
-			{
-				if (*root1 == *root2 && isIdentical(root1->left, root2->left) && isIdentical(root1->right, root2->right))
-					return (true);
-				else
-					return (false);
-			}
-		}
-
-		friend bool	operator<(const RedBlackTree< Type, Compare > &lhs, const RedBlackTree< Type, Compare > &rhs) { return (lhs.isInferior((lhs.getRoot())->minimum(), (rhs.getRoot())->minimum())); }
-		friend bool	operator==(const RedBlackTree< Type, Compare > &lhs, const RedBlackTree< Type, Compare > &rhs) { return (lhs.isIdentical(lhs.getRoot(), rhs.getRoot())); }
-		friend bool	operator!=(const RedBlackTree< Type, Compare > &lhs, const RedBlackTree< Type, Compare > &rhs) { return (!(lhs == rhs)); }
 
 		bool	checkerHelper(node_pointer node, bool &status)
 		{
@@ -551,7 +522,7 @@ class RedBlackTree
 			}
 			else
 			{
-				y = node->right->minimum();
+				y = minimum(node->right);
 				original_color = y->color;
 				x = y->right;
 				if (y->parent == node)

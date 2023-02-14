@@ -74,17 +74,26 @@ template<
 		const_iterator			find(const Key &key) const;
 
 		////// Non-Member Functions ////
-		friend bool	operator==(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs) { return (lhs._elements == rhs._elements); }
-		friend bool	operator!=(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs) { return (lhs._elements != rhs._elements); }
-		friend bool	operator>=(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (!(lhs._elements < rhs._elements)); }
-		friend bool	operator>(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (rhs._elements < lhs._elements); }
-		friend bool	operator<=(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (!(rhs._elements < lhs._elements)); }
+		friend bool	operator==(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs)
+		{ return (lhs == rhs); }
+
+		friend bool	operator!=(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs)
+		{ return (lhs != rhs); }
+
+		friend bool	operator>=(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs)
+		{ return (!(lhs < rhs)); }
+
+		friend bool	operator>(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs)
+		{ return (rhs < lhs); }
+
+		friend bool	operator<=(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) 
+		{ return (!(rhs < lhs)); }
 		friend bool	operator<(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) {
 			if (lhs.size() < rhs.size())
 				return (true);
 			if (rhs.size() < lhs.size())
 				return (false);
-			return (lhs._elements < rhs._elements);
+			return (lhs < rhs);
 		}
 	private:
 		allocator_type					_alloc;
