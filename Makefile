@@ -2,7 +2,7 @@ NAME := ft_container
 
 CC := c++
 STDFLAGS := -std=c++98
-CFLAGS := -Wall -Werror -Wextra
+CFLAGS := -fpermissive #-Wall -Werror -Wextra
 INCLUDE := -I include/
 TESTFLAGS := -lgtest -lgtest_main -lgmock
 
