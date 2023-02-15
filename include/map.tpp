@@ -164,7 +164,7 @@ typename map< Key, Type, Compare, Allocator>::key_compare	map< Key, Type, Compar
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::value_compare	map< Key, Type, Compare, Allocator >::value_comp(void) const
 {
-	return (typename ft::map< Key, Type, Compare, Allocator >::value_compare());
+	return (typename ft::map< Key, Type, Compare, Allocator >::value_compare(_comp));
 }
 //// Observers ////
 

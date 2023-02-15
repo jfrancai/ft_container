@@ -55,6 +55,7 @@ template<
 			protected:
 				Compare comp_;
 				value_compare(Compare c) : comp_(c) {}
+				friend class map;
 		};
 
 		//// Element access ////
@@ -140,11 +141,11 @@ class	LegacyBidirectionalIterator
 		LegacyBidirectionalIterator(const iterator& other) : _node(other._node) {}
 		~LegacyBidirectionalIterator(void) {}
 		iterator		&operator=(const iterator& other) { _node = other._node; return (*this); }
-		iterator		&operator++(void) { _node = _node->successor(_node); return (*this); }
+		iterator		&operator++(void) {  _node = _node->successor(_node); return (*this); }
 		reference		operator*(void) const { return (*(_node->data)); }
 
 		// LegacyInputIterator
-		iterator		operator++(int) { iterator it(_node); ++_node; return (it); }
+		iterator		operator++(int) { iterator it(_node); _node = _node->successor(_node); return (it); }
 		pointer			operator->(void) const { return (_node->data); }
 		bool			operator==(const iterator& rhs) const { return _node == rhs._node; }
 		bool			operator!=(const iterator& rhs) const { return _node != rhs._node; }
@@ -157,7 +158,7 @@ class	LegacyBidirectionalIterator
 
 		// LegacyBidirectionalIterator
 		iterator		&operator--(void) { _node = _node->predecessor(_node); return (*this); }
-		iterator		operator--(int) { iterator it(_node); --_node; return (it); }
+		iterator		operator--(int) { iterator it(_node); _node = _node->predecessor(_node); return (it); }
 };
 
 template< class Type >
