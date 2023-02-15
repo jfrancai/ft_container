@@ -9,8 +9,18 @@ namespace ft {
  */
 
 //// Constructors ////
+
 template< class Key, class Type, class Compare, class Allocator >
-map< Key, Type, Compare, Allocator >::map(const Allocator& alloc) :
+map< Key, Type, Compare, Allocator >::map(void) :
+	_comp(Compare()),
+	_alloc(Allocator()),
+	_mapSize(0)
+{
+	return ;
+}
+template< class Key, class Type, class Compare, class Allocator >
+map< Key, Type, Compare, Allocator >::map(const Compare &comp, const Allocator& alloc) :
+	_comp(comp),
 	_alloc(alloc),
 	_mapSize(0)
 {
@@ -116,7 +126,7 @@ typename map< Key, Type, Compare, Allocator >::size_type	map< Key, Type, Compare
 template< class Key, class Type, class Compare, class Allocator >
 typename std::pair< typename map< Key, Type, Compare, Allocator >::iterator, bool >	map< Key, Type, Compare, Allocator >::insert(const typename map< Key, Type, Compare, Allocator >::value_type &value)
 {
-	std::pair< typename ft::RedBlackTree< Key, std::pair< const Key, Type >, Allocator >::node_pointer, bool > pair = _elements.insert(value);
+	std::pair< typename ft::RedBlackTree< Key, std::pair< const Key, Type >, Compare >::node_pointer, bool > pair = _elements.insert(value);
 	typename map< Key, Type, Compare, Allocator >::iterator	it(pair.first);
 	if (pair.second)
 	{
@@ -144,5 +154,7 @@ typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Com
 {
 	return (const_iterator(_elements.searchTree(_elements.getRoot(), key)));
 }
+
+//// Observers ////
 
 } //namespace

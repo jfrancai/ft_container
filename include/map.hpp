@@ -6,7 +6,6 @@
 #include "type_traits.hpp"
 #include "RedBlackTree.hpp"
 #include "algorithm.hpp"
-
 #include <utility> // replace with utility .hpp (make_pair and pair template should be inside this header)
 
 namespace ft {
@@ -27,24 +26,36 @@ template<
 		// friend class LegacyBidirectionalIterator;
 
 		// Member types (aliases)
-		typedef Key												key_type;
-		typedef Type 											mapped_type;
-		typedef std::pair< const Key, Type >					value_type; // update for ft::pair
-		typedef std::size_t 									size_type;
-		typedef std::ptrdiff_t									Typedifference_type;
-		typedef Compare											key_compare;
-		typedef Allocator										allocator_type;
-		typedef value_type&										reference;
-		typedef const value_type&								const_reference;
-		typedef typename Allocator::pointer						pointer;
-		typedef typename Allocator::const_pointer				const_pointer;
-		typedef LegacyBidirectionalIterator< Node< value_type > >		iterator;
+		typedef Key															key_type;
+		typedef Type 														mapped_type;
+		typedef std::pair< const Key, Type >								value_type; // update for ft::pair
+		typedef std::size_t 												size_type;
+		typedef std::ptrdiff_t												Typedifference_type;
+		typedef Compare														key_compare;
+		typedef Allocator													allocator_type;
+		typedef value_type&													reference;
+		typedef const value_type&											const_reference;
+		typedef typename Allocator::pointer									pointer;
+		typedef typename Allocator::const_pointer							const_pointer;
+		typedef LegacyBidirectionalIterator< Node< value_type > >			iterator;
 		typedef LegacyBidirectionalIterator< const Node < value_type > >	const_iterator;
-		typedef ft::reverse_iterator< iterator >				reverse_iterator;
-		typedef ft::reverse_iterator< const_iterator >			const_reverse_iterator;
+		typedef ft::reverse_iterator< iterator >							reverse_iterator;
+		typedef ft::reverse_iterator< const_iterator >						const_reverse_iterator;
 
-		explicit map( const Allocator& alloc = Allocator());
+		map(void);
+		explicit map( const Compare &comp, const Allocator& alloc = Allocator());
 		allocator_type			get_allocator(void) const;
+
+
+		//// Member class ////
+		class value_compare : public std::binary_function< value_type, value_type, bool >
+		{
+			public :
+				bool	operator() (const value_type &lhs, const value_type &rhs) const { return (comp_(lhs.first, rhs.first)); }
+			protected:
+				Compare comp_;
+				value_compare(Compare c) : comp_(c) {}
+		};
 
 		//// Element access ////
 
@@ -66,10 +77,13 @@ template<
 		//// Modifiers ////
 		std::pair< iterator, bool >				insert(const value_type &value); //remplacer par ft::pair
 
-		///// Lookup ////
+		//// Lookup ////
 		size_type				count(const Key &key);
 		iterator				find(const Key &key);
 		const_iterator			find(const Key &key) const;
+
+		//// Observers ////
+		key_compare	key_comp() const;
 
 		////// Non-Member Functions ////
 		friend bool	operator==(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs)
@@ -89,9 +103,10 @@ template<
 		friend bool	operator<(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs)
 		{ return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
 	private:
-		allocator_type							_alloc;
-		size_type								_mapSize;
-		RedBlackTree< Key, value_type, Compare >		_elements;
+		key_compare									_comp;
+		allocator_type								_alloc;
+		size_type									_mapSize;
+		RedBlackTree< Key, value_type, Compare >	_elements;
 };
 
 /*
