@@ -83,7 +83,8 @@ template<
 		const_iterator			find(const Key &key) const;
 
 		//// Observers ////
-		key_compare	key_comp() const;
+		key_compare				key_comp(void) const;
+		value_compare			value_comp(void) const;
 
 		////// Non-Member Functions ////
 		friend bool	operator==(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs)

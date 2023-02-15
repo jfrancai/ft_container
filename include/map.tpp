@@ -155,6 +155,17 @@ typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Com
 	return (const_iterator(_elements.searchTree(_elements.getRoot(), key)));
 }
 
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator>::key_compare	map< Key, Type, Compare, Allocator >::key_comp(void) const
+{
+	return (_comp);
+}
+
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator >::value_compare	map< Key, Type, Compare, Allocator >::value_comp(void) const
+{
+	return (typename ft::map< Key, Type, Compare, Allocator >::value_compare());
+}
 //// Observers ////
 
 } //namespace
