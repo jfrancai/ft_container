@@ -27,7 +27,7 @@ struct pair
 };
 
 template < class T1, class T2, class U1, class U2>
-bool	operator==(const ft::pair< T1, T2 > &lhs, const ft::pair< U1, U2 > &rhs) { return (lhs.first == rhs.first && rhs.second == rhs.second); }
+bool	operator==(const ft::pair< T1, T2 > &lhs, const ft::pair< U1, U2 > &rhs) { return (lhs.first == rhs.first && lhs.second == rhs.second); }
 
 template < class T1, class T2, class U1, class U2>
 bool	operator!=(const ft::pair< T1, T2 > &lhs, const ft::pair< U1, U2 > &rhs) { return (!(lhs == rhs)); }

@@ -6,7 +6,7 @@
 #include "type_traits.hpp"
 #include "RedBlackTree.hpp"
 #include "algorithm.hpp"
-#include <utility> // replace with utility .hpp (make_pair and pair template should be inside this header)
+#include "utility.hpp"
 
 namespace ft {
 
@@ -17,18 +17,14 @@ template<
 	class Key,
 	class Type,
 	class Compare = std::less< Key >,
-	class Allocator = std::allocator< std::pair< const Key, Type > > // update for ft::pair
+	class Allocator = std::allocator< ft::pair< const Key, Type > >
 > class map
 {
 	public:
-
-		// template< class TType >
-		// friend class LegacyBidirectionalIterator;
-
 		// Member types (aliases)
 		typedef Key															key_type;
 		typedef Type 														mapped_type;
-		typedef std::pair< const Key, Type >								value_type; // update for ft::pair
+		typedef ft::pair< const Key, Type >									value_type;
 		typedef std::size_t 												size_type;
 		typedef std::ptrdiff_t												Typedifference_type;
 		typedef Compare														key_compare;
@@ -76,7 +72,7 @@ template<
 		size_type				max_size() const;
 
 		//// Modifiers ////
-		std::pair< iterator, bool >				insert(const value_type &value); //remplacer par ft::pair
+		ft::pair< iterator, bool >				insert(const value_type &value); //remplacer par ft::pair
 
 		//// Lookup ////
 		size_type				count(const Key &key);

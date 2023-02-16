@@ -124,16 +124,16 @@ typename map< Key, Type, Compare, Allocator >::size_type	map< Key, Type, Compare
 
 //insert
 template< class Key, class Type, class Compare, class Allocator >
-typename std::pair< typename map< Key, Type, Compare, Allocator >::iterator, bool >	map< Key, Type, Compare, Allocator >::insert(const typename map< Key, Type, Compare, Allocator >::value_type &value)
+typename ft::pair< typename map< Key, Type, Compare, Allocator >::iterator, bool >	map< Key, Type, Compare, Allocator >::insert(const typename map< Key, Type, Compare, Allocator >::value_type &value)
 {
-	std::pair< typename ft::RedBlackTree< Key, std::pair< const Key, Type >, Compare >::node_pointer, bool > pair = _elements.insert(value);
+	ft::pair< typename ft::RedBlackTree< Key, ft::pair< const Key, Type >, Compare >::node_pointer, bool > pair = _elements.insert(value);
 	typename map< Key, Type, Compare, Allocator >::iterator	it(pair.first);
 	if (pair.second)
 	{
 		_elements.getNill()->parent = _elements.maximum(_elements.getRoot());
 		_mapSize++;
 	}
-	return (std::make_pair(it, pair.second));
+	return (ft::make_pair(it, pair.second));
 }
 
 //// Lookup ////

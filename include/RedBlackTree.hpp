@@ -1,6 +1,7 @@
 #ifndef REDBLACKTREE_HPP
 #define REDBLACKTREE_HPP
 #include <iostream>
+#include "utility.hpp"
 
 namespace ft {
 
@@ -393,11 +394,11 @@ class RedBlackTree
 			_root->color = false;
 		}
 
-		std::pair< node_pointer, bool >	insert(const_reference key)
+		ft::pair< node_pointer, bool >	insert(const_reference key)
 		{
 			node_pointer node = searchTree(_root, key.first);
 			if (!node->isNILL)
-				return (std::make_pair(node, false));
+				return (ft::make_pair(node, false));
 			node = new node_type(key);
 			node->left = _NILL;
 			node->right = _NILL;
@@ -425,12 +426,12 @@ class RedBlackTree
 			if (node->parent == NULL)
 			{
 				node->color = false;
-				return (std::make_pair(node, true));
+				return (ft::make_pair(node, true));
 			}
 			if (node->parent->parent == NULL)
-				return (std::make_pair(node, true));
+				return (ft::make_pair(node, true));
 			insertFix(node);
-			return (std::make_pair(node, true));
+			return (ft::make_pair(node, true));
 		}
 
 		void	transplantNode(node_pointer x, node_pointer y)
