@@ -52,11 +52,11 @@ template<
 		map(void);
 		explicit map( const Compare &comp, const Allocator& alloc = Allocator());
 		allocator_type			get_allocator(void) const;
-		map	&operator=(const map& other);
+		map						&operator=(const map& other);
 
 		//// Element access ////
-		Type	&at(const Key &key);
-		Type	&operator[](const Key &key);
+		Type					&at(const Key &key);
+		Type					&operator[](const Key &key);
 
 		//// Iterators ////
 		const_iterator			begin(void) const;
@@ -80,6 +80,8 @@ template<
 		size_type				count(const Key &key);
 		iterator				find(const Key &key);
 		const_iterator			find(const Key &key) const;
+		// iterator				lower_bound(const Key &key);
+		const_iterator			lower_bound(const Key &key) const;
 
 		//// Observers ////
 		key_compare				key_comp(void) const;

@@ -176,18 +176,22 @@ typename ft::pair< typename map< Key, Type, Compare, Allocator >::iterator, bool
 }
 
 //// Lookup ////
+
+// count
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator>::size_type	map< Key, Type, Compare, Allocator >::count(const Key &key)
 {
 	return (find(key) != end());
 }
 
+// find
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator>::iterator	map< Key, Type, Compare, Allocator >::find(const Key &key)
 {
 	return (iterator(_elements.searchTree(_elements.getRoot(), key)));
 }
 
+// find
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Compare, Allocator >::find(const Key &key) const
 {
@@ -195,11 +199,21 @@ typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Com
 }
 
 template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Compare, Allocator >::lower_bound(const Key &key) const
+{
+
+}
+
+//// Observers ////
+
+// key_comp
+template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator>::key_compare	map< Key, Type, Compare, Allocator >::key_comp(void) const
 {
 	return (_comp);
 }
 
+// value_comp
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::value_compare	map< Key, Type, Compare, Allocator >::value_comp(void) const
 {
