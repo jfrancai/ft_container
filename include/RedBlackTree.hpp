@@ -41,7 +41,7 @@ struct Node {
 		right(NULL),
 		color(src.color),
 		isNILL(src.isNILL)
-	{ data = new value_type(*src.data); }
+	{ if (src.data) data = new value_type(*src.data); }
 
 	Node(void) : 
 		data(NULL),
@@ -192,7 +192,7 @@ class RedBlackTree
 		node_pointer cloneBinaryTree(node_pointer node)
 		{
 			if (node->isNILL)
-				return (new node_type(_NILL));
+				return (new node_type(*node));
 			node_pointer newNode = new node_type(*node);
 			newNode->left = cloneBinaryTree(node->left);
 			newNode->left->parent = newNode;
@@ -212,7 +212,7 @@ class RedBlackTree
 		{
 			if (!_root->isNILL)
 				delete _root;
-			_root = cloneBinaryTree(rhs.getRoot(), rhs._NILL);
+			_root = cloneBinaryTree(rhs.getRoot());
 			return (*this);
 		}
 

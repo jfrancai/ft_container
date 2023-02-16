@@ -1,5 +1,4 @@
 namespace ft {
-
 /*
  * Statics
  */
@@ -18,6 +17,7 @@ map< Key, Type, Compare, Allocator >::map(void) :
 {
 	return ;
 }
+
 template< class Key, class Type, class Compare, class Allocator >
 map< Key, Type, Compare, Allocator >::map(const Compare &comp, const Allocator& alloc) :
 	_comp(comp),
@@ -32,6 +32,17 @@ template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::allocator_type	map< Key, Type, Compare, Allocator >::get_allocator(void) const
 {
 	return (_alloc);
+}
+
+template< class Key, class Type, class Compare, class Allocator >
+map< Key, Type, Compare, Allocator >	&map< Key, Type, Compare, Allocator>::operator=(const map& other)
+{
+	_comp = other._comp;
+	_alloc = other._alloc;
+	_mapSize = other._mapSize;
+	_elements = other._elements;
+
+	return (*this);
 }
 
 //// Element access ////

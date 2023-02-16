@@ -38,11 +38,6 @@ template<
 		typedef ft::reverse_iterator< iterator >							reverse_iterator;
 		typedef ft::reverse_iterator< const_iterator >						const_reverse_iterator;
 
-		map(void);
-		explicit map( const Compare &comp, const Allocator& alloc = Allocator());
-		allocator_type			get_allocator(void) const;
-
-
 		//// Member class ////
 		class value_compare : public std::binary_function< value_type, value_type, bool >
 		{
@@ -53,6 +48,11 @@ template<
 				value_compare(Compare c) : comp_(c) {}
 				friend class map;
 		};
+
+		map(void);
+		explicit map( const Compare &comp, const Allocator& alloc = Allocator());
+		allocator_type			get_allocator(void) const;
+		map	&operator=(const map& other);
 
 		//// Element access ////
 		Type	&at(const Key &key);
