@@ -201,10 +201,68 @@ typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Com
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Compare, Allocator >::lower_bound(const Key &key) const
 {
+	typedef typename RedBlackTree< Key, value_type, Compare >::node_pointer node_pointer; 
 
+	node_pointer node = _elements.minimum(_elements.getRoot());
+	while (node && !node->isNILL)
+	{
+		if (key > node->data->first)
+			node = node->successor(node);
+		else
+			return (const_iterator(node));
+	}
+	return (const_iterator(node));
 }
 
-//// Observers ////
+
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator>::iterator	map< Key, Type, Compare, Allocator >::lower_bound(const Key &key)
+{
+	typedef typename RedBlackTree< Key, value_type, Compare >::node_pointer node_pointer; 
+
+	node_pointer node = _elements.minimum(_elements.getRoot());
+	while (node && !node->isNILL)
+	{
+		if (key > node->data->first)
+			node = node->successor(node);
+		else
+			return (iterator(node));
+	}
+	return (iterator(node));
+}
+
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Compare, Allocator >::upper_bound(const Key &key) const
+{
+	typedef typename RedBlackTree< Key, value_type, Compare >::node_pointer node_pointer; 
+
+	node_pointer node = _elements.minimum(_elements.getRoot());
+	while (node && !node->isNILL)
+	{
+		if (key > node->data->first)
+			node = node->successor(node);
+		else
+			return (const_iterator(node));
+	}
+	return (const_iterator(node));
+}
+
+
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator>::iterator	map< Key, Type, Compare, Allocator >::upper_bound(const Key &key)
+{
+	typedef typename RedBlackTree< Key, value_type, Compare >::node_pointer node_pointer; 
+
+	node_pointer node = _elements.minimum(_elements.getRoot());
+	while (node && !node->isNILL)
+	{
+		if (key >= node->data->first)
+			node = node->successor(node);
+		else
+			return (iterator(node));
+	}
+	return (iterator(node));
+}//// Observers ////
 
 // key_comp
 template< class Key, class Type, class Compare, class Allocator >
