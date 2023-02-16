@@ -110,21 +110,11 @@ struct Node {
 	{
 		node_pointer x = const_cast< node_pointer >(node);
 
-		/*
-		std::cout << "in with : " << std::endl;
-		std::cout << x->data << std::endl;
-		std::cout << x->data->first << std::endl;
-			*/
-
 		if (x->right && !x->right->isNILL)
 		{
 			x = x->right;
 			while (x->left->isNILL == false)
 				x = x->left;
-				/*
-			std::cout << "out with: " << std::endl;
-			std::cout << x << std::endl;
-				*/
 			return (x);
 		}
 

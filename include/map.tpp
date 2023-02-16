@@ -217,10 +217,9 @@ typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Com
 	node_pointer node = _elements.minimum(_elements.getRoot());
 	while (node && !node->isNILL)
 	{
-		if (key > node->data->first)
-			node = node->successor(node);
-		else
+		if (key <= node->data->first)
 			return (const_iterator(node));
+		node = node->successor(node);
 	}
 	return (const_iterator(node));
 }
@@ -235,10 +234,9 @@ typename map< Key, Type, Compare, Allocator>::iterator	map< Key, Type, Compare, 
 	node_pointer node = _elements.minimum(_elements.getRoot());
 	while (node && !node->isNILL)
 	{
-		if (key > node->data->first)
-			node = node->successor(node);
-		else
+		if (key <= node->data->first)
 			return (iterator(node));
+		node = node->successor(node);
 	}
 	return (iterator(node));
 }
@@ -253,10 +251,9 @@ typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Com
 	node_pointer node = _elements.minimum(_elements.getRoot());
 	while (node && !node->isNILL)
 	{
-		if (key > node->data->first)
-			node = node->successor(node);
-		else
+		if (key < node->data->first)
 			return (const_iterator(node));
+		node = node->successor(node);
 	}
 	return (const_iterator(node));
 }
@@ -271,10 +268,9 @@ typename map< Key, Type, Compare, Allocator>::iterator	map< Key, Type, Compare, 
 	node_pointer node = _elements.minimum(_elements.getRoot());
 	while (node && !node->isNILL)
 	{
-		if (key >= node->data->first)
-			node = node->successor(node);
-		else
+		if (key < node->data->first)
 			return (iterator(node));
+		node = node->successor(node);
 	}
 	return (iterator(node));
 }//// Observers ////
