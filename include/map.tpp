@@ -198,6 +198,17 @@ typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Com
 	return (const_iterator(_elements.searchTree(_elements.getRoot(), key)));
 }
 
+
+//equal range
+template< class Key, class Type, class Compare, class Allocator >
+ft::pair< typename map< Key, Type, Compare, Allocator>::iterator, typename map< Key, Type, Compare, Allocator >::iterator >	map< Key, Type, Compare, Allocator >::equal_range( const Key &key)
+{
+	typedef typename map< Key, Type, Compare, Allocator >::iterator iterator;
+
+	return (ft::pair< iterator, iterator >(lower_bound(key), upper_bound(key)));
+}
+
+// lower_bound const
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Compare, Allocator >::lower_bound(const Key &key) const
 {
@@ -215,6 +226,7 @@ typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Com
 }
 
 
+// lower_bound
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator>::iterator	map< Key, Type, Compare, Allocator >::lower_bound(const Key &key)
 {
@@ -231,6 +243,8 @@ typename map< Key, Type, Compare, Allocator>::iterator	map< Key, Type, Compare, 
 	return (iterator(node));
 }
 
+
+// upper_bound const
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Compare, Allocator >::upper_bound(const Key &key) const
 {
@@ -248,6 +262,7 @@ typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Com
 }
 
 
+// upper_bound
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator>::iterator	map< Key, Type, Compare, Allocator >::upper_bound(const Key &key)
 {

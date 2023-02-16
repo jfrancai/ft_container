@@ -81,7 +81,7 @@ template<
 		size_type				count(const Key &key);
 		iterator				find(const Key &key);
 		const_iterator			find(const Key &key) const;
-
+		ft::pair< iterator, iterator >	equal_range( const Key &key);
 		const_iterator			lower_bound(const Key &key) const;
 		iterator				lower_bound(const Key &key);
 		const_iterator			upper_bound(const Key &key) const;
