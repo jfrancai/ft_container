@@ -55,6 +55,8 @@ template<
 		};
 
 		//// Element access ////
+		Type	&at(const Key &key);
+		Type	&operator[](const Key &key);
 
 		//// Iterators ////
 		const_iterator			begin(void) const;

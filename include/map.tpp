@@ -36,6 +36,34 @@ typename map< Key, Type, Compare, Allocator >::allocator_type	map< Key, Type, Co
 
 //// Element access ////
 
+// at
+template< class Key, class Type, class Compare, class Allocator >
+Type	&map< Key, Type, Compare, Allocator >::at(const Key &key)
+{
+	typename RedBlackTree< Key, value_type, Compare >::node_pointer node = _elements.searchTree(_elements.getRoot(), key);
+	if (node->isNILL)
+	{
+		std::ostringstream errorMsg;
+		errorMsg << "map::at";
+		throw std::out_of_range(errorMsg.str());
+	}
+	return (node->data->second);
+}
+
+// operator[]
+template< class Key, class Type, class Compare, class Allocator >
+Type	&map< Key, Type, Compare, Allocator >::operator[](const Key &key)
+{
+	typename RedBlackTree< Key, value_type, Compare >::node_pointer node = _elements.searchTree(_elements.getRoot(), key);
+	if (node->isNILL)
+	{
+		ft::pair< iterator, bool> pair = insert(ft::make_pair(key, Type()));
+		map< Key, Type, Compare, Allocator >::iterator it = pair.first;
+		return (it->second);
+	}
+	return (node->data->second);
+}
+
 //// Iterators ////
 
 // begin
