@@ -27,6 +27,17 @@ map< Key, Type, Compare, Allocator >::map(const Compare &comp, const Allocator& 
 	return ;
 }
 
+/*
+template< class Key, class Type, class Compare, class Allocator >
+map< Key, Type, Compare, Allocator >::map(InputIt first, InputIt last, const Compare &comp, const Allocator &alloc)
+	_comp(comp),
+	_alloc(alloc),
+	_mapSize(0)
+{
+	insert(first, last);
+}
+*/
+
 // get_allocator
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::allocator_type	map< Key, Type, Compare, Allocator >::get_allocator(void) const
