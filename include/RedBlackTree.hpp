@@ -9,12 +9,10 @@ template< typename Type >
 struct Node {
 	typedef Type				value_type;
 	typedef Type				*pointer;
-	typedef Node< Type >		*node_pointer;
-	typedef const Node< Type >	*const_node_pointer;
-	typedef Node< Type >		&node_reference;
-	typedef const Type			*const_pointer;
 	typedef Type				&reference;
-	typedef const Type			&const_reference;
+	typedef Node< Type >		*node_pointer;
+	typedef Node< const Type >	*const_node_pointer;
+	typedef Node< Type >		&node_reference;
 
 	pointer			data;
 	node_pointer	parent;
@@ -52,7 +50,7 @@ struct Node {
 		isNILL(true)
 	{}
 
-	Node(const_reference d, bool c = false, bool isN = false) : 
+	Node(const Type &d, bool c = false, bool isN = false) : 
 		data(NULL),
 		parent(NULL),
 		left(NULL),
@@ -64,8 +62,10 @@ struct Node {
 	~Node()
 	{
 		if (data) { delete data; }
-		if (left && !left->isNILL && !isNILL) { delete left; left = NULL; }
-		if (right && !right->isNILL && !isNILL) { delete right; right = NULL; }
+		if (left && !left->isNILL && !isNILL)
+			delete left;
+		if (right && !right->isNILL && !isNILL)
+			delete right;
 	}
 
 	friend bool	operator==(const Node< Type > &lhs, const Node< Type > &rhs)
@@ -77,14 +77,6 @@ struct Node {
 		return (false);
 	}
 
-	friend bool	operator<(const Node< Type > &lhs, const Node< Type > &rhs)
-	{ if (!lhs.isNILL && !rhs.isNILL && *lhs.data < *rhs.data) { return (true); } return (false); }
-	friend bool	operator<=(const Node< Type > &lhs, const Node< Type > &rhs) { return (!(rhs < lhs)); }
-	friend bool	operator>=(const Node< Type > &lhs, const Node< Type > &rhs) { return (!(lhs < rhs)); }
-	friend bool	operator>(const Node< Type > &lhs, const Node< Type > &rhs) { return (rhs < lhs); }
-	friend bool	operator!=(const Node< Type > &lhs, const Node< Type > &rhs) {return (!(lhs == rhs)); }
-
-	
 	node_pointer	predecessor(const_node_pointer node) const
 	{
 		node_pointer x = const_cast< node_pointer >(node);
@@ -131,6 +123,12 @@ struct Node {
 	}
 };
 
+template < typename Type > bool	operator<(const Node< Type > &lhs, const Node< Type > &rhs) { if (!lhs.isNILL && !rhs.isNILL && *lhs.data < *rhs.data) { return (true); } return (false); }
+template < typename Type > bool	operator<=(const Node< Type > &lhs, const Node< Type > &rhs) { return (!(rhs < lhs)); }
+template < typename Type > bool	operator>=(const Node< Type > &lhs, const Node< Type > &rhs) { return (!(lhs < rhs)); }
+template < typename Type > bool	operator>(const Node< Type > &lhs, const Node< Type > &rhs) { return (rhs < lhs); }
+template < typename Type > bool	operator!=(const Node< Type > &lhs, const Node< Type > &rhs) {return (!(lhs == rhs)); }
+
 template< typename Key, typename Type, typename Compare >
 class RedBlackTree
 {
@@ -138,7 +136,6 @@ class RedBlackTree
 		typedef Key				key_type;
 		typedef Type			value_type;
 		typedef Type			*pointer;
-		typedef const Type		*const_pointer;
 		typedef Type			&reference;
 		typedef const Type		&const_reference;
 		typedef Node< Type >	node_type;
@@ -578,6 +575,11 @@ class RedBlackTree
 					node = node->right;
 			}
 			return (node);
+		}
+
+		void	setRoot(node_pointer node)
+		{
+			_root = node;
 		}
 
 	private:

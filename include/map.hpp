@@ -52,46 +52,48 @@ template<
 
 		map(void);
 		explicit map( const Compare &comp, const Allocator& alloc = Allocator());
-		//template< class InputIt >
-		//map(InputIt first, InputIt last, const Compare &comp = Compare(), const Allocator &alloc = Allocator());
+		template< class InputIt >
+		map(InputIt first, InputIt last, const Compare &comp = Compare(), const Allocator &alloc = Allocator());
 		~map(void);
-		allocator_type							get_allocator(void) const;
-		map										&operator=(const map& other);
+		allocator_type										get_allocator(void) const;
+		map													&operator=(const map& other);
 
 		//// Element access ////
-		Type									&at(const Key &key);
-		Type									&operator[](const Key &key);
+		Type												&at(const Key &key);
+		Type												&operator[](const Key &key);
 
 		//// Iterators ////
-		const_iterator							begin(void) const;
-		iterator								begin(void);
-		const_iterator							end(void) const;
-		iterator								end(void);
-		reverse_iterator						rbegin(void);
-		const_reverse_iterator					rbegin(void) const;
-		reverse_iterator						rend(void) ;
-		const_reverse_iterator					rend(void) const;
+		const_iterator										begin(void) const;
+		iterator											begin(void);
+		const_iterator										end(void) const;
+		iterator											end(void);
+		reverse_iterator									rbegin(void);
+		const_reverse_iterator								rbegin(void) const;
+		reverse_iterator									rend(void) ;
+		const_reverse_iterator								rend(void) const;
 
 		//// Capacity ////
-		bool									empty(void) const;
-		size_type								size(void) const;
-		size_type								max_size() const;
+		bool												empty(void) const;
+		size_type											size(void) const;
+		size_type											max_size() const;
 
 		//// Modifiers ////
-		ft::pair< iterator, bool >				insert(const value_type &value);
-		iterator								insert(iterator pos, const value_type &value);
+		void												clear(void);
+		ft::pair< iterator, bool >							insert(const value_type &value);
+		iterator											insert(iterator pos, const value_type &value);
 		template< class InputIt >
-		void									insert(InputIt first, InputIt last);
+		void												insert(InputIt first, InputIt last);
 
 		//// Lookup ////
-		size_type								count(const Key &key);
-		iterator								find(const Key &key);
-		const_iterator							find(const Key &key) const;
-		ft::pair< iterator, iterator >			equal_range( const Key &key);
-		const_iterator							lower_bound(const Key &key) const;
-		iterator								lower_bound(const Key &key);
-		const_iterator							upper_bound(const Key &key) const;
-		iterator								upper_bound(const Key &key);
+		size_type											count(const Key &key);
+		iterator											find(const Key &key);
+		const_iterator										find(const Key &key) const;
+		ft::pair< iterator, iterator >						equal_range( const Key &key);
+		ft::pair< const_iterator, const_iterator >			equal_range( const Key &key) const;
+		const_iterator										lower_bound(const Key &key) const;
+		iterator											lower_bound(const Key &key);
+		const_iterator										upper_bound(const Key &key) const;
+		iterator											upper_bound(const Key &key);
 
 		//// Observers ////
 		key_compare								key_comp(void) const;
@@ -150,7 +152,6 @@ class	LegacyBidirectionalIterator
 		bool			operator==(const iterator& rhs) const { return _node == rhs._node; }
 		bool			operator!=(const iterator& rhs) const { return _node != rhs._node; }
 
-		// LegacyOutputIterator
 
 		// LegacyForwardIterator
 		explicit		LegacyBidirectionalIterator(node_pointer node = NULL) : _node(node) { }
@@ -174,7 +175,6 @@ void	swap(ft::LegacyBidirectionalIterator< Type > &x, ft::LegacyBidirectionalIte
 	x = y;
 	y = tmp;
 }
-
 
 } // namespace ft
 

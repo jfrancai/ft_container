@@ -27,16 +27,17 @@ map< Key, Type, Compare, Allocator >::map(const Compare &comp, const Allocator& 
 	return ;
 }
 
-/*
 template< class Key, class Type, class Compare, class Allocator >
-map< Key, Type, Compare, Allocator >::map(InputIt first, InputIt last, const Compare &comp, const Allocator &alloc)
+template< class InputIt >
+map< Key, Type, Compare, Allocator >::map(InputIt first, InputIt last, const Compare &comp, const Allocator &alloc) :
 	_comp(comp),
 	_alloc(alloc),
 	_mapSize(0)
 {
 	insert(first, last);
+
+	return ;
 }
-*/
 
 // get_allocator
 template< class Key, class Type, class Compare, class Allocator >
@@ -179,7 +180,17 @@ typename map< Key, Type, Compare, Allocator >::size_type	map< Key, Type, Compare
 
 //// Modifiers ////
 
-//insert
+// clear
+
+template< class Key, class Type, class Compare, class Allocator >
+void	map< Key, Type, Compare, Allocator >::clear(void)
+{
+	delete _elements.getRoot();
+	_elements.setRoot(_elements.getNill());
+	_mapSize = 0;
+}
+
+// insert
 template< class Key, class Type, class Compare, class Allocator >
 typename ft::pair< typename map< Key, Type, Compare, Allocator >::iterator, bool >	map< Key, Type, Compare, Allocator >::insert(const typename map< Key, Type, Compare, Allocator >::value_type &value)
 {
@@ -238,6 +249,14 @@ ft::pair< typename map< Key, Type, Compare, Allocator>::iterator, typename map< 
 	typedef typename map< Key, Type, Compare, Allocator >::iterator iterator;
 
 	return (ft::pair< iterator, iterator >(lower_bound(key), upper_bound(key)));
+}
+
+template< class Key, class Type, class Compare, class Allocator >
+ft::pair< typename map< Key, Type, Compare, Allocator>::const_iterator, typename map< Key, Type, Compare, Allocator >::const_iterator >	map< Key, Type, Compare, Allocator >::equal_range( const Key &key) const
+{
+	typedef typename map< Key, Type, Compare, Allocator >::const_iterator const_iterator;
+
+	return (ft::pair< const_iterator, const_iterator >(lower_bound(key), upper_bound(key)));
 }
 
 // lower_bound const
