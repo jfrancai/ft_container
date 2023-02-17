@@ -45,6 +45,13 @@ map< Key, Type, Compare, Allocator >	&map< Key, Type, Compare, Allocator>::opera
 	return (*this);
 }
 
+//// Destructor ////
+
+template< class Key, class Type, class Compare, class Allocator >
+map< Key, Type, Compare, Allocator >::~map(void)
+{
+	return ;
+}
 //// Element access ////
 
 // at
@@ -166,13 +173,28 @@ template< class Key, class Type, class Compare, class Allocator >
 typename ft::pair< typename map< Key, Type, Compare, Allocator >::iterator, bool >	map< Key, Type, Compare, Allocator >::insert(const typename map< Key, Type, Compare, Allocator >::value_type &value)
 {
 	ft::pair< typename ft::RedBlackTree< Key, ft::pair< const Key, Type >, Compare >::node_pointer, bool > pair = _elements.insert(value);
-	typename map< Key, Type, Compare, Allocator >::iterator	it(pair.first);
 	if (pair.second)
 	{
 		_elements.getNill()->parent = _elements.maximum(_elements.getRoot());
 		_mapSize++;
 	}
-	return (ft::make_pair(it, pair.second));
+	return (pair);
+}
+
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator >::insert(typename map< Key, Type, Compare, Allocator >::iterator pos, const typename map< Key, Type, Compare, Allocator >::value_type &value)
+{
+	(void)pos;
+	return (insert(value).first);
+}
+
+
+template< class Key, class Type, class Compare, class Allocator >
+template< class InputIt >
+void	map< Key, Type, Compare, Allocator >::insert(InputIt first, InputIt last) 
+{
+	for (InputIt it = first; it != last; ++it)
+		insert(*it);
 }
 
 //// Lookup ////
@@ -197,7 +219,6 @@ typename map< Key, Type, Compare, Allocator>::const_iterator	map< Key, Type, Com
 {
 	return (const_iterator(_elements.searchTree(_elements.getRoot(), key)));
 }
-
 
 //equal range
 template< class Key, class Type, class Compare, class Allocator >

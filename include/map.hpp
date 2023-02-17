@@ -51,6 +51,7 @@ template<
 		};
 
 		map(void);
+		~map(void);
 		explicit map( const Compare &comp, const Allocator& alloc = Allocator());
 		allocator_type			get_allocator(void) const;
 		map						&operator=(const map& other);
@@ -75,7 +76,10 @@ template<
 		size_type				max_size() const;
 
 		//// Modifiers ////
-		ft::pair< iterator, bool >				insert(const value_type &value); //remplacer par ft::pair
+		ft::pair< iterator, bool >				insert(const value_type &value);
+		iterator								insert(iterator pos, const value_type &value);
+		template< class InputIt >
+		void									insert(InputIt first, InputIt last);
 
 		//// Lookup ////
 		size_type				count(const Key &key);
@@ -108,11 +112,11 @@ template<
 		{ return (!(rhs < lhs)); }
 		friend bool	operator<(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs)
 		{ return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
+		RedBlackTree< Key, value_type, Compare >	_elements;
 	private:
 		key_compare									_comp;
 		allocator_type								_alloc;
 		size_type									_mapSize;
-		RedBlackTree< Key, value_type, Compare >	_elements;
 };
 
 /*
