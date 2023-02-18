@@ -9,6 +9,7 @@ template< typename Type >
 struct Node {
 	typedef Type				value_type;
 	typedef Type				*pointer;
+
 	typedef Type				&reference;
 	typedef Node< Type >		*node_pointer;
 	typedef Node< Type >		&node_reference;
@@ -76,10 +77,8 @@ struct Node {
 		return (false);
 	}
 
-	node_pointer	predecessor(node_pointer node) const
+	node_pointer	predecessor(node_pointer x) const
 	{
-		node_pointer x = const_cast< node_pointer >(node);
-
 		if (x->left && !x->left->isNILL)
 		{
 			x = x->left;
@@ -97,10 +96,8 @@ struct Node {
 		return (y);
 	}
 
-	node_pointer	successor(node_pointer node) const
+	node_pointer	successor(node_pointer x) const
 	{
-		node_pointer x = const_cast< node_pointer >(node);
-
 		if (x->right && !x->right->isNILL)
 		{
 			x = x->right;

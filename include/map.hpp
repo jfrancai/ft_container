@@ -34,8 +34,8 @@ template<
 		typedef const value_type&											const_reference;
 		typedef typename Allocator::pointer									pointer;
 		typedef typename Allocator::const_pointer							const_pointer;
-		typedef LegacyBidirectionalIterator< Node< value_type > >			iterator;
-		typedef LegacyBidirectionalIterator< Node < value_type > >	const_iterator;
+		typedef LegacyBidirectionalIterator< value_type >					iterator;
+		typedef LegacyBidirectionalIterator< value_type >				const_iterator;
 		typedef ft::reverse_iterator< iterator >							reverse_iterator;
 		typedef ft::reverse_iterator< const_iterator >						const_reverse_iterator;
 
@@ -125,14 +125,14 @@ template< class Type >
 class	LegacyBidirectionalIterator
 {
 	private:
-		typedef Type	*node_pointer;
+		typedef Node< Type >	*node_pointer;
 		node_pointer	_node;
 	public:
 		template< class IteType, class AllocatorType >
 		friend class vector;
 
 		typedef std::bidirectional_iterator_tag				iterator_category;
-		typedef typename Type::value_type					value_type;
+		typedef Type										value_type;
 		typedef std::ptrdiff_t								difference_type;
 		typedef value_type*									pointer;
 		typedef value_type&									reference;
@@ -159,12 +159,6 @@ class	LegacyBidirectionalIterator
 		iterator		&operator--(void) { _node = _node->predecessor(_node); return (*this); }
 		iterator		operator--(int) { iterator it(_node); _node = _node->predecessor(_node); return (it); }
 };
-
-template< class Type >
-LegacyBidirectionalIterator< Type > operator+(std::ptrdiff_t n, const LegacyBidirectionalIterator< Type > &rhs)
-{
-	return (rhs + n);
-}
 
 template< class Type >
 void	swap(ft::LegacyBidirectionalIterator< Type > &x, ft::LegacyBidirectionalIterator< Type > &y)
