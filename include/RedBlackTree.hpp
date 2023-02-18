@@ -24,12 +24,17 @@ struct Node {
 	Node< Type >	&operator=(const Node< Type > &rhs)
 	{
 		if (data)
+			delete data;
+		if (rhs.data)
 			data = new value_type(*rhs.data);
+		else
+			data = NULL;
 		parent = NULL;
 		left = NULL;
 		right = NULL;
 		color = rhs.color;
 		isNILL = rhs.isNILL;
+		return (*this);
 	}
 
 	Node(const Node< Type > &src) : 
@@ -148,13 +153,13 @@ class RedBlackTree
 
 		RedBlackTree(void)
 		{
-			_NILL = new node_type();
+			_NILL = new Node< Type >();
 			_root = _NILL;
 		}
 
 		RedBlackTree(RedBlackTree const &src)
 		{
-			_NILL = new node_type();
+			_NILL = new Node< Type >();
 			_root = cloneBinaryTree(src.getRoot());
 		}
 
@@ -548,10 +553,9 @@ class RedBlackTree
 			return (_root);
 		}
 
-		node_pointer	getNill(void) const {
+		node_pointer getNill(void) const {
 			return (_NILL);
 		}
-
 
 		void	printTree(void) const
 		{

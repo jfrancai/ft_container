@@ -14,6 +14,9 @@ namespace ft {
 template< class Type >
 class	LegacyBidirectionalIterator;
 
+template< class Type >
+class	ConstLegacyBidirectionalIterator;
+
 template<
 	class Key,
 	class Type,
@@ -35,7 +38,7 @@ template<
 		typedef typename Allocator::pointer									pointer;
 		typedef typename Allocator::const_pointer							const_pointer;
 		typedef LegacyBidirectionalIterator< value_type >					iterator;
-		typedef LegacyBidirectionalIterator< value_type >				const_iterator;
+		typedef ConstLegacyBidirectionalIterator< value_type >				const_iterator;
 		typedef ft::reverse_iterator< iterator >							reverse_iterator;
 		typedef ft::reverse_iterator< const_iterator >						const_reverse_iterator;
 
@@ -131,12 +134,16 @@ class	LegacyBidirectionalIterator
 		template< class IteType, class AllocatorType >
 		friend class vector;
 
-		typedef std::bidirectional_iterator_tag				iterator_category;
-		typedef Type										value_type;
-		typedef std::ptrdiff_t								difference_type;
-		typedef value_type*									pointer;
-		typedef value_type&									reference;
-		typedef LegacyBidirectionalIterator< Type >			iterator;
+		template< class IteType >
+		friend class ConstLegacyBidirectionalIterator;
+
+		typedef std::bidirectional_iterator_tag						iterator_category;
+		typedef Type												value_type;
+		typedef std::ptrdiff_t										difference_type;
+		typedef value_type*											pointer;
+		typedef value_type&											reference;
+		typedef LegacyBidirectionalIterator< Type >					iterator;
+		typedef LegacyBidirectionalIterator< const Type >			const_iterator;
 
 		// LegacyIterator
 		LegacyBidirectionalIterator(const iterator& other) : _node(other._node) {}
@@ -148,17 +155,62 @@ class	LegacyBidirectionalIterator
 		// LegacyInputIterator
 		iterator		operator++(int) { iterator it(_node); _node = _node->successor(_node); return (it); }
 		pointer			operator->(void) const { return (_node->data); }
-		bool			operator==(const iterator& rhs) const { return _node == rhs._node; }
-		bool			operator!=(const iterator& rhs) const { return _node != rhs._node; }
 
 		// LegacyForwardIterator
 		explicit		LegacyBidirectionalIterator(node_pointer node = NULL) : _node(node) { }
-		// operator const_iterator(void) const { std::cout << "couououououou" << std::endl; return  (LegacyBidirectionalIterator< const Type >(_node)); }
 
 		// LegacyBidirectionalIterator
 		iterator		&operator--(void) { _node = _node->predecessor(_node); return (*this); }
 		iterator		operator--(int) { iterator it(_node); _node = _node->predecessor(_node); return (it); }
 };
+
+template< class Type >
+class	ConstLegacyBidirectionalIterator
+{
+	private:
+		typedef Node< Type >	*node_pointer;
+		node_pointer	_node;
+	public:
+		template< class IteType, class AllocatorType >
+		friend class vector;
+
+		template< class IteType >
+		friend class LegacyBidirectionalIterator;
+
+		typedef std::bidirectional_iterator_tag						iterator_category;
+		typedef const Type											value_type;
+		typedef std::ptrdiff_t										difference_type;
+		typedef value_type*											pointer;
+		typedef value_type&											reference;
+		typedef LegacyBidirectionalIterator< Type >					iterator;
+		typedef ConstLegacyBidirectionalIterator< Type >			const_iterator;
+
+		// LegacyIterator
+		ConstLegacyBidirectionalIterator(const iterator& other) : _node(other._node) {}
+		ConstLegacyBidirectionalIterator(const const_iterator& other) : _node(other._node) {}
+		~ConstLegacyBidirectionalIterator(void) {}
+
+		const_iterator		&operator=(const iterator& other) { _node = other._node; return (*this); }
+		const_iterator		&operator=(const const_iterator& other) { _node = other._node; return (*this); }
+
+		const_iterator		&operator++(void) {  _node = _node->successor(_node); return (*this); }
+		reference		operator*(void) const { return (*(_node->data)); }
+
+		// LegacyInputIterator
+		const_iterator		operator++(int) { const_iterator it(_node); _node = _node->successor(_node); return (it); }
+		pointer			operator->(void) const { return (_node->data); }
+
+		template < class Type1, class Type2 > friend bool	operator==(const Type1& lhs, const Type2& rhs) { return lhs._node == rhs._node; }
+		template < class Type1, class Type2 > friend bool	operator!=(const Type1 &lhs, const Type2 &rhs) { return lhs._node != rhs._node; }
+
+		// LegacyForwardIterator
+		explicit		ConstLegacyBidirectionalIterator(node_pointer node = NULL) : _node(node) { }
+
+		// LegacyBidirectionalIterator
+		const_iterator		&operator--(void) { _node = _node->predecessor(_node); return (*this); }
+		const_iterator		operator--(int) { const_iterator it(_node); _node = _node->predecessor(_node); return (it); }
+};
+
 
 template< class Type >
 void	swap(ft::LegacyBidirectionalIterator< Type > &x, ft::LegacyBidirectionalIterator< Type > &y)
