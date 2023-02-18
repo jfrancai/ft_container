@@ -11,7 +11,6 @@ struct Node {
 	typedef Type				*pointer;
 	typedef Type				&reference;
 	typedef Node< Type >		*node_pointer;
-	typedef Node< const Type >	*const_node_pointer;
 	typedef Node< Type >		&node_reference;
 
 	pointer			data;
@@ -77,7 +76,7 @@ struct Node {
 		return (false);
 	}
 
-	node_pointer	predecessor(const_node_pointer node) const
+	node_pointer	predecessor(node_pointer node) const
 	{
 		node_pointer x = const_cast< node_pointer >(node);
 
@@ -98,7 +97,7 @@ struct Node {
 		return (y);
 	}
 
-	node_pointer	successor(const_node_pointer node) const
+	node_pointer	successor(node_pointer node) const
 	{
 		node_pointer x = const_cast< node_pointer >(node);
 

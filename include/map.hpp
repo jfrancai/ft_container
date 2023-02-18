@@ -35,7 +35,7 @@ template<
 		typedef typename Allocator::pointer									pointer;
 		typedef typename Allocator::const_pointer							const_pointer;
 		typedef LegacyBidirectionalIterator< Node< value_type > >			iterator;
-		typedef LegacyBidirectionalIterator< const Node < value_type > >	const_iterator;
+		typedef LegacyBidirectionalIterator< Node < value_type > >	const_iterator;
 		typedef ft::reverse_iterator< iterator >							reverse_iterator;
 		typedef ft::reverse_iterator< const_iterator >						const_reverse_iterator;
 
@@ -137,7 +137,6 @@ class	LegacyBidirectionalIterator
 		typedef value_type*									pointer;
 		typedef value_type&									reference;
 		typedef LegacyBidirectionalIterator< Type >			iterator;
-		typedef LegacyBidirectionalIterator< const Type >	const_iterator;
 
 		// LegacyIterator
 		LegacyBidirectionalIterator(const iterator& other) : _node(other._node) {}
@@ -152,10 +151,9 @@ class	LegacyBidirectionalIterator
 		bool			operator==(const iterator& rhs) const { return _node == rhs._node; }
 		bool			operator!=(const iterator& rhs) const { return _node != rhs._node; }
 
-
 		// LegacyForwardIterator
 		explicit		LegacyBidirectionalIterator(node_pointer node = NULL) : _node(node) { }
-		operator const_iterator(void) const { return  (LegacyBidirectionalIterator< const Type >(_node)); }
+		// operator const_iterator(void) const { std::cout << "couououououou" << std::endl; return  (LegacyBidirectionalIterator< const Type >(_node)); }
 
 		// LegacyBidirectionalIterator
 		iterator		&operator--(void) { _node = _node->predecessor(_node); return (*this); }
