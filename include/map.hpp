@@ -83,6 +83,9 @@ template<
 		iterator											insert(iterator pos, const value_type &value);
 		template< class InputIt >
 		void												insert(InputIt first, InputIt last);
+		iterator											erase(iterator pos);
+		iterator											erase(iterator first, iterator last);
+		size_type											erase(const Key &key);
 		void												swap(map &other);
 
 		//// Lookup ////

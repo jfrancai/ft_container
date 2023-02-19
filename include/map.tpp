@@ -190,7 +190,7 @@ void	map< Key, Type, Compare, Allocator >::clear(void)
 	_mapSize = 0;
 }
 
-// insert
+// insert 1
 template< class Key, class Type, class Compare, class Allocator >
 typename ft::pair< typename map< Key, Type, Compare, Allocator >::iterator, bool >	map< Key, Type, Compare, Allocator >::insert(const typename map< Key, Type, Compare, Allocator >::value_type &value)
 {
@@ -203,6 +203,7 @@ typename ft::pair< typename map< Key, Type, Compare, Allocator >::iterator, bool
 	return (pair);
 }
 
+// insert 2
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator >::insert(typename map< Key, Type, Compare, Allocator >::iterator pos, const typename map< Key, Type, Compare, Allocator >::value_type &value)
 {
@@ -210,7 +211,7 @@ typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare,
 	return (insert(value).first);
 }
 
-
+// insert 3
 template< class Key, class Type, class Compare, class Allocator >
 template< class InputIt >
 void	map< Key, Type, Compare, Allocator >::insert(InputIt first, InputIt last) 
@@ -219,7 +220,36 @@ void	map< Key, Type, Compare, Allocator >::insert(InputIt first, InputIt last)
 		insert(*it);
 }
 
+// erase 1
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator >::erase(typename map< Key, Type, Compare, Allocator >::iterator pos)
+{
+	return (iterator(_elements.deleteNode(*pos)));
+}
 
+// erase 2
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator >::erase(typename map< Key, Type, Compare, Allocator >::iterator first, typename map< Key, Type, Compare, Allocator >::iterator last)
+{
+	map< Key, Type, Compare, Allocator >::iterator it = first;
+	for (; it != last; ++it)
+		_elements.deleteNode(*it);
+	return (it);
+}
+
+// erase 3
+/*
+template< class Key, class Type, class Compare, class Allocator >
+typename map< Key, Type, Compare, Allocator >::size_type	map< Key, Type, Compare, Allocator >::erase(const Key &key)
+{
+	if (_elements.searchTree(_elements.getRoot(), key)->isNILL)
+		return (0);
+	erase(find(key));
+	return (1);
+}
+*/
+
+// swap
 template< class Key, class Type, class Compare, class Allocator >
 void	map< Key, Type, Compare, Allocator >::swap(map< Key, Type, Compare, Allocator > &other)
 {
