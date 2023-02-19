@@ -224,21 +224,25 @@ void	map< Key, Type, Compare, Allocator >::insert(InputIt first, InputIt last)
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator >::erase(typename map< Key, Type, Compare, Allocator >::iterator pos)
 {
-	return (iterator(_elements.deleteNode(*pos)));
+	typename RedBlackTree< Key, value_type, Compare >::node_pointer node = _elements.deleteNode(*pos);
+	_elements.getNill()->parent = _elements.maximum(_elements.getRoot());
+	--_mapSize;
+	if (node->isNILL)
+		return (iterator(node->parent));
+	return (iterator(node));
 }
 
 // erase 2
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator >::erase(typename map< Key, Type, Compare, Allocator >::iterator first, typename map< Key, Type, Compare, Allocator >::iterator last)
 {
-	map< Key, Type, Compare, Allocator >::iterator it = first;
-	for (; it != last; ++it)
-		_elements.deleteNode(*it);
+	typename map< Key, Type, Compare, Allocator >::iterator it = first;
+	while (it != last)
+		it = erase(it);
 	return (it);
 }
 
 // erase 3
-/*
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::size_type	map< Key, Type, Compare, Allocator >::erase(const Key &key)
 {
@@ -247,7 +251,6 @@ typename map< Key, Type, Compare, Allocator >::size_type	map< Key, Type, Compare
 	erase(find(key));
 	return (1);
 }
-*/
 
 // swap
 template< class Key, class Type, class Compare, class Allocator >
