@@ -83,6 +83,7 @@ template<
 		iterator											insert(iterator pos, const value_type &value);
 		template< class InputIt >
 		void												insert(InputIt first, InputIt last);
+		void												swap(map &other);
 
 		//// Lookup ////
 		size_type											count(const Key &key);
@@ -106,20 +107,15 @@ template<
 		friend bool	operator>(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (rhs < lhs); }
 		friend bool	operator<=(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (!(rhs < lhs)); }
 		friend bool	operator<(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
-		RedBlackTree< Key, value_type, Compare >	_elements;
 	private:
 		key_compare									_comp;
 		allocator_type								_alloc;
 		size_type									_mapSize;
+		RedBlackTree< Key, value_type, Compare >	_elements;
 };
 
-/*
-template< class Type, class Allocator >
-void	swap(ft::vector< Type, Allocator > &x, ft::vector< Type, Allocator > &y)
-{
-	return (y.swap(x));
-}
-*/
+template< class Key, class Type, class Compare, class Alloc >
+void	swap(ft::map< Key, Type, Compare, Alloc > &lhs, ft::map< Key, Type, Compare, Alloc > &rhs) { return (lhs.swap(rhs)); }
 
 template< class DataType, class NodeType >
 class	LegacyBidirectionalIterator

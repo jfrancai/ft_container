@@ -140,8 +140,8 @@ class RedBlackTree
 		typedef Type			&reference;
 		typedef const Type		&const_reference;
 		typedef Node< Type >	node_type;
-		typedef node_type		*node_pointer;
-		typedef node_type		&node_reference;
+		typedef Node< Type >	*node_pointer;
+		typedef Node< Type >	&node_reference;
 		typedef Compare			key_compare;
 
 		~RedBlackTree(void) 
@@ -549,16 +549,11 @@ class RedBlackTree
 				deleteFix(x);
 		}
 
-		node_pointer	getRoot(void) const {
-			return (_root);
-		}
+		node_pointer	getRoot(void) const { return (_root); }
+		node_pointer getNill(void) const { return (_NILL); }
+		key_compare	getComp(void) const { return (_compare); }
 
-		node_pointer getNill(void) const {
-			return (_NILL);
-		}
-
-		void	printTree(void) const
-		{
+		void	printTree(void) const {
 			if (_root)
 				printHelper(_root, "", true);
 		}
@@ -577,11 +572,9 @@ class RedBlackTree
 			return (node);
 		}
 
-		void	setRoot(node_pointer node)
-		{
-			_root = node;
-		}
-
+		void	setRoot(node_pointer node) { _root = node; }
+		void	setNill(node_pointer node) { _NILL = node; }
+		void	setComp(const key_compare &c) { _compare = c; }
 	private:
 		void	printHelper(node_pointer root, std::string indent, bool last) const
 		{

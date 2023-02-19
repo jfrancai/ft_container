@@ -219,6 +219,34 @@ void	map< Key, Type, Compare, Allocator >::insert(InputIt first, InputIt last)
 		insert(*it);
 }
 
+
+template< class Key, class Type, class Compare, class Allocator >
+void	map< Key, Type, Compare, Allocator >::swap(map< Key, Type, Compare, Allocator > &other)
+{
+	typename RedBlackTree< Key, value_type, Compare >::node_pointer	root = _elements.getRoot();
+	typename RedBlackTree< Key, value_type, Compare >::node_pointer	nill = _elements.getNill();
+	typename RedBlackTree< Key, value_type, Compare >::key_compare	c = _elements.getComp();
+	map< Key, Type, Compare, Allocator >::size_type s(size());
+	map< Key, Type, Compare, Allocator >::allocator_type a(get_allocator());
+	map< Key, Type, Compare, Allocator >::key_compare k(key_comp());
+
+	_elements.setRoot(other._elements.getRoot());
+	_elements.setNill(other._elements.getNill());
+	_elements.setComp(other._elements.getComp());
+	_alloc = other.get_allocator();
+	_comp = other.key_comp();
+	_mapSize = other.size();
+
+	other._elements.setRoot(root);
+	other._elements.setNill(nill);
+	other._elements.setComp(c);
+	other._mapSize = s;
+	other._alloc = a;
+	other._comp = k;
+
+	return ;
+}
+
 //// Lookup ////
 
 // count
