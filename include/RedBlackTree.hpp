@@ -558,7 +558,7 @@ class RedBlackTree
 				printHelper(_root, "", true);
 		}
 
-		node_pointer	searchTree(node_pointer node, key_type key)
+		node_pointer	searchTree(node_pointer node, key_type key) const
 		{
 			while (!node->isNILL)
 			{

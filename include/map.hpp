@@ -86,7 +86,7 @@ template<
 		void												swap(map &other);
 
 		//// Lookup ////
-		size_type											count(const Key &key);
+		size_type											count(const Key &key) const;
 		iterator											find(const Key &key);
 		const_iterator										find(const Key &key) const;
 		ft::pair< iterator, iterator >						equal_range( const Key &key);

@@ -251,7 +251,7 @@ void	map< Key, Type, Compare, Allocator >::swap(map< Key, Type, Compare, Allocat
 
 // count
 template< class Key, class Type, class Compare, class Allocator >
-typename map< Key, Type, Compare, Allocator>::size_type	map< Key, Type, Compare, Allocator >::count(const Key &key)
+typename map< Key, Type, Compare, Allocator>::size_type	map< Key, Type, Compare, Allocator >::count(const Key &key) const
 {
 	return (find(key) != end());
 }
