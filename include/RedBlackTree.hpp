@@ -504,12 +504,10 @@ class RedBlackTree
 			x->color = false;
 		}
 
-		node_pointer	deleteNode(const_reference data)
+		node_pointer	deleteNode(const Key &key)
 		{
-			node_pointer	node = searchTree(_root, data.first);
-			if (node->isNILL)
-				return (node);
-			node_pointer	successor = node->successor(node);
+			node_pointer	node = searchTree(_root, key);
+			// node_pointer	successor = node->successor(node);
 			node_pointer	x;
 			node_pointer	y;
 			int	original_color = node->color;
@@ -544,7 +542,7 @@ class RedBlackTree
 			delNode(node);
 			if (original_color == false)
 				deleteFix(x);
-			return (successor);
+			return (x);
 		}
 
 		node_pointer	getRoot(void) const { return (_root); }

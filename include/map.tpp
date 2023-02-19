@@ -224,11 +224,12 @@ void	map< Key, Type, Compare, Allocator >::insert(InputIt first, InputIt last)
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator >::erase(typename map< Key, Type, Compare, Allocator >::iterator pos)
 {
-	typename RedBlackTree< Key, value_type, Compare >::node_pointer node = _elements.deleteNode(*pos);
+	typename map< Key, Type, Compare, Allocator >::iterator it = find(pos->first);
+	if (it == end())
+		return (it);
+	typename RedBlackTree< Key, value_type, Compare >::node_pointer node = _elements.deleteNode(pos->first);
+	_mapSize--;
 	_elements.getNill()->parent = _elements.maximum(_elements.getRoot());
-	--_mapSize;
-	if (node->isNILL)
-		return (iterator(node->parent));
 	return (iterator(node));
 }
 
@@ -237,8 +238,13 @@ template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator >::erase(typename map< Key, Type, Compare, Allocator >::iterator first, typename map< Key, Type, Compare, Allocator >::iterator last)
 {
 	typename map< Key, Type, Compare, Allocator >::iterator it = first;
-	while (it != last)
+	while (first != last)
+	{
+		std::cout << "coucou" << std::endl;
+		it = first;
+		++first;
 		it = erase(it);
+	}
 	return (it);
 }
 
@@ -246,9 +252,12 @@ typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare,
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::size_type	map< Key, Type, Compare, Allocator >::erase(const Key &key)
 {
-	if (_elements.searchTree(_elements.getRoot(), key)->isNILL)
+	typename map< Key, Type, Compare, Allocator >::iterator it = find(key);
+	if (it == end())
 		return (0);
-	erase(find(key));
+	typename RedBlackTree< Key, value_type, Compare >::node_pointer node = _elements.deleteNode(key);
+	_mapSize--;
+	_elements.getNill()->parent = _elements.maximum(_elements.getRoot());
 	return (1);
 }
 
