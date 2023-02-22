@@ -16,25 +16,25 @@ class stack
 		typedef typename Container::const_reference	const_reference;
 
 
-		explicit stack(const Container& cont = Container()) : _container(cont) { }
+		explicit stack(const Container& cont = Container()) : c(cont) { }
 		~stack(void) { }
 
-		bool			empty(void) const { return (_container.empty()); }
-		size_type		size(void) const { return (_container.size()); }
-		reference		top(void) { return (_container.back()); }
-		const_reference	top(void) const { return (_container.back()); }
-		void			push(const value_type& value) { return (_container.push_back(value)); }
-		void			pop(void) { return (_container.pop_back()); }
+		bool			empty(void) const { return (c.empty()); }
+		size_type		size(void) const { return (c.size()); }
+		reference		top(void) { return (c.back()); }
+		const_reference	top(void) const { return (c.back()); }
+		void			push(const value_type& value) { return (c.push_back(value)); }
+		void			pop(void) { return (c.pop_back()); }
 
-		friend bool operator==(const ft::stack< Type, Container > &lhs, const ft::stack< Type, Container > &rhs) { return (lhs._container == rhs._container); }
-		friend bool operator!=(const ft::stack< Type, Container > &lhs, const ft::stack< Type, Container > &rhs) { return (lhs._container != rhs._container); }
-		friend bool operator<(const ft::stack< Type, Container > &lhs, const ft::stack< Type, Container > &rhs) { return (lhs._container < rhs._container); }
-		friend bool operator<=(const ft::stack< Type, Container > &lhs, const ft::stack< Type, Container > &rhs) { return (lhs._container <= rhs._container); }
-		friend bool operator>(const ft::stack< Type, Container > &lhs, const ft::stack< Type, Container > &rhs) { return (lhs._container > rhs._container); }
-		friend bool operator>=(const ft::stack< Type, Container > &lhs, const ft::stack< Type, Container > &rhs) { return (lhs._container >= rhs._container); }
+		friend bool operator==(const ft::stack< Type, Container > &lhs, const ft::stack< Type, Container > &rhs) { return (lhs.c == rhs.c); }
+		friend bool operator!=(const ft::stack< Type, Container > &lhs, const ft::stack< Type, Container > &rhs) { return (lhs.c != rhs.c); }
+		friend bool operator<(const ft::stack< Type, Container > &lhs, const ft::stack< Type, Container > &rhs) { return (lhs.c < rhs.c); }
+		friend bool operator<=(const ft::stack< Type, Container > &lhs, const ft::stack< Type, Container > &rhs) { return (lhs.c <= rhs.c); }
+		friend bool operator>(const ft::stack< Type, Container > &lhs, const ft::stack< Type, Container > &rhs) { return (lhs.c > rhs.c); }
+		friend bool operator>=(const ft::stack< Type, Container > &lhs, const ft::stack< Type, Container > &rhs) { return (lhs.c >= rhs.c); }
 		
-	private:
-		Container	_container;
+	protected:
+		Container	c;
 };
 
 
