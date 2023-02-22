@@ -2,7 +2,7 @@ NAME := ft_container
 
 CC := c++
 STDFLAGS := -std=c++98
-CFLAGS :=  -Wall -Werror -Wextra
+CFLAGS :=  -Wall -Werror -Wextra -MD
 INCLUDE := -I include/ -I lib/googletest/include
 TESTFLAGS := -L lib/googletest/lib -lgtest -lgtest_main -lgmock
 
@@ -20,10 +20,6 @@ TEST := map_test.cpp \
 OBJS := $(SRC:%.cpp=$(OBJSDIR)%.o)
 OBJSTEST := $(TEST:%.cpp=$(OBJSDIR)%.o)
 
-ifeq ($(INT_ONLY), 1)
-	CFLAGS += -DINT_ONLY
-endif
-
 all:
 	make $(NAME)
 
@@ -37,7 +33,8 @@ $(OBJSDIR)%.o: $(TESTDIR)%.cpp
 	mkdir -p $(OBJSDIR)
 	$(CC) $(CFLAGS) $(STDFLAGS) $(INCLUDE) -c $< -o $@
 
-$(OBJSDIR)%.o: $(SRCDIR)%.cpp 
+$(OBJSDIR)%.o: $(SRCDIR)%.cpp ./include/map.hpp
+	echo "hello"
 	mkdir -p $(OBJSDIR)
 	$(CC) $(CFLAGS) $(STDFLAGS) $(INCLUDE) -c $< -o $@
 
@@ -54,7 +51,6 @@ re: fclean
 retest: fclean
 	make tests
 
-reint: fclean
-	make tests INT_ONLY=1
+-include $(OBJS:.o=.d)
 
 .PHONY: all clean re fclean tests retest reint
