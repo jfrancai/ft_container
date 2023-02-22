@@ -27,15 +27,15 @@ template<
 		typedef Type 														mapped_type;
 		typedef ft::pair< const Key, Type >									value_type;
 		typedef std::size_t 												size_type;
-		typedef std::ptrdiff_t												Typedifference_type;
+		typedef std::ptrdiff_t												difference_type;
 		typedef Compare														key_compare;
 		typedef Allocator													allocator_type;
 		typedef value_type&													reference;
 		typedef const value_type&											const_reference;
 		typedef typename Allocator::pointer									pointer;
 		typedef typename Allocator::const_pointer							const_pointer;
-		typedef LegacyBidirectionalIterator< value_type, value_type >					iterator;
-		typedef LegacyBidirectionalIterator< const value_type, value_type >				const_iterator;
+		typedef LegacyBidirectionalIterator< value_type, value_type >		iterator;
+		typedef LegacyBidirectionalIterator< const value_type, value_type >	const_iterator;
 		typedef ft::reverse_iterator< iterator >							reverse_iterator;
 		typedef ft::reverse_iterator< const_iterator >						const_reverse_iterator;
 
