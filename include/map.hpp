@@ -104,13 +104,6 @@ template<
 		key_compare								key_comp(void) const;
 		value_compare							value_comp(void) const;
 
-		////// Non-Member Functions ////
-		friend bool	operator==(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs) {  if (lhs.size() != rhs.size()) return (false); return (ft::equal(lhs.begin(), lhs.end(), rhs.begin())); }
-		friend bool	operator!=(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs) { return (!(lhs == rhs)); }
-		friend bool	operator>=(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (!(lhs < rhs)); }
-		friend bool	operator>(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (rhs < lhs); }
-		friend bool	operator<=(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (!(rhs < lhs)); }
-		friend bool	operator<(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
 	private:
 		key_compare									_comp;
 		allocator_type								_alloc;
@@ -118,8 +111,27 @@ template<
 		RedBlackTree< Key, value_type, Compare >	_elements;
 };
 
-template< class Key, class Type, class Compare, class Alloc >
-void	swap(ft::map< Key, Type, Compare, Alloc > &lhs, ft::map< Key, Type, Compare, Alloc > &rhs) { return (lhs.swap(rhs)); }
+////// Non-Member Functions ////
+template< typename Key, typename Type, typename Compare, typename Allocator >
+bool	operator==(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs) {  if (lhs.size() != rhs.size()) return (false); return (ft::equal(lhs.begin(), lhs.end(), rhs.begin())); }
+
+template< typename Key, typename Type, typename Compare, typename Allocator >
+bool	operator!=(const ft::map< Key, Type, Compare, Allocator >&lhs, const ft::map< Key, Type, Compare, Allocator >&rhs) { return (!(lhs == rhs)); }
+
+template< typename Key, typename Type, typename Compare, typename Allocator >
+bool	operator>=(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (!(lhs < rhs)); }
+
+template< typename Key, typename Type, typename Compare, typename Allocator >
+bool	operator>(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (rhs < lhs); }
+
+template< typename Key, typename Type, typename Compare, typename Allocator >
+bool	operator<=(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (!(rhs < lhs)); }
+
+template< typename Key, typename Type, typename Compare, typename Allocator >
+bool	operator<(const ft::map< Key, Type, Compare, Allocator > &lhs, const ft::map< Key, Type, Compare, Allocator> &rhs) { return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
+
+template< typename Key, typename Type, typename Compare, typename Allocator >
+void	swap(ft::map< Key, Type, Compare, Allocator > &lhs, ft::map< Key, Type, Compare, Allocator > &rhs) { return (lhs.swap(rhs)); }
 
 template< class DataType, class NodeType >
 class	LegacyBidirectionalIterator
