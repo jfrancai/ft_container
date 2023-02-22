@@ -157,14 +157,16 @@ class RedBlackTree
 			_root = _NILL;
 		}
 
-		RedBlackTree(RedBlackTree const &src)
-		{
-			_NILL = new Node< Type >();
-			_root = cloneBinaryTree(src.getRoot());
-		}
+		RedBlackTree(RedBlackTree const &src) :
+			_NILL(new Node< Type >()),
+			_root(cloneBinaryTree(src.getRoot())),
+			_compare(src._compare)
+		{}
 
 		node_pointer	minimum(node_pointer node) const
 		{
+			if (node == _NILL)
+				return (_NILL);
 			while (node->left->isNILL == false)
 				node = node->left;
 			return (node);
@@ -172,6 +174,8 @@ class RedBlackTree
 
 		node_pointer	maximum(node_pointer node) const
 		{
+			if (node == _NILL)
+				return (_NILL);
 			while (node->right->isNILL == false)
 				node = node->right;
 			return (node);
@@ -180,7 +184,7 @@ class RedBlackTree
 		node_pointer cloneBinaryTree(node_pointer node)
 		{
 			if (node->isNILL)
-				return (new node_type(*node));
+				return (_NILL);
 			node_pointer newNode = new node_type(*node);
 			newNode->left = cloneBinaryTree(node->left);
 			newNode->left->parent = newNode;

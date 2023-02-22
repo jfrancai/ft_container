@@ -54,6 +54,7 @@ template<
 		explicit map( const Compare &comp, const Allocator& alloc = Allocator());
 		template< class InputIt >
 		map(InputIt first, InputIt last, const Compare &comp = Compare(), const Allocator &alloc = Allocator());
+		map(const map& other);
 		~map(void);
 		allocator_type										get_allocator(void) const;
 		map													&operator=(const map& other);

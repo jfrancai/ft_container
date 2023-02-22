@@ -39,6 +39,14 @@ map< Key, Type, Compare, Allocator >::map(InputIt first, InputIt last, const Com
 	return ;
 }
 
+template< class Key, class Type, class Compare, class Allocator >
+map< Key, Type, Compare, Allocator >::map(const map< Key, Type, Compare, Allocator > &other) :
+	_comp(other._comp),
+	_alloc(other._alloc),
+	_mapSize(other._mapSize),
+	_elements(other._elements)
+{}
+
 // get_allocator
 template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::allocator_type	map< Key, Type, Compare, Allocator >::get_allocator(void) const
@@ -88,8 +96,7 @@ Type	&map< Key, Type, Compare, Allocator >::operator[](const Key &key)
 	if (node->isNILL)
 	{
 		ft::pair< iterator, bool> pair = insert(ft::make_pair(key, Type()));
-		map< Key, Type, Compare, Allocator >::iterator it = pair.first;
-		return (it->second);
+		return (pair.first->second);
 	}
 	return (node->data->second);
 }
@@ -225,8 +232,6 @@ template< class Key, class Type, class Compare, class Allocator >
 typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare, Allocator >::erase(typename map< Key, Type, Compare, Allocator >::iterator pos)
 {
 	typename map< Key, Type, Compare, Allocator >::iterator it = find(pos->first);
-	if (it == end())
-		return (it);
 	typename RedBlackTree< Key, value_type, Compare >::node_pointer node = _elements.deleteNode(pos->first);
 	_mapSize--;
 	_elements.getNill()->parent = _elements.maximum(_elements.getRoot());
@@ -240,7 +245,6 @@ typename map< Key, Type, Compare, Allocator >::iterator	map< Key, Type, Compare,
 	typename map< Key, Type, Compare, Allocator >::iterator it = first;
 	while (first != last)
 	{
-		std::cout << "coucou" << std::endl;
 		it = first;
 		++first;
 		it = erase(it);
@@ -255,7 +259,7 @@ typename map< Key, Type, Compare, Allocator >::size_type	map< Key, Type, Compare
 	typename map< Key, Type, Compare, Allocator >::iterator it = find(key);
 	if (it == end())
 		return (0);
-	typename RedBlackTree< Key, value_type, Compare >::node_pointer node = _elements.deleteNode(key);
+	_elements.deleteNode(key);
 	_mapSize--;
 	_elements.getNill()->parent = _elements.maximum(_elements.getRoot());
 	return (1);
@@ -394,7 +398,9 @@ typename map< Key, Type, Compare, Allocator>::iterator	map< Key, Type, Compare, 
 		node = node->successor(node);
 	}
 	return (iterator(node));
-}//// Observers ////
+}
+
+//// Observers ////
 
 // key_comp
 template< class Key, class Type, class Compare, class Allocator >

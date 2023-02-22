@@ -12,7 +12,10 @@ TESTDIR := test/
 
 SRC :=
 
-TEST := map_test.cpp	
+TEST := map_test.cpp \
+	vector_test.cpp \
+	stack_test.cpp \
+	type_traits_test.cpp
 
 OBJS := $(SRC:%.cpp=$(OBJSDIR)%.o)
 OBJSTEST := $(TEST:%.cpp=$(OBJSDIR)%.o)
