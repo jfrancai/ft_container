@@ -2,9 +2,9 @@ NAME := ft_container
 
 CC := c++
 STDFLAGS := -std=c++98
-CFLAGS := -fpermissive #-Wall -Werror -Wextra
-INCLUDE := -I include/
-TESTFLAGS := -lgtest -lgtest_main -lgmock
+CFLAGS :=  -Wall -Werror -Wextra
+INCLUDE := -I include/ -I lib/googletest/include
+TESTFLAGS := -L lib/googletest/lib -lgtest -lgtest_main -lgmock
 
 SRCDIR := src/
 OBJSDIR := objs/
